@@ -121,7 +121,7 @@ jobs:
           script: |
             set -e
 
-            # Step A: Determine domain based on branch
+            # Step A: Determine domain
             if [ "$TARGET_BRANCH" == "main" ]; then
               APP_DOMAIN=$PRODUCTION_DOMAIN
             else
@@ -133,11 +133,8 @@ jobs:
 
             # Step B: Install Java if not present
             if ! command -v java &>/dev/null; then
-              echo "Java not found. Installing Java 21..."
               sudo apt-get update -qq
               sudo apt-get install -y openjdk-21-jre-headless
-            else
-              echo "Java already installed: $(java -version 2>&1 | head -1)"
             fi
 
             # Step C: Write Nginx config
@@ -166,11 +163,10 @@ jobs:
             sudo nginx -t && sudo systemctl reload nginx
             echo "Nginx configured for $APP_DOMAIN"
 
-            # Step D: Deploy frontend files
+            # Step D: Deploy frontend
             sudo rm -rf /var/www/teamsphere
             sudo mkdir -p /var/www/teamsphere
 
-            # Robustly find the frontend build output
             FRONTEND_SRC=""
             if [ -d "$DEPLOY_DIR/frontend/org-chart" ]; then
               FRONTEND_SRC="$DEPLOY_DIR/frontend/org-chart"
@@ -184,36 +180,51 @@ jobs:
               sudo cp -r "$FRONTEND_SRC"/. /var/www/teamsphere/
               echo "Frontend deployed from: $FRONTEND_SRC"
             else
-              echo "ERROR: Could not locate frontend build output."
-              echo "Contents of $DEPLOY_DIR/frontend/:"
+              echo "ERROR: Frontend not found"
               find "$DEPLOY_DIR/frontend/" -maxdepth 3 || true
               exit 1
             fi
 
-            # Step E: Stop existing backend
-            pkill -f 'java -jar' || true
-            sleep 3
-
-            # Step F: Start Spring Boot backend — fully detached from SSH session
+            # Step E: Find JAR
             JAR_FILE=$(ls "$DEPLOY_DIR/backend/"*.jar 2>/dev/null | head -1)
-            if [ -n "$JAR_FILE" ]; then
-              LOG_FILE="/home/$DEPLOY_USER/backend.log"
-              setsid nohup java -jar "$JAR_FILE" \
-                --app.base-url=https://$APP_DOMAIN \
-                --server.port=8080 \
-                > "$LOG_FILE" 2>&1 &
-              disown $!
-              sleep 5
-              if pgrep -f 'java -jar' > /dev/null; then
-                echo "Backend started successfully: $JAR_FILE"
-              else
-                echo "ERROR: Backend failed to start. Last 20 lines of log:"
-                tail -20 "$LOG_FILE" || true
-                exit 1
-              fi
-            else
-              echo "ERROR: No JAR file found in $DEPLOY_DIR/backend/"
+            if [ -z "$JAR_FILE" ]; then
+              echo "ERROR: No JAR file found"
               ls -la "$DEPLOY_DIR/backend/" || true
+              exit 1
+            fi
+
+            # Step F: Create systemd service for backend
+            sudo tee /etc/systemd/system/teamsphere.service > /dev/null << EOF
+            [Unit]
+            Description=Teamsphere Spring Boot Backend
+            After=network.target
+
+            [Service]
+            Type=simple
+            User=$DEPLOY_USER
+            ExecStart=/usr/bin/java -jar $JAR_FILE --app.base-url=https://$APP_DOMAIN --server.port=8080
+            Restart=on-failure
+            RestartSec=10
+            StandardOutput=append:/home/$DEPLOY_USER/backend.log
+            StandardError=append:/home/$DEPLOY_USER/backend.log
+
+            [Install]
+            WantedBy=multi-user.target
+            EOF
+
+            # Step G: Start the service
+            sudo systemctl daemon-reload
+            sudo systemctl stop teamsphere || true
+            sudo systemctl enable teamsphere
+            sudo systemctl start teamsphere
+            sleep 5
+
+            # Step H: Verify
+            if sudo systemctl is-active --quiet teamsphere; then
+              echo "Backend started successfully via systemd"
+            else
+              echo "ERROR: Backend failed to start"
+              sudo journalctl -u teamsphere -n 30 --no-pager || true
               exit 1
             fi
 
