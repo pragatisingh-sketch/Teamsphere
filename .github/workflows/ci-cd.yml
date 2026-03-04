@@ -2,31 +2,45 @@ name: CI/CD - Build, Test, Deploy to GCE
 
 on:
   push:
-    branches: 
+    branches:
       - main      # Triggers production deployment
       - testing   # Triggers testing deployment
 
 jobs:
-  build-and-deploy:
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 1: Build & Test
+  # ─────────────────────────────────────────────────────────────────
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # --- 1. BUILD BACKEND (Spring Boot) ---
+      # ── Authenticate to Google Cloud ──
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      # ── Backend: Build & Test ──
       - name: Set up Java 21
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'corretto'
           cache: 'maven'
 
-      - name: Build Spring Boot Backend
+      - name: Run Backend Tests
         working-directory: ./backend/capsAllocation
-        run: mvn clean package -DskipTests
+        run: mvn test --batch-mode
+        continue-on-error: true
 
-      # --- 2. BUILD FRONTEND (Angular) ---
+      - name: Build Spring Boot Backend (JAR)
+        working-directory: ./backend/capsAllocation
+        run: mvn clean package -DskipTests --batch-mode
+
+      # ── Frontend: Build ──
       - name: Set up Node.js 18
         uses: actions/setup-node@v4
         with:
@@ -34,65 +48,133 @@ jobs:
           cache: 'npm'
           cache-dependency-path: ./org-chart/package-lock.json
 
-      - name: Install Dependencies & Build Frontend
+      - name: Install Frontend Dependencies
+        working-directory: ./org-chart
+        run: npm ci
+
+      - name: Build Frontend (Production)
         working-directory: ./org-chart
         run: |
-          npm ci
           npm install -g @angular/cli@16
           ng build --configuration production
 
-      # --- 3. TRANSFER FILES TO VM ---
-      - name: Copy Build Artifacts to VM
+      # ── Upload Build Artifacts for Deploy Job ──
+      - name: Upload Backend JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: backend/capsAllocation/target/*.jar
+          retention-days: 1
+
+      - name: Upload Frontend Dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: org-chart/dist/
+          retention-days: 1
+
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 2: Deploy to GCE VM
+  # ─────────────────────────────────────────────────────────────────
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+
+    steps:
+      # ── Download Artifacts from Build Job ──
+      - name: Download Backend JAR
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-jar
+          path: artifacts/backend/
+
+      - name: Download Frontend Dist
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: artifacts/frontend/
+
+      # ── Transfer Build Artifacts to VM via SCP ──
+      - name: Copy Artifacts to VM
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.GCE_HOST_IP }}
           username: ${{ secrets.GCE_USERNAME }}
           key: ${{ secrets.GCE_SSH_KEY }}
-          source: "backend/capsAllocation/target/*.jar, org-chart/dist/"
+          source: "artifacts/"
           target: "/home/${{ secrets.GCE_USERNAME }}/teamsphere-deploy"
-          strip_components: 1
 
-      # --- 4. SECURE DEPLOYMENT & PLACEHOLDERS ---
-      - name: Execute Deployment on VM
+      # ── Deploy Application on VM ──
+      - name: Deploy Application on VM
         uses: appleboy/ssh-action@v1.0.3
         env:
-          TESTING_DOMAIN: ${{ secrets.TESTING_DOMAIN }}       
+          TESTING_DOMAIN: ${{ secrets.TESTING_DOMAIN }}
           PRODUCTION_DOMAIN: ${{ secrets.PRODUCTION_DOMAIN }}
           TARGET_BRANCH: ${{ github.ref_name }}
+          DEPLOY_USER: ${{ secrets.GCE_USERNAME }}
         with:
           host: ${{ secrets.GCE_HOST_IP }}
           username: ${{ secrets.GCE_USERNAME }}
           key: ${{ secrets.GCE_SSH_KEY }}
-          envs: TESTING_DOMAIN, PRODUCTION_DOMAIN, TARGET_BRANCH
+          envs: TESTING_DOMAIN,PRODUCTION_DOMAIN,TARGET_BRANCH,DEPLOY_USER
           script: |
-            # Step A: Determine the correct placeholder based on the branch
+            # Step A: Determine domain based on branch
             if [ "$TARGET_BRANCH" == "main" ]; then
               APP_DOMAIN=$PRODUCTION_DOMAIN
             else
               APP_DOMAIN=$TESTING_DOMAIN
             fi
-            
-            echo "Deploying for domain: https://$APP_DOMAIN"
-            
-            # Step B: Restart the Spring Boot Backend
-            pkill -f 'java -jar' || true
-            sleep 5
-            
-            # Injecting the domain placeholder into the running app
-            nohup java -jar /home/${{ secrets.GCE_USERNAME }}/teamsphere-deploy/backend/capsAllocation/target/*.jar \
-              --app.base-url=https://$APP_DOMAIN \
-              --server.port=8080 > backend.log 2>&1 &
-            
-            # Step C: Update Frontend Files for Nginx
-            sudo rm -rf /var/www/teamsphere/*
-            sudo mkdir -p /var/www/teamsphere
-            sudo cp -r /home/${{ secrets.GCE_USERNAME }}/teamsphere-deploy/org-chart/dist/org-chart/* /var/www/teamsphere/
-             
-            # Step D: Restart Nginx to ensure it serves the fresh files safely
-            sudo systemctl restart nginx
+            echo "Deploying to: https://$APP_DOMAIN"
 
-      # --- 5. SSL CERTIFICATE PROVISIONING (Certbot / Let's Encrypt) ---
-      - name: Provision or Renew SSL Certificate via Certbot
+            DEPLOY_DIR="/home/$DEPLOY_USER/teamsphere-deploy/artifacts"
+
+            # Step B: Configure Nginx for this domain
+            sudo tee /etc/nginx/sites-available/teamsphere > /dev/null <<NGINX_EOF
+            server {
+                listen 80;
+                server_name $APP_DOMAIN;
+
+                root /var/www/teamsphere;
+                index index.html;
+
+                # Angular routing support
+                location / {
+                    try_files \$uri \$uri/ /index.html;
+                }
+
+                # Proxy API requests to Spring Boot backend
+                location /api/ {
+                    proxy_pass http://localhost:8080/;
+                    proxy_set_header Host \$host;
+                    proxy_set_header X-Real-IP \$remote_addr;
+                    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+                    proxy_set_header X-Forwarded-Proto \$scheme;
+                }
+            }
+            NGINX_EOF
+
+            sudo ln -sf /etc/nginx/sites-available/teamsphere /etc/nginx/sites-enabled/teamsphere
+            sudo rm -f /etc/nginx/sites-enabled/default
+            sudo nginx -t && sudo systemctl reload nginx
+            echo "Nginx configured for $APP_DOMAIN"
+
+            # Step C: Deploy frontend files
+            sudo rm -rf /var/www/teamsphere
+            sudo mkdir -p /var/www/teamsphere
+            sudo cp -r $DEPLOY_DIR/frontend/org-chart/* /var/www/teamsphere/
+            echo "Frontend deployed."
+
+            # Step D: Restart Spring Boot backend
+            pkill -f 'java -jar' || true
+            sleep 3
+            nohup java -jar $DEPLOY_DIR/backend/*.jar \
+              --app.base-url=https://$APP_DOMAIN \
+              --server.port=8080 \
+              > /home/$DEPLOY_USER/backend.log 2>&1 &
+            echo "Backend started."
+
+      # ── SSL Certificate via Certbot ──
+      - name: Provision or Renew SSL Certificate
         uses: appleboy/ssh-action@v1.0.3
         env:
           TESTING_DOMAIN: ${{ secrets.TESTING_DOMAIN }}
@@ -103,50 +185,37 @@ jobs:
           host: ${{ secrets.GCE_HOST_IP }}
           username: ${{ secrets.GCE_USERNAME }}
           key: ${{ secrets.GCE_SSH_KEY }}
-          envs: TESTING_DOMAIN, PRODUCTION_DOMAIN, TARGET_BRANCH, CERTBOT_EMAIL
+          envs: TESTING_DOMAIN,PRODUCTION_DOMAIN,TARGET_BRANCH,CERTBOT_EMAIL
           script: |
-            # Step A: Resolve the active domain for this branch
             if [ "$TARGET_BRANCH" == "main" ]; then
               APP_DOMAIN=$PRODUCTION_DOMAIN
             else
               APP_DOMAIN=$TESTING_DOMAIN
             fi
 
-            echo "Checking SSL certificate for domain: $APP_DOMAIN"
+            echo "SSL check for: $APP_DOMAIN"
 
-            # Step B: Install Certbot and the Nginx plugin if not already present
-            if ! command -v certbot &> /dev/null; then
-              echo "Certbot not found. Installing..."
+            # Install Certbot if not present
+            if ! command -v certbot &>/dev/null; then
               sudo apt-get update -qq
               sudo apt-get install -y certbot python3-certbot-nginx
-            else
-              echo "Certbot is already installed."
             fi
 
-            # Step C: Check if a valid certificate already exists for this domain
-            # certbot certificates returns exit code 0 even if empty, so we grep for the domain
+            # Issue new certificate or renew existing
             CERT_EXISTS=$(sudo certbot certificates 2>/dev/null | grep -c "Domains:.*$APP_DOMAIN" || true)
 
             if [ "$CERT_EXISTS" -eq "0" ]; then
-              echo "No existing certificate found for $APP_DOMAIN. Issuing a new one..."
-              # --non-interactive runs Certbot without prompts
-              # --nginx automatically configures Nginx for HTTPS
-              # --redirect forces HTTP → HTTPS redirect
-              # --agree-tos accepts the Let's Encrypt Terms of Service
               sudo certbot --nginx \
                 --non-interactive \
                 --agree-tos \
                 --redirect \
                 --email "$CERTBOT_EMAIL" \
                 -d "$APP_DOMAIN"
-              echo "SSL certificate issued successfully for $APP_DOMAIN."
+              echo "SSL certificate issued for $APP_DOMAIN"
             else
-              echo "Certificate already exists for $APP_DOMAIN. Attempting renewal if due..."
-              # --quiet only outputs errors; safe to run on every deploy
               sudo certbot renew --quiet --nginx
-              echo "Certificate renewal check complete."
+              echo "SSL renewal checked for $APP_DOMAIN"
             fi
 
-            # Step D: Reload Nginx to apply any certificate updates
             sudo systemctl reload nginx
-            echo "Nginx reloaded. HTTPS is active for https://$APP_DOMAIN"
+            echo "✅ Live at: https://$APP_DOMAIN"
