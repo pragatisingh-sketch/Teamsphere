@@ -1,0 +1,722 @@
+<div class="admin-dashboard">
+    <div class="admin-header">
+        <app-page-header style="width: 98%" title="Admin Panel" subtitle="Manage users, roles, and system settings">
+        </app-page-header>
+
+
+
+        <!-- Admin Settings Gear Button - Only visible to ADMIN_OPS_MANAGER -->
+        <button mat-icon-button class="action-button settings-button" [matMenuTriggerFor]="adminSettingsMenu"
+            *ngIf="hasAdminOpsManagerRole()" matTooltip="Admin Settings">
+            <mat-icon>settings</mat-icon>
+        </button>
+    </div>
+
+    <!-- Admin Settings Menu -->
+    <mat-menu #adminSettingsMenu="matMenu">
+        <!-- Database Backup Option -->
+        <button mat-menu-item (click)="triggerDatabaseBackup()">
+            <mat-icon>backup</mat-icon>
+            <span>Backup Database</span>
+        </button>
+
+        <!-- Database Import Option -->
+        <button mat-menu-item (click)="importFromBackup()">
+            <mat-icon>restore</mat-icon>
+            <span>Import from Backup</span>
+        </button>
+
+        <!-- CSV Upload Option -->
+        <button mat-menu-item (click)="uploadEmployeeRelationCsv()">
+            <mat-icon>upload_file</mat-icon>
+            <span>Upload Employee Relations CSV</span>
+        </button>
+    </mat-menu>
+
+
+    <div class="actions">
+        <button mat-raised-button color="primary" class="action-button add-button" (click)="openAddUserForm()"
+            [disabled]="!hasEditAccess()" matTooltip="You don't have access to perform this action"
+            [matTooltipDisabled]="hasEditAccess()">
+            <mat-icon>person_add</mat-icon>Add User
+        </button>
+
+        <!-- Upload CSV with Info Icon -->
+        <div class="upload-container">
+            <button mat-raised-button color="primary" class="action-button upload-button" (click)="fileInput.click()"
+                [disabled]="!hasEditAccess()" matTooltip="You don't have access to perform this action"
+                [matTooltipDisabled]="hasEditAccess()">
+
+                <mat-icon>upload</mat-icon> Upload CSV
+            </button>
+            <mat-icon class="info-icon" (click)="openCsvInfoDialog()" matTooltip="CSV Format Info">info</mat-icon>
+        </div>
+
+        <input #fileInput type="file" accept=".csv" (change)="onFileUpload($event)" style="display: none" />
+
+        <!-- <button mat-raised-button color="primary" class="action-button download-button" (click)="downloadCSV()">
+        <mat-icon>download</mat-icon> Download CSV
+    </button> -->
+
+        <button mat-raised-button color="primary" class="action-button download-button" (click)="exportUsersWithLogs()"
+            matTooltip="Download complete user data with edit history">
+            <mat-icon>download</mat-icon> Download CSV
+        </button>
+        <button mat-raised-button color="warn" (click)="deleteSelectedUsers()"
+            [disabled]="!selectedUsers.length || !hasEditAccess()"
+            matTooltip="You don't have access to perform this action" [matTooltipDisabled]="hasEditAccess()">
+            <mat-icon>delete</mat-icon> Delete Selected
+        </button>
+
+
+
+        <!-- Added Column Filter Toggle Button -->
+        <button mat-raised-button (click)="toggleColumnFilters()" class="action-button toggle-filter-button">
+            <mat-icon>{{ showColumnFilters ? 'visibility_off' : 'filter_list' }}</mat-icon>
+            {{ showColumnFilters ? 'Hide' : 'Show' }} Column Filters
+        </button>
+
+        <div class="dropdown">
+            <button class="dropdown-button" (click)="toggleDropdown()" [class.active]="dropdownOpen">
+                <mat-icon>{{ dropdownOpen ? 'arrow_drop_up_circle' : 'arrow_drop_down_circle' }}</mat-icon> Select
+                Columns
+            </button>
+            <div class="dropdown-menu" *ngIf="dropdownOpen" (click)="$event.stopPropagation()">
+                <input type="text" [(ngModel)]="searchText" (input)="filterColumns()" placeholder="Search columns..."
+                    class="search-box" />
+                <label class="checkbox-container">
+                    <input type="checkbox" (change)="toggleSelectAll()" />
+                    Select All
+                </label>
+                <div class="column-list">
+                    <label class="checkbox-container" *ngFor="let col of filteredColumns">
+                        <input type="checkbox" [checked]="selectedColumns.includes(col.key)"
+                            (change)="updateDisplayedColumns($event, col.key)" />
+                        {{ col.displayName }}
+                    </label>
+
+                </div>
+            </div>
+        </div>
+
+
+        <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Search</mat-label>
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput (keyup)="applyGlobalFilter($event)" placeholder="Search users">
+        </mat-form-field>
+
+    </div>
+
+    <div class="table-responsive">
+        <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+                <mat-header-cell *matHeaderCellDef class="mat-column-select">
+                    <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="isAllSelected()"
+                        [indeterminate]="isIndeterminate()">
+                    </mat-checkbox>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">
+                    <mat-checkbox (change)="toggleSelection(user)" [checked]="isSelected(user)">
+                    </mat-checkbox>
+                </mat-cell>
+            </ng-container>
+
+            <!-- Columns -->
+            <ng-container matColumnDef="firstName">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Name</span>
+                        <button mat-icon-button #nameTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('firstName', nameTrigger)"
+                            [color]="isFilterActive('firstName') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.firstName }} {{ user.lastName}}</mat-cell>
+            </ng-container>
+
+
+            <ng-container matColumnDef="ldap">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Ldap</span>
+                        <button mat-icon-button #ldapTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('ldap', ldapTrigger)"
+                            [color]="isFilterActive('ldap') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.ldap }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="lastName">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Last Name</span>
+                        <button mat-icon-button #lastNameTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('lastName', lastNameTrigger)"
+                            [color]="isFilterActive('lastName') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.lastName }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="startDate">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Start Date</span>
+                        <button mat-icon-button #startDateTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu"
+                            (menuOpened)="openFilterMenu('startDate', startDateTrigger)"
+                            [color]="isFilterActive('startDate') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.startDate }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="team">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Team</span>
+                        <button mat-icon-button #teamTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('team', teamTrigger)"
+                            [color]="isFilterActive('team') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.team }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="newLevel">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">New Level</span>
+                        <button mat-icon-button #newLevelTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('newLevel', newLevelTrigger)"
+                            [color]="isFilterActive('newLevel') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.newLevel }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="lead">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Lead</span>
+                        <button mat-icon-button #leadTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('lead', leadTrigger)"
+                            [color]="isFilterActive('lead') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.lead }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="programManager">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Program Manager</span>
+                        <button mat-icon-button #pmTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('programManager', pmTrigger)"
+                            [color]="isFilterActive('programManager') ? 'accent' : ''"
+                            (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.programManager }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="vendor">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Vendor</span>
+                        <button mat-icon-button #vendorTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('vendor', vendorTrigger)"
+                            [color]="isFilterActive('vendor') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.vendor }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Email</span>
+                        <button mat-icon-button #emailTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('email', emailTrigger)"
+                            [color]="isFilterActive('email') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.email }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Status</span>
+                        <button mat-icon-button #statusTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('status', statusTrigger)"
+                            [color]="isFilterActive('status') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.status }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="lwdMlStartDate">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">LWD ML Start Date</span>
+                        <button mat-icon-button #lwdTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('lwdMlStartDate', lwdTrigger)"
+                            [color]="isFilterActive('lwdMlStartDate') ? 'accent' : ''"
+                            (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.lwdMlStartDate || 'N/A' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="process">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Process</span>
+                        <button mat-icon-button #processTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('process', processTrigger)"
+                            [color]="isFilterActive('process') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.process }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="resignationDate">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Resignation Date</span>
+                        <button mat-icon-button #resignTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu"
+                            (menuOpened)="openFilterMenu('resignationDate', resignTrigger)"
+                            [color]="isFilterActive('resignationDate') ? 'accent' : ''"
+                            (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.resignationDate || 'N/A' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="roleChangeEffectiveDate">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Role Change Effective Date</span>
+                        <button mat-icon-button #roleChangeTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu"
+                            (menuOpened)="openFilterMenu('roleChangeEffectiveDate', roleChangeTrigger)"
+                            [color]="isFilterActive('roleChangeEffectiveDate') ? 'accent' : ''"
+                            (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.roleChangeEffectiveDate || 'N/A' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="levelBeforeChange">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Level Before Change</span>
+                        <button mat-icon-button #levelBeforeTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu"
+                            (menuOpened)="openFilterMenu('levelBeforeChange', levelBeforeTrigger)"
+                            [color]="isFilterActive('levelBeforeChange') ? 'accent' : ''"
+                            (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.levelBeforeChange || 'N/A' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="levelAfterChange">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Level After Change</span>
+                        <button mat-icon-button #levelAfterTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu"
+                            (menuOpened)="openFilterMenu('levelAfterChange', levelAfterTrigger)"
+                            [color]="isFilterActive('levelAfterChange') ? 'accent' : ''"
+                            (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.levelAfterChange || 'N/A' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="lastBillingDate">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Last Billing Date</span>
+                        <button mat-icon-button #lastBillTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu"
+                            (menuOpened)="openFilterMenu('lastBillingDate', lastBillTrigger)"
+                            [color]="isFilterActive('lastBillingDate') ? 'accent' : ''"
+                            (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.lastBillingDate || 'N/A' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="backfillLdap">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Backfill Ldap</span>
+                        <button mat-icon-button #backfillTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu"
+                            (menuOpened)="openFilterMenu('backfillLdap', backfillTrigger)"
+                            [color]="isFilterActive('backfillLdap') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.backfillLdap || 'N/A' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="billingStartDate">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Billing Start Date</span>
+                        <button mat-icon-button #billingStartTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu"
+                            (menuOpened)="openFilterMenu('billingStartDate', billingStartTrigger)"
+                            [color]="isFilterActive('billingStartDate') ? 'accent' : ''"
+                            (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.billingStartDate || 'N/A' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="language">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Language</span>
+                        <button mat-icon-button #langTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('language', langTrigger)"
+                            [color]="isFilterActive('language') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.language || 'N/A' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="tenureTillDate">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Tenure Till Date</span>
+                        <button mat-icon-button #tenureTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu"
+                            (menuOpened)="openFilterMenu('tenureTillDate', tenureTrigger)"
+                            [color]="isFilterActive('tenureTillDate') ? 'accent' : ''"
+                            (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.tenureTillDate || 'N/A' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="pnseProgram">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">PS&E Program</span>
+                        <button mat-icon-button #pnseTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('pnseProgram', pnseTrigger)"
+                            [color]="isFilterActive('pnseProgram') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.pnseProgram }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="level">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Level</span>
+                        <button mat-icon-button #levelTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('level', levelTrigger)"
+                            [color]="isFilterActive('level') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.level || 'N/A' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="location">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Location</span>
+                        <button mat-icon-button #locationTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('location', locationTrigger)"
+                            [color]="isFilterActive('location') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.location || 'N/A' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="profilePic">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="profile-header">
+                    <div class="header-container">
+                        <span class="header-text">Image</span>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user" class="profile-cell">
+                    <div class="profile-picture">
+                        <div class="image-wrapper" style="margin-right: auto;">
+                            <img *ngIf="user.profilePic && user.profilePic !== 'NA' && user.profilePic !== 'undefined'; else defaultImage"
+                                [src]="'data:image/jpeg;base64,' + user.profilePic"
+                                alt="{{ user.firstName }}'s Profile Picture" />
+                            <ng-template #defaultImage>
+                                <img [src]="'https://ui-avatars.com/api/?name=' + user.firstName + '+' + user.lastName + '&background=random'"
+                                    alt="{{ user.firstName }}'s Avatar" />
+                            </ng-template>
+                        </div>
+                    </div>
+                </mat-cell>
+            </ng-container>
+
+
+
+            <ng-container matColumnDef="parent">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Parent</span>
+                        <button mat-icon-button #parentTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('parent', parentTrigger)"
+                            [color]="isFilterActive('parent') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.parent }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="shift">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <div class="header-container">
+                        <span class="header-text">Shift</span>
+                        <button mat-icon-button #shiftTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                            [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('shift', shiftTrigger)"
+                            [color]="isFilterActive('shift') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.shift }}</mat-cell>
+            </ng-container>
+
+
+            <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+                <mat-cell *matCellDef="let user">
+                    <button mat-raised-button color="accent" class="action-button view-button"
+                        (click)="viewUser(user)">View</button>
+                    <button mat-raised-button color="primary" class="action-button edit-button"
+                        [disabled]="user.inactive || !hasEditAccess()" (click)="editUser(user)"
+                        [matTooltip]="user.inactive ? 'Cannot edit inactive user' : (!hasEditAccess() ? 'You don\'t have access to perform this action' : 'Edit user')"
+                        [matTooltipDisabled]="hasEditAccess() && !user.inactive">
+                        Edit
+                    </button>
+
+                    <button mat-raised-button color="warn" class="action-button delete-button"
+                        [disabled]="user.inactive || !hasEditAccess()" (click)="deleteUser(user)"
+                        [matTooltip]="user.inactive ? 'Cannot delete inactive user' : (!hasEditAccess() ? 'You don\'t have access to perform this action' : 'Delete user')"
+                        [matTooltipDisabled]="hasEditAccess() && !user.inactive">
+                        Delete
+                    </button>
+
+                    <button mat-icon-button class="action-button more-options-button"
+                        [matMenuTriggerFor]="moreOptionsMenu" [disabled]="user.inactive"
+                        [matTooltip]="user.inactive ? 'Cannot perform actions on inactive user' : 'More options'">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+
+                    <mat-menu #moreOptionsMenu="matMenu">
+                        <!-- Change Role Option -->
+                        <button mat-menu-item [disabled]="!hasAdminOpsManagerRole()" [matMenuTriggerFor]="roleMenu"
+                            [matTooltip]="!hasAdminOpsManagerRole() ? 'Only Admin Ops Manager can change user roles' : 'Change user role'"
+                            [matTooltipDisabled]="hasAdminOpsManagerRole()">
+                            <mat-icon class="menu-icon role-icon">swap_horiz</mat-icon>
+                            <span>Change Role</span>
+                        </button>
+
+                        <!-- Delegate Role Option -->
+                        <button mat-menu-item (click)="delegateRoleToUser(user)" *ngIf="canDelegate()"
+                            matTooltip="Delegate your role to this user">
+                            <mat-icon class="menu-icon delegate-icon">swap_horiz</mat-icon>
+                            <span>Delegate Role</span>
+                        </button>
+
+                        <!-- Reset Password Option -->
+                        <button mat-menu-item [disabled]="!hasPasswordResetAccess()" (click)="resetUserPassword(user)"
+                            [matTooltip]="!hasPasswordResetAccess() ? 'Only Admin Ops Manager, Leads, and Managers can reset passwords' : 'Reset password to default'"
+                            [matTooltipDisabled]="hasPasswordResetAccess()">
+                            <mat-icon class="menu-icon password-icon">lock_reset</mat-icon>
+                            <span>Reset Password</span>
+                        </button>
+
+                        <!-- View Edit Logs Option -->
+                        <button mat-menu-item (click)="viewEditLogs(user)">
+                            <mat-icon class="menu-icon logs-icon">history</mat-icon>
+                            <span>View Edit Logs</span>
+                        </button>
+
+                        <!-- View Delegation History Option -->
+                        <button mat-menu-item (click)="viewDelegationHistory(user)">
+                            <mat-icon class="menu-icon history-icon">manage_history</mat-icon>
+                            <span>View Delegation History</span>
+                        </button>
+                    </mat-menu>
+
+                    <!-- Submenu for role selection -->
+                    <mat-menu #roleMenu="matMenu">
+                        <button mat-menu-item *ngFor="let role of availableRoles" (click)="changeUserRole(user, role)">
+                            {{role}}
+                        </button>
+                    </mat-menu>
+
+                    <mat-icon *ngIf="user.inactive" class="action-button info-icon"
+                        matTooltip="This user is inactive and cannot be edited or deleted, editing or deleting feature will be implemented in the future release for such users">
+                        info
+                    </mat-icon>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+    </div>
+
+    <mat-paginator [length]="dataSource.data.length" [pageSize]="20" [pageSizeOptions]="[20, 50, 100]">
+    </mat-paginator>
+
+
+
+    <ng-template #csvInfoDialog>
+        <div class="header-csv">
+            <h2 mat-dialog-title>CSV Format Information</h2>
+            <mat-dialog-actions>
+                <button mat-icon-button mat-dialog-close class="action-button delete-button">
+                    <mat-icon>close</mat-icon>
+                </button>
+
+            </mat-dialog-actions>
+        </div>
+        <mat-dialog-content>
+            <p>
+                Note:
+
+                <li>The Account Manager will be the grandparent of all Program Managers.The Lead and Manager fields must
+                    be left blank for this role.</li>
+                <li>The Account Manager should be assigned as both the Team Lead and Program Manager for all Program
+                    Managers across all programs.</li>
+
+            </p>
+            <p>Your CSV file should have the following format:</p>
+            <table mat-table [dataSource]="csvFormatExamples" class="csv-format-table">
+                <ng-container matColumnDef="columnName">
+                    <mat-header-cell *matHeaderCellDef>Column Name</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{ element.columnName }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="description">
+                    <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{ element.description }}</mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="['columnName', 'description']"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: ['columnName', 'description'];"></mat-row>
+            </table>
+            <p>
+                Example:
+                <code>
+          John Doe,john.doe@company.com,Engineering
+        </code>
+            </p>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button mat-dialog-close>Close</button>
+        </mat-dialog-actions>
+    </ng-template>
+</div>
+
+<!-- Define ONE Filter Menu -->
+<mat-menu #filterMenu="matMenu" class="custom-filter-menu" (closed)="resetCurrentFilterMenuState()"
+    [overlapTrigger]="false">
+    <ng-template matMenuContent>
+        <div (click)="$event.stopPropagation()" style="padding: 10px;">
+            <!-- Check if a column is selected -->
+            <ng-container *ngIf="currentColumnKeyForMenu as columnKey">
+                <!-- Search Input Added -->
+                <mat-form-field appearance="outline" class="filter-search-field">
+                    <mat-label>Search Options</mat-label>
+                    <input matInput [(ngModel)]="currentFilterMenuState.searchText" placeholder="Type to search...">
+                </mat-form-field>
+
+                <!-- Select All Checkbox -->
+                <mat-checkbox [checked]="isAllTempSelected()" [indeterminate]="isSomeTempSelected()"
+                    (change)="toggleSelectAllTemp($event.checked)">
+                    Select All ({{ getUniqueColumnValues(columnKey).length }} items)
+                </mat-checkbox>
+                <hr>
+                <!-- Filter Options -->
+                <div style="max-height: 200px; overflow-y: auto;">
+                    <!-- Use filteredMenuOptions getter -->
+                    <mat-checkbox *ngFor="let value of filteredMenuOptions" [checked]="isTempSelected(value)"
+                        (change)="toggleTempSelection(value, $event.checked)">
+                        {{ value }}
+                    </mat-checkbox>
+                </div>
+                <hr>
+                <!-- Action Buttons -->
+                <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                    <button mat-button (click)="onFilterApplied(); filterMenu.closed.emit()">Apply</button>
+                    <button mat-button (click)="clearColumnFilter(); filterMenu.closed.emit()">Clear</button>
+                </div>
+            </ng-container>
+            <!-- Optional: Show message if no column is active (shouldn't happen with this logic) -->
+            <ng-container *ngIf="!currentColumnKeyForMenu">
+                Error: No filter column selected.
+            </ng-container>
+        </div>
+    </ng-template>
+</mat-menu>

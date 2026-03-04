@@ -1,0 +1,139 @@
+<div class="release-form-dialog">
+    <div class="dialog-header">
+        <h2 mat-dialog-title>
+            <mat-icon>{{ isEdit ? 'edit' : 'add_circle' }}</mat-icon>
+            {{ isEdit ? 'Edit Release' : 'Create New Release' }}
+        </h2>
+        <button mat-icon-button (click)="onCancel()" class="close-btn">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <mat-dialog-content>
+        <form [formGroup]="releaseForm" class="release-form">
+            <!-- Basic Info Section -->
+            <div class="section">
+                <div class="section-header">
+                    <mat-icon>info</mat-icon>
+                    <h3>Release Information</h3>
+                </div>
+
+                <div class="form-row">
+                    <mat-form-field appearance="outline" class="field-version">
+                        <mat-label>Version</mat-label>
+                        <input matInput formControlName="version" placeholder="1.0.0">
+                        <mat-hint>Format: X.Y.Z</mat-hint>
+                        <mat-error *ngIf="releaseForm.get('version')?.hasError('pattern')">
+                            Invalid version format
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="field-date">
+                        <mat-label>Release Date</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="releaseDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <mat-form-field appearance="outline" class="field-full">
+                    <mat-label>Release Title</mat-label>
+                    <input matInput formControlName="title" placeholder="e.g., January 2026 Update">
+                </mat-form-field>
+            </div>
+
+            <!-- Release Items Section -->
+            <div class="section">
+                <div class="section-header">
+                    <mat-icon>list_alt</mat-icon>
+                    <h3>Release Items</h3>
+                    <button mat-stroked-button color="primary" type="button" (click)="addItem()">
+                        <mat-icon>add</mat-icon> Add Item
+                    </button>
+                </div>
+
+                <div formArrayName="releaseItems" class="items-container">
+                    <div *ngFor="let item of releaseItems.controls; let i = index" [formGroupName]="i"
+                        class="item-card">
+
+                        <div class="item-header">
+                            <mat-form-field appearance="outline" class="field-type">
+                                <mat-label>Type</mat-label>
+                                <mat-select formControlName="type">
+                                    <mat-option *ngFor="let type of releaseTypes" [value]="type.value">
+                                        {{ type.icon }} {{ type.label }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="field-item-title">
+                                <mat-label>Title</mat-label>
+                                <input matInput formControlName="title" placeholder="What was done">
+                            </mat-form-field>
+
+                            <button mat-icon-button color="warn" type="button" (click)="removeItem(i)"
+                                *ngIf="releaseItems.length > 1" matTooltip="Remove Item">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </div>
+
+                        <mat-form-field appearance="outline" class="field-full">
+                            <mat-label>Description</mat-label>
+                            <textarea matInput formControlName="description" rows="2"
+                                placeholder="Optional description"></textarea>
+                        </mat-form-field>
+
+                        <!-- Steps -->
+                        <div class="steps-section">
+                            <div class="steps-header">
+                                <span class="steps-label">
+                                    <mat-icon>format_list_numbered</mat-icon>
+                                    Demo Steps ({{ getSteps(i).length }})
+                                </span>
+                                <button mat-stroked-button type="button" (click)="addStep(i)">
+                                    <mat-icon>add</mat-icon> Add Step
+                                </button>
+                            </div>
+
+                            <div formArrayName="steps" class="steps-container">
+                                <div *ngFor="let step of getSteps(i).controls; let j = index" [formGroupName]="j"
+                                    class="step-row">
+                                    <span class="step-number">{{ j + 1 }}</span>
+
+                                    <mat-form-field appearance="outline" class="field-explanation">
+                                        <mat-label>Explanation</mat-label>
+                                        <input matInput formControlName="explanation" placeholder="Describe this step">
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="field-screenshot">
+                                        <mat-label>Screenshot URL</mat-label>
+                                        <input matInput formControlName="screenshotUrl" placeholder="Optional">
+                                        <mat-icon matSuffix>image</mat-icon>
+                                    </mat-form-field>
+
+                                    <button mat-icon-button color="warn" type="button" (click)="removeStep(i, j)"
+                                        matTooltip="Remove Step">
+                                        <mat-icon>remove_circle</mat-icon>
+                                    </button>
+                                </div>
+
+                                <div *ngIf="getSteps(i).length === 0" class="no-steps">
+                                    <mat-icon>lightbulb</mat-icon>
+                                    <span>Add steps to create a demo walkthrough with optional screenshots</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button type="button" (click)="onCancel()">Cancel</button>
+        <button mat-raised-button color="primary" [disabled]="isSubmitting || releaseForm.invalid" (click)="onSubmit()">
+            <mat-icon>{{ isEdit ? 'save' : 'add' }}</mat-icon>
+            {{ isEdit ? 'Update Release' : 'Create Release' }}
+        </button>
+    </mat-dialog-actions>
+</div>

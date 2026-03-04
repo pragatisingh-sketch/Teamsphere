@@ -1,0 +1,142 @@
+#myDiagramDiv {
+  border: 1px solid #ddd;
+  background-color: #f8f8f8;
+  height: 550px;
+  width: 100%;
+}
+
+/* Node Style: Business Card */
+.node-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  padding: 10px;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.node-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Profile Picture */
+.node-card img {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border: 3px solid #0078d4;
+  margin-bottom: 10px;
+}
+
+/* Text Styles */
+.node-card h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0078d4;
+}
+
+.node-card p {
+  margin: 2px 0;
+  font-size: 13px;
+  color: #555;
+}
+
+/* Layout and Flexbox */
+.button-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px; /* Spacing between buttons and other content */
+}
+
+/* Custom Styling for Buttons */
+.action-button {
+  margin-right: 10px;
+}
+
+/* Styling for the Icon */
+mat-icon {
+  font-size: 24px;
+  vertical-align: middle; /* Ensure the icon is aligned with the text */
+  color: #0b0b0b; /* Accent color for the icon */
+}
+
+.unclickable-info-icon {
+  pointer-events: none; /* Disables any interactions */
+}
+
+/* Info Text Styling */
+.info-text {
+  font-size: 14px;
+  color: #555;
+  vertical-align: middle;
+  display: inline-block;
+  margin-left: -20px; /* Reduced margin for closer alignment */
+
+}
+
+/* Angular Material Colors (if needed, here we define custom colors) */
+
+/* Custom Colors */
+.mat-raised-button.mat-primary {
+  background-color: #2196F3; /* Blue for primary button */
+  color: white;
+}
+
+.mat-raised-button.mat-accent {
+  background-color: #FF4081; /* Pink for accent button */
+  color: white;
+}
+
+.mat-icon-button.mat-warn {
+  background-color: #F44336; /* Red for warning button */
+  color: white;
+  border-radius: 50%; /* Optional: Makes the icon button round */
+}
+
+/* Hover effects */
+.mat-raised-button:hover {
+  background-color: #1976D2; /* Darker blue for hover on primary */
+}
+
+.mat-raised-button.mat-accent:hover {
+  background-color: #F50057; /* Darker pink for hover on accent */
+}
+
+.mat-icon-button.mat-warn:hover {
+  background-color: #D32F2F; /* Darker red for hover on warn */
+}
+
+/* Zoom to Fit Button */
+.action-button.zoom-to-fit-button {
+  background-color: #fff !important; /* Light blue */
+  color: #005cbf !important; /* Dark blue text */
+  border: 2px solid #005cbf !important; /* Black border */
+}
+
+.action-button.zoom-to-fit-button:hover {
+  background-color: #005cbf !important; /* Dark blue */
+  color: #fff !important; /* White text */
+  border: 2px solid #005cbf !important; /* Black border */
+}
+
+/* Center on Root Button */
+.action-button.center-root-button {
+  background-color: #fff !important; /* Light purple */
+  color: #6a1b9a !important; /* Dark purple text */
+  border: 2px solid #6a1b9a !important; /* Black border */
+}
+
+.action-button.center-root-button:hover {
+  background-color: #6a1b9a !important; /* Dark purple */
+  color: #fff !important; /* White text */
+  border: 2px solid #6a1b9a !important; /* Black border */
+}

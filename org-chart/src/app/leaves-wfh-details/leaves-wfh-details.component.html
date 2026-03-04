@@ -1,0 +1,11 @@
+<div class="leaves-wfh-details-container">
+    <app-page-header *ngIf="dateRange" title="Leaves & Work From Home Details"
+        [subtitle]="formatDate(dateRange.start) + ' - ' + formatDate(dateRange.end)" [showBack]="true"
+        (backClick)="goBack()">
+    </app-page-header>
+
+    <div class="table-container">
+        <app-reusable-table [data]="leavesWFHData" [config]="tableConfig">
+        </app-reusable-table>
+    </div>
+</div>

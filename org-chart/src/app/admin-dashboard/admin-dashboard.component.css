@@ -1,0 +1,684 @@
+.admin-dashboard {
+    padding: 20px;
+  }
+
+  .admin-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+    padding-right: 120px; /* Add padding to ensure space for the gear icon */
+    box-sizing: border-box;
+  }
+
+  .admin-header .settings-button {
+    position: absolute;
+    right: 80px; /* Increased from 40px to ensure it's not trimmed */
+    top: 25px;
+    z-index: 10;
+  }
+
+  .actions {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .actions button {
+    margin-right: 20px; /* Adds space between the Add User button and search bar */
+  }
+
+  .mat-elevation-z8 {
+    width: 100%;
+  }
+
+  /* Add spacing between buttons */
+.action-button {
+  margin-right: 8px; /* Space between buttons */
+}
+
+/* Remove margin from the last button */
+.action-button:last-child {
+  margin-right: 0;
+}
+
+/* Style for the search field */
+.search-field {
+  width: 400px; /* Adjust width to make it longer */
+  height: 30px; /* Reduce height to make it shorter */
+  margin-left: 16px; /* Add spacing to separate it from the "Add User" button */
+  margin-bottom: 30px;
+}
+
+
+.search-field input {
+  height: 10px; /* Control the height of the input box inside the field */
+  padding: 4px 8px; /* Adjust padding for better fit */
+  font-size: 14px; /* Adjust font size for better readability */
+}
+
+
+
+/* General Button Hover Styles */
+.mat-raised-button:hover {
+  background-color: #9e9e9e !important; /* Darker grey */
+  color: #fff !important; /* White text for contrast */
+}
+
+/* Primary Button Hover */
+.mat-raised-button[color="primary"]:hover {
+  background-color: #9e9e9e !important; /* Darker grey */
+  color: #fff !important; /* White text for contrast */
+}
+
+/* Accent Button Hover */
+.mat-raised-button[color="accent"]:hover {
+  background-color: #9e9e9e !important; /* Darker grey */
+  color: #fff !important; /* White text for contrast */
+}
+
+/* Warn Button Hover */
+.mat-raised-button[color="warn"]:hover {
+  background-color: #d32f2f !important; /* Darker red */
+  color: #fff !important; /* White text for contrast */
+}
+
+/* Action Buttons Specific Hover Styles */
+.action-button.view-button:hover {
+  background-color: #444444 !important; /* Dark grey for 'View' */
+  color: #fff !important; /* White text for visibility */
+}
+
+.action-button.edit-button:hover {
+  background-color: #3b5998 !important; /* Darker blue for 'Edit' */
+  color: #fff !important; /* White text for visibility */
+}
+
+.action-button.delete-button:hover {
+  background-color: #b71c1c !important; /* Darker red for 'Delete' */
+  color: #fff !important; /* White text for warning actions */
+}
+
+.action-button.upload-button:hover {
+  background-color: #1cb536 !important; /* Darker blue for 'Edit' */
+  color: #fff !important; /* White text for visibility */
+}
+
+/* Search Field Icon Styling on Hover */
+.search-field mat-icon:hover {
+  color: #000 !important; /* Black icon for visibility */
+}
+
+/* Checkbox Column Hover */
+.mat-column-select:hover {
+  background-color: #dcdcdc !important; /* Slightly darker background */
+  color: #000 !important; /* Black text */
+}
+
+/* Action Button Specific Styles */
+.action-button {
+  margin-right: 8px; /* Space between action buttons */
+}
+
+.action-button:last-child {
+  margin-right: 0;
+}
+
+.action-button.view-button {
+  background-color: #fff !important; /* White for 'View' */
+  color: #000 !important; /* Black text for visibility */
+}
+
+.action-button.edit-button {
+  background-color: #fff !important; /* Slightly grey for 'Edit' */
+  color: #0423bcf7 !important; /* Black text for visibility */
+}
+
+.action-button.delete-button {
+  background-color: #fff !important; /* Light grey for 'Delete' */
+  color: #d32f2f !important; /* Red text for warning actions */
+}
+
+/* More Options Button */
+.action-button.more-options-button {
+  color: #555 !important;
+}
+
+.action-button.more-options-button:hover {
+  background-color: #f0f0f0 !important;
+}
+
+/* Menu Icons */
+.menu-icon.role-icon {
+  color: #673ab7 !important; /* Purple color for role change */
+}
+
+.menu-icon.password-icon {
+  color: #2196f3 !important; /* Blue color for password reset */
+}
+
+.menu-icon.logs-icon {
+  color: #ff9800 !important; /* Orange color for edit logs */
+}
+
+/* Admin Settings Menu Icons */
+::ng-deep .mat-menu-item mat-icon[fontIcon="backup"] {
+  color: #9c27b0 !important; /* Purple color for backup */
+}
+
+::ng-deep .mat-menu-item mat-icon[fontIcon="restore"] {
+  color: #f44336 !important; /* Red color for restore */
+}
+
+/* Style for menu items on hover */
+::ng-deep .mat-menu-item:hover:not([disabled]) {
+  background-color: #f5f5f5 !important;
+}
+
+
+/* Add Button */
+.action-button.add-button {
+  background-color: #fff !important; /* Light blue */
+  color: #005cbf !important; /* Dark blue text */
+}
+
+.action-button.add-button:hover {
+  background-color: #005cbf !important; /* Dark blue */
+  color: #fff !important; /* White text */
+}
+
+/* Upload Button */
+.action-button.upload-button {
+  background-color: #fff !important; /* Light green */
+  color: #228b22 !important; /* Dark green text */
+}
+
+.action-button.upload-button:hover {
+  background-color: #228b22 !important; /* Dark green */
+  color: #fff !important; /* White text */
+}
+
+/* Download Button */
+.action-button.download-button {
+  background-color: #fff !important; /* Light orange */
+  color: #e67e22 !important; /* Orange text */
+}
+
+.action-button.download-button:hover {
+  background-color: #e67e22 !important; /* Dark orange */
+  color: #fff !important; /* White text */
+}
+
+/* Backup Button */
+.action-button.backup-button {
+  background-color: #fff !important; /* Light purple */
+  color: #9c27b0 !important; /* Purple text */
+}
+
+.action-button.backup-button:hover {
+  background-color: #9c27b0 !important; /* Dark purple */
+  color: #fff !important; /* White text */
+}
+
+/* Import Button */
+.action-button.import-button {
+  background-color: #fff !important; /* Light red */
+  color: #f44336 !important; /* Red text */
+}
+
+.action-button.import-button:hover {
+  background-color: #f44336 !important; /* Dark red */
+  color: #fff !important; /* White text */
+}
+
+/* Settings Button */
+.action-button.settings-button {
+  background-color: #fff !important;
+  color: #134472 !important;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-right: 10px;
+}
+
+.action-button.settings-button:hover {
+  background-color: #134472 !important;
+  color: #fff !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Settings Button in Header */
+.admin-header .action-button.settings-button {
+  margin-right: 0;
+  background-color: #333 !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  color: #fff !important;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-header .action-button.settings-button:hover {
+  background-color: #134472 !important;
+  color: #fff !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.admin-header .action-button.settings-button mat-icon {
+  font-size: 24px;
+  height: 24px;
+  width: 24px;
+  line-height: 24px;
+}
+
+/* Export with Logs Button */
+.action-button.export-logs-button {
+  background-color: #ff9800 !important; /* Orange background */
+  color: #fff !important; /* White text */
+  font-weight: 500 !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+  padding: 0 16px !important;
+}
+
+.action-button.export-logs-button:hover {
+  background-color: #f57c00 !important; /* Darker orange on hover */
+  color: #fff !important; /* White text */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Info Button */
+.action-button.info-button {
+  background-color: #fff !important; /* Light orange */
+  color: #040404 !important; /* Orange text */
+}
+
+.action-button.info-button:hover {
+  background-color: #040404 !important; /* Dark orange */
+  color: #fff !important; /* White text */
+}
+
+/* Search Field Icon Styling */
+.search-field mat-icon {
+  color: #757575 !important; /* Dark grey for icon */
+}
+
+
+
+
+/* Force the checkbox column to have a minimal width */
+.mat-column-select {
+  width: 150px !important; /* Enforce small width */
+  max-width: 150px !important;
+  text-align: center; /* Center the checkbox */
+}
+
+.header-csv {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-csv h2 {
+  margin: 0; /* To remove default margins */
+}
+
+.mat-dialog-actions {
+  margin: 0;
+  padding: 0;
+}
+
+
+.column-toggle {
+  width: 250px;
+  margin-right: 20px;
+}
+
+.upload-container {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between button and icon */
+}
+
+.info-icon {
+  cursor: pointer;
+  color: #666;
+}
+.info-icon:hover {
+  color: #000;
+}
+
+/* Ensure proper spacing and alignment */
+.column-toggle {
+  width: auto;
+  margin-left: 12px;
+  margin-top: 20px;
+  height: 70px;
+}
+
+/* Hide default dropdown styling */
+.column-toggle .mat-form-field-wrapper {
+  padding: 0;
+  border: none;
+}
+
+/* Make it look like an icon button */
+.column-toggle .mat-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background-color: #f5f5f5;
+  transition: background-color 0.3s ease;
+}
+
+/* Change background on hover */
+.column-toggle .mat-select-trigger:hover {
+  background-color: rgba(25, 118, 210, 0.2);
+}
+
+/* Customize the icon */
+.column-toggle mat-icon {
+  font-size: 24px;
+  color: #1976d2;
+}
+
+/* Hide the default text content inside the trigger */
+.column-toggle .mat-select-value {
+  display: none;
+}
+
+/* Style the dropdown panel */
+.mat-select-panel {
+  min-width: 250px; /* Give the panel more space */
+  max-height: 400px; /* Allow more items to be visible */
+  overflow-y: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Improve option styling */
+.mat-option.mat-selected {
+  font-weight: 600;
+  background-color: rgba(25, 118, 210, 0.1);
+}
+
+.mat-option:hover {
+  background-color: rgba(25, 118, 210, 0.2);
+}
+
+.mat-option {
+  padding: 10px 16px;
+  border-radius: 4px;
+}
+
+
+.header-container {
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Vertically center items */
+  justify-content: space-between; /* Push text and button apart */
+  width: 100%; /* Ensure container takes full width */
+  gap: 8px; /* Add some space between text and button */
+}
+
+.header-text {
+  font-weight: bold;
+}
+
+.filter-input {
+  width: 100%; /* Full width for better alignment */
+  padding: 5px;
+  font-size: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+}
+
+mat-table {
+ width: 1200px;
+ max-width: 1200px;
+ margin-bottom: 1rem;
+ display: table;
+ border-collapse: collapse;
+ margin: 0px;
+}
+
+mat-row,
+mat-header-row {
+  display: table-row;
+}
+mat-cell,
+mat-header-cell {
+  word-wrap: initial;
+  display: table-cell;
+  padding: 0px 5px;
+  line-break: unset;
+  width: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+
+.duplicate-row {
+  background-color: #ffdddd;
+}
+
+/* Dropdown Container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Button Styling (No Border) */
+.dropdown-button {
+  background-color: #fffdfd00 !important;
+  color: #256fa0 !important;
+  font-weight: bold; /* Bold text */
+  padding: 10px 16px;
+  border: none; /* Removed border */
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between icon and text */
+}
+
+
+
+
+/* Button Hover Effect */
+.dropdown-button:hover {
+  background: #075b92 !important;
+  color: #fff !important;  /* Ensure text remains visible */
+}
+
+/* Active state when dropdown is open */
+.dropdown-button.active {
+  background: #075b92 !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(7, 91, 146, 0.3);
+}
+
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  width: 250px;
+  padding: 10px;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: dropdownFadeIn 0.3s forwards;
+  border: 1px solid #e0e0e0;
+}
+
+/* Animation */
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Search Box */
+.search-box {
+  width: 90%;
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.search-box:focus {
+  border-color: #007bff;
+}
+
+/* Select All Checkbox */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 6px 0;
+  user-select: none;
+}
+
+.checkbox-container input {
+  cursor: pointer;
+  accent-color: #007bff;
+  width: 16px;
+  height: 16px;
+}
+
+/* Column List */
+.column-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+/* Scrollbar Styling */
+.column-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.column-list::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 5px;
+}
+
+.column-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Column Item */
+.column-list label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  transition: background 0.2s;
+  border-radius: 5px;
+}
+
+.column-list label:hover {
+  background: #f5f5f5;
+}
+
+/* Center align both header and cell content */
+.profile-header {
+  text-align: center !important;
+}
+
+/* Ensures the profile picture is properly aligned */
+.profile-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ensure it takes the full height of the row */
+}
+
+/* Profile picture container */
+.profile-picture {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* Image styling */
+.image-wrapper img {
+  width: 40px;  /* Adjust size as needed */
+  height: 40px;
+  border-radius: 50%; /* Makes it circular */
+  object-fit: cover;
+  border: 1px solid #ddd; /* Light border */
+}
+
+/* Custom Filter Menu Styles */
+.custom-filter-menu {
+  min-width: 200px; /* Adjust as needed */
+}
+
+.custom-filter-menu mat-form-field {
+  width: 100%;
+  padding: 0 8px; /* Add padding around search */
+  box-sizing: border-box;
+}
+
+.custom-filter-menu mat-checkbox {
+  display: block; /* Each checkbox on its own line */
+  padding: 8px;
+}
+
+.custom-filter-menu hr {
+  margin: 8px 0;
+}
+
+.custom-filter-menu .mat-mdc-button {
+  min-width: 64px;
+}
+
+/* Style for the new toggle button */
+.toggle-filter-button mat-icon {
+  margin-right: 4px; /* Space between icon and text */
+}
+

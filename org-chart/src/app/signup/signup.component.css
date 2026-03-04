@@ -1,0 +1,126 @@
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .signup-container {
+    max-width: 400px;
+    width: 100%;
+    padding: 30px;
+    background: linear-gradient(to bottom, #ffffff, #f7f7f7);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    text-align: center;
+
+    /* Centering the container */
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+
+  /* .signup-container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 30px;
+    background: linear-gradient(to bottom, #ffffff, #f7f7f7);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin: 0 auto;
+  }
+   */
+  .logo {
+    width: 250px;
+    height: auto;
+    max-height: 100px;
+    object-fit: contain;
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    font-size: 26px;
+    color: #333;
+    margin-bottom: 8px;
+  }
+
+  .signup-subtitle {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 24px;
+  }
+
+  .custom-field {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .custom-field.mat-form-field {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  mat-label {
+    font-size: 14px;
+    color: #333;
+  }
+
+  input::placeholder {
+    color: #aaa;
+    font-size: 14px;
+  }
+
+  .action-button {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #111411;
+    color: #fff;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .action-button:hover {
+    background-color: #3f29e6;
+    transform: scale(1.05);
+  }
+
+  .footer-text {
+    font-size: 14px;
+    color: #999;
+    margin-top: 20px;
+  }
+
+  .link {
+    color: #117cbe;
+    text-decoration: none;
+  }
+
+  .link:hover {
+    text-decoration: underline;
+  }
+
+  @media screen and (max-width: 480px) {
+    .signup-container {
+      padding: 20px;
+      margin: 20px;
+    }
+
+    h2 {
+      font-size: 22px;
+    }
+
+    .signup-subtitle {
+      font-size: 14px;
+    }
+
+    .action-button {
+      padding: 12px;
+      font-size: 14px;
+    }
+  }

@@ -1,0 +1,253 @@
+<div class="reusable-table-container">
+  <!-- Table Header -->
+  <div class="table-header" *ngIf="config.title || config.subtitle">
+    <div class="table-title-section">
+      <h2 *ngIf="config.title" class="table-title">{{ config.title }}</h2>
+      <p *ngIf="config.subtitle" class="table-subtitle">{{ config.subtitle }}</p>
+    </div>
+  </div>
+
+  <!-- Actions and Controls -->
+  <div class="table-controls"
+    *ngIf="(config.actions?.length || 0) > 0 || (config.bulkActions?.length || 0) > 0 || config.showGlobalSearch || config.showColumnToggle || config.showColumnFilters || config.showExport">
+    <div class="left-controls">
+      <!-- Bulk Actions -->
+      <div class="bulk-actions" *ngIf="(config.bulkActions?.length || 0) > 0 && state.selectedRows.length > 0">
+        <span class="selection-info">{{ state.selectedRows.length }} selected</span>
+        <button *ngFor="let action of config.bulkActions" mat-button [color]="action.color || 'primary'"
+          [disabled]="action.disabled ? action.disabled(state.selectedRows) : false" (click)="onBulkAction(action)"
+          class="bulk-action-button">
+          <mat-icon *ngIf="action.icon" [color]="action.color">{{ action.icon }}</mat-icon>
+          {{ action.label }}
+        </button>
+      </div>
+    </div>
+
+    <div class="right-controls">
+      <!-- Global Search -->
+      <mat-form-field appearance="outline" class="search-field" *ngIf="config.showGlobalSearch">
+        <mat-label>Search</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput (keyup)="applyGlobalSearch($event)" placeholder="Search...">
+      </mat-form-field>
+
+      <!-- Column Filters Toggle -->
+      <button *ngIf="config.showColumnFilters" mat-button (click)="toggleColumnFilters()" class="toggle-filter-button">
+        <mat-icon>{{ showColumnFilters ? 'visibility_off' : 'filter_list' }}</mat-icon>
+        {{ showColumnFilters ? 'Hide' : 'Show' }} Column Filters
+      </button>
+
+      <!-- Column Toggle -->
+      <button *ngIf="config.showColumnToggle" mat-button [matMenuTriggerFor]="columnMenu" class="column-toggle-button">
+        <mat-icon>view_column</mat-icon>
+        Toggle Columns
+      </button>
+
+      <!-- Export Button with Dropdown -->
+      <button *ngIf="config.showExport || config.exportConfig?.enabled" mat-button [matMenuTriggerFor]="exportMenu"
+        class="export-button">
+        <mat-icon>download</mat-icon>
+        Export
+      </button>
+    </div>
+  </div>
+
+  <!-- Column Toggle Menu -->
+  <mat-menu #columnMenu="matMenu" class="column-menu">
+    <div class="column-menu-content" (click)="$event.stopPropagation()">
+      <h3 class="column-menu-title">Toggle Columns</h3>
+      <mat-divider></mat-divider>
+
+      <!-- Search input -->
+      <mat-form-field appearance="outline" class="column-search-field">
+        <mat-label>Search columns</mat-label>
+        <input matInput [(ngModel)]="columnSearchText" placeholder="Search columns">
+        <button *ngIf="columnSearchText" matSuffix mat-icon-button aria-label="Clear" (click)="columnSearchText=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <!-- Select All checkbox -->
+      <div class="select-all-container">
+        <mat-checkbox [checked]="allColumnsSelected" (change)="toggleAllColumns($event.checked)"
+          class="select-all-checkbox">
+          Select All
+        </mat-checkbox>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Column checkboxes -->
+      <div class="column-menu-items">
+        <mat-checkbox *ngFor="let column of getFilteredColumns()" [checked]="isColumnDisplayed(column)"
+          (change)="toggleColumn(column)"
+          [disabled]="column === 'select' || column === 'actions' || isColumnDisabled(column)"
+          class="column-toggle-checkbox">
+          {{ columnDisplayNames[column] }}
+        </mat-checkbox>
+      </div>
+    </div>
+  </mat-menu>
+
+  <!-- Export Menu -->
+  <mat-menu #exportMenu="matMenu">
+    <button *ngIf="supportsFormat('csv')" mat-menu-item (click)="exportCsv()">
+      <mat-icon>description</mat-icon>
+      <span>Export as CSV</span>
+    </button>
+    <button *ngIf="supportsFormat('excel')" mat-menu-item (click)="exportExcel()">
+      <mat-icon>table_chart</mat-icon>
+      <span>Export as Excel</span>
+    </button>
+  </mat-menu>
+
+  <!-- Table Container -->
+  <div class="table-responsive" [ngClass]="{ 'scrollable': dataSource.data.length > 0 }">
+    <mat-table [dataSource]="dataSource" matSort class="reusable-table" [ngClass]="config.customClasses">
+
+      <!-- Selection Column -->
+      <ng-container matColumnDef="select" *ngIf="config.showSelection">
+        <mat-header-cell *matHeaderCellDef class="select-column" [style.width]="'60px'" [style.minWidth]="'60px'"
+          [style.maxWidth]="'60px'">
+          <mat-checkbox (change)="$event ? toggleAllRows($event) : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && isSomeSelected()">
+          </mat-checkbox>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row" class="select-column" [style.width]="'60px'" [style.minWidth]="'60px'"
+          [style.maxWidth]="'60px'">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? toggleRow(row, $event) : null"
+            [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Data Columns -->
+      <ng-container *ngFor="let column of config.columns" [matColumnDef]="column.key">
+        <ng-container *ngIf="config && isColumnDisplayed(column.key)">
+
+          <mat-header-cell *matHeaderCellDef mat-sort-header #headerCell="matSortHeader"
+            [ngClass]="{ 'has-filter': showColumnFilters && column.filterable, 'resizable': column.resizable }"
+            [style.width]="state.columnWidths[column.key] ? state.columnWidths[column.key] + 'px' : column.width"
+            [style.minWidth]="column.minWidth || '50px'" [style.maxWidth]="column.maxWidth || 'none'">
+            <div class="header-container">
+              <span class="header-text">{{ column.label }}</span>
+              <button *ngIf="showColumnFilters && column.filterable" mat-icon-button #filterTrigger="matMenuTrigger"
+                [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu(column.key, filterTrigger)"
+                [color]="isFilterActive(column.key) ? 'accent' : ''" (click)="$event.stopPropagation()">
+                <mat-icon>filter_list</mat-icon>
+              </button>
+            </div>
+            <!-- Resize handle -->
+            <div *ngIf="column.resizable" class="resize-handle" (mousedown)="onResizeMouseDown($event, column.key)"
+              (click)="$event.stopPropagation()" matTooltip="Drag to resize column" matTooltipPosition="above">
+            </div>
+          </mat-header-cell>
+
+          <mat-cell *matCellDef="let row" [ngClass]="getRowClass(row)"
+            [style.width]="state.columnWidths[column.key] ? state.columnWidths[column.key] + 'px' : column.width"
+            [style.minWidth]="column.minWidth || '50px'" [style.maxWidth]="column.maxWidth || 'none'">
+            <ng-container *ngIf="!column.template">
+              <!-- Clickable cell (link style) -->
+              <a *ngIf="column.clickable" class="clickable-cell-link" (click)="onCellClick($event, column, row)"
+                [innerHTML]="getCellValue(row, column)">
+              </a>
+              <!-- Normal cell -->
+              <span *ngIf="!column.clickable" [innerHTML]="getCellValue(row, column)"></span>
+            </ng-container>
+            <ng-container *ngIf="column.template === 'badge'">
+              <span class="badge" [ngClass]="(getCellValue(row, column) || '').toLowerCase().replace(' ', '-')">
+                {{ getCellValue(row, column) }}
+              </span>
+            </ng-container>
+
+            <ng-container *ngIf="column.template && column.template !== 'badge'">
+              <!-- Fallback for other templates if needed or just show value -->
+              <span [innerHTML]="getCellValue(row, column)"></span>
+            </ng-container>
+          </mat-cell>
+        </ng-container>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions" *ngIf="config.actions && config.actions.length > 0">
+        <mat-header-cell *matHeaderCellDef class="actions-column" [style.width]="'150px'" [style.minWidth]="'150px'"
+          [style.maxWidth]="'150px'">
+          <div class="header-container">
+            <span class="header-text">Actions</span>
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row" class="actions-column" [style.width]="'150px'" [style.minWidth]="'150px'"
+          [style.maxWidth]="'150px'">
+          <div class="action-buttons">
+            <button *ngFor="let action of config.actions" mat-icon-button [color]="action.color || 'primary'"
+              [disabled]="action.disabled ? action.disabled(row) : false"
+              [hidden]="action.hidden ? action.hidden(row) : false" (click)="onAction(action, row)"
+              [matTooltip]="action.label">
+              <mat-icon>{{ action.icon || 'settings' }}</mat-icon>
+            </button>
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Row Definition -->
+      <mat-header-row *matHeaderRowDef="state.displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: state.displayedColumns" [ngClass]="getRowClass(row)"
+        [class.clickable-row]="config.rowClick" (click)="config.rowClick ? onRowClick(row) : null">
+      </mat-row>
+    </mat-table>
+
+    <!-- Empty State -->
+    <div *ngIf="dataSource.data.length === 0" class="empty-state">
+      <div class="empty-content">
+        <mat-icon *ngIf="config.emptyState?.icon" class="empty-icon">{{ config.emptyState?.icon }}</mat-icon>
+        <p class="empty-message">{{ config.emptyState?.message || 'No data available' }}</p>
+        <button *ngIf="config.emptyState?.action" mat-raised-button color="primary"
+          (click)="config.emptyState?.action?.handler()" class="empty-action">
+          {{ config.emptyState?.action?.label }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginator -->
+  <mat-paginator *ngIf="config.showPagination" [length]="dataSource.data.length" [pageIndex]="state.pageIndex"
+    [pageSize]="state.pageSize" [pageSizeOptions]="config.pageSizeOptions || [5, 10, 25, 50]"
+    (page)="onPageChange($event)" showFirstLastButtons>
+  </mat-paginator>
+</div>
+
+<!-- Column Filter Menu Template -->
+<mat-menu #filterMenu="matMenu" class="filter-menu">
+  <div class="filter-menu-content" (click)="$event.stopPropagation()">
+    <ng-container *ngIf="currentFilterMenuState.columnKey">
+      <!-- Search Input -->
+      <mat-form-field appearance="outline" class="filter-search">
+        <mat-label>Search</mat-label>
+        <input matInput [(ngModel)]="currentFilterMenuState.searchText" placeholder="Search options">
+      </mat-form-field>
+
+      <!-- Select All Checkbox -->
+      <mat-checkbox [checked]="isAllTempSelected()" [indeterminate]="isSomeTempSelected()"
+        (change)="toggleSelectAllTemp($event.checked)">
+        Select All ({{ getUniqueColumnValues(currentFilterMenuState.columnKey).length }} items)
+      </mat-checkbox>
+      <hr>
+
+      <!-- Filter Options -->
+      <div style="max-height: 200px; overflow-y: auto;">
+        <mat-checkbox *ngFor="let value of filteredMenuOptions" [checked]="isTempSelected(value)"
+          (change)="toggleTempSelection(value, $event.checked)">
+          {{ value }}
+        </mat-checkbox>
+      </div>
+      <hr>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+        <button mat-button (click)="onFilterApplied()">Apply</button>
+        <button mat-button (click)="clearColumnFilter()">Clear</button>
+      </div>
+    </ng-container>
+  </div>
+</mat-menu>

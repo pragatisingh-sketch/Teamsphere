@@ -1,0 +1,81 @@
+<div class="notification-dialog">
+    <div class="dialog-header">
+        <h2 mat-dialog-title>
+            <mat-icon>send</mat-icon>
+            Send Release Notification
+        </h2>
+        <button mat-icon-button (click)="onCancel()" class="close-btn">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <mat-dialog-content>
+        <!-- Release Info -->
+        <div class="release-info">
+            <div class="version-badge">v{{ release.version }}</div>
+            <div class="release-title">{{ release.title }}</div>
+        </div>
+
+        <!-- Recipients Section -->
+        <div class="section">
+            <div class="section-header">
+                <mat-icon>people</mat-icon>
+                <h3>Select Recipients</h3>
+            </div>
+
+            <div *ngIf="isLoading" class="loading">
+                <mat-spinner diameter="30"></mat-spinner>
+            </div>
+
+            <div *ngIf="!isLoading" class="recipients-list">
+                <div *ngFor="let recipient of recipients" class="recipient-item"
+                    [class.selected]="isSelected(recipient.email)">
+                    <mat-checkbox [checked]="isSelected(recipient.email)" (change)="toggleRecipient(recipient.email)">
+                    </mat-checkbox>
+                    <div class="recipient-info" (click)="toggleRecipient(recipient.email)">
+                        <span class="email">{{ recipient.email }}</span>
+                        <span *ngIf="recipient.name" class="name">{{ recipient.name }}</span>
+                    </div>
+                    <button mat-icon-button color="warn" (click)="deleteRecipient(recipient)"
+                        matTooltip="Remove recipient" class="delete-btn">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+
+                <div *ngIf="recipients.length === 0" class="empty-state">
+                    <mat-icon>inbox</mat-icon>
+                    <p>No saved recipients. Add email addresses below.</p>
+                </div>
+            </div>
+
+            <!-- Add New Email -->
+            <div class="add-email-section">
+                <mat-form-field appearance="outline" class="email-input">
+                    <mat-label>Add New Email</mat-label>
+                    <input matInput [(ngModel)]="newEmail" placeholder="email@example.com"
+                        (keyup.enter)="addNewEmail()">
+                    <mat-icon matSuffix>email</mat-icon>
+                </mat-form-field>
+                <button mat-stroked-button color="primary" (click)="addNewEmail()">
+                    <mat-icon>add</mat-icon>
+                    Add
+                </button>
+            </div>
+
+            <!-- Selected Count -->
+            <div class="selected-summary" *ngIf="selectedRecipients.length > 0">
+                <mat-icon>check_circle</mat-icon>
+                <span>{{ selectedRecipients.length }} recipient(s) selected</span>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button (click)="onCancel()">Cancel</button>
+        <button mat-raised-button color="primary" [disabled]="isSending || selectedRecipients.length === 0"
+            (click)="sendNotification()">
+            <mat-icon>send</mat-icon>
+            {{ isSending ? 'Sending...' : 'Send Notification' }}
+        </button>
+    </mat-dialog-actions>
+</div>

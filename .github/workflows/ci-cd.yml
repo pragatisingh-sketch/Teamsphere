@@ -1,0 +1,152 @@
+name: CI/CD - Build, Test, Deploy to GCE
+
+on:
+  push:
+    branches: 
+      - main      # Triggers production deployment
+      - testing   # Triggers testing deployment
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # --- 1. BUILD BACKEND (Spring Boot) ---
+      - name: Set up Java 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'corretto'
+          cache: 'maven'
+
+      - name: Build Spring Boot Backend
+        working-directory: ./backend/capsAllocation
+        run: mvn clean package -DskipTests
+
+      # --- 2. BUILD FRONTEND (Angular) ---
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.19.0'
+          cache: 'npm'
+          cache-dependency-path: ./org-chart/package-lock.json
+
+      - name: Install Dependencies & Build Frontend
+        working-directory: ./org-chart
+        run: |
+          npm ci
+          npm install -g @angular/cli@16
+          ng build --configuration production
+
+      # --- 3. TRANSFER FILES TO VM ---
+      - name: Copy Build Artifacts to VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.GCE_HOST_IP }}
+          username: ${{ secrets.GCE_USERNAME }}
+          key: ${{ secrets.GCE_SSH_KEY }}
+          source: "backend/capsAllocation/target/*.jar, org-chart/dist/"
+          target: "/home/${{ secrets.GCE_USERNAME }}/teamsphere-deploy"
+          strip_components: 1
+
+      # --- 4. SECURE DEPLOYMENT & PLACEHOLDERS ---
+      - name: Execute Deployment on VM
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          TESTING_DOMAIN: ${{ secrets.TESTING_DOMAIN }}       
+          PRODUCTION_DOMAIN: ${{ secrets.PRODUCTION_DOMAIN }}
+          TARGET_BRANCH: ${{ github.ref_name }}
+        with:
+          host: ${{ secrets.GCE_HOST_IP }}
+          username: ${{ secrets.GCE_USERNAME }}
+          key: ${{ secrets.GCE_SSH_KEY }}
+          envs: TESTING_DOMAIN, PRODUCTION_DOMAIN, TARGET_BRANCH
+          script: |
+            # Step A: Determine the correct placeholder based on the branch
+            if [ "$TARGET_BRANCH" == "main" ]; then
+              APP_DOMAIN=$PRODUCTION_DOMAIN
+            else
+              APP_DOMAIN=$TESTING_DOMAIN
+            fi
+            
+            echo "Deploying for domain: https://$APP_DOMAIN"
+            
+            # Step B: Restart the Spring Boot Backend
+            pkill -f 'java -jar' || true
+            sleep 5
+            
+            # Injecting the domain placeholder into the running app
+            nohup java -jar /home/${{ secrets.GCE_USERNAME }}/teamsphere-deploy/backend/capsAllocation/target/*.jar \
+              --app.base-url=https://$APP_DOMAIN \
+              --server.port=8080 > backend.log 2>&1 &
+            
+            # Step C: Update Frontend Files for Nginx
+            sudo rm -rf /var/www/teamsphere/*
+            sudo mkdir -p /var/www/teamsphere
+            sudo cp -r /home/${{ secrets.GCE_USERNAME }}/teamsphere-deploy/org-chart/dist/org-chart/* /var/www/teamsphere/
+             
+            # Step D: Restart Nginx to ensure it serves the fresh files safely
+            sudo systemctl restart nginx
+
+      # --- 5. SSL CERTIFICATE PROVISIONING (Certbot / Let's Encrypt) ---
+      - name: Provision or Renew SSL Certificate via Certbot
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          TESTING_DOMAIN: ${{ secrets.TESTING_DOMAIN }}
+          PRODUCTION_DOMAIN: ${{ secrets.PRODUCTION_DOMAIN }}
+          TARGET_BRANCH: ${{ github.ref_name }}
+          CERTBOT_EMAIL: ${{ secrets.CERTBOT_EMAIL }}
+        with:
+          host: ${{ secrets.GCE_HOST_IP }}
+          username: ${{ secrets.GCE_USERNAME }}
+          key: ${{ secrets.GCE_SSH_KEY }}
+          envs: TESTING_DOMAIN, PRODUCTION_DOMAIN, TARGET_BRANCH, CERTBOT_EMAIL
+          script: |
+            # Step A: Resolve the active domain for this branch
+            if [ "$TARGET_BRANCH" == "main" ]; then
+              APP_DOMAIN=$PRODUCTION_DOMAIN
+            else
+              APP_DOMAIN=$TESTING_DOMAIN
+            fi
+
+            echo "Checking SSL certificate for domain: $APP_DOMAIN"
+
+            # Step B: Install Certbot and the Nginx plugin if not already present
+            if ! command -v certbot &> /dev/null; then
+              echo "Certbot not found. Installing..."
+              sudo apt-get update -qq
+              sudo apt-get install -y certbot python3-certbot-nginx
+            else
+              echo "Certbot is already installed."
+            fi
+
+            # Step C: Check if a valid certificate already exists for this domain
+            # certbot certificates returns exit code 0 even if empty, so we grep for the domain
+            CERT_EXISTS=$(sudo certbot certificates 2>/dev/null | grep -c "Domains:.*$APP_DOMAIN" || true)
+
+            if [ "$CERT_EXISTS" -eq "0" ]; then
+              echo "No existing certificate found for $APP_DOMAIN. Issuing a new one..."
+              # --non-interactive runs Certbot without prompts
+              # --nginx automatically configures Nginx for HTTPS
+              # --redirect forces HTTP → HTTPS redirect
+              # --agree-tos accepts the Let's Encrypt Terms of Service
+              sudo certbot --nginx \
+                --non-interactive \
+                --agree-tos \
+                --redirect \
+                --email "$CERTBOT_EMAIL" \
+                -d "$APP_DOMAIN"
+              echo "SSL certificate issued successfully for $APP_DOMAIN."
+            else
+              echo "Certificate already exists for $APP_DOMAIN. Attempting renewal if due..."
+              # --quiet only outputs errors; safe to run on every deploy
+              sudo certbot renew --quiet --nginx
+              echo "Certificate renewal check complete."
+            fi
+
+            # Step D: Reload Nginx to apply any certificate updates
+            sudo systemctl reload nginx
+            echo "Nginx reloaded. HTTPS is active for https://$APP_DOMAIN"

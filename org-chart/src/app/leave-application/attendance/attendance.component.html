@@ -1,0 +1,575 @@
+<div class="attendance-container">
+  <!-- Today's Attendance Check-in Section -->
+  <div class="today-attendance" *ngIf="canCheckIn()&& showMyAttendance">
+    <!-- <h3 [ngClass]="{
+  'text-red-600': getAttendanceHeaderText().includes('Please checkout'),
+  'text-green-600': checkInStatus?.checkedOut,
+  'text-blue-600': checkInStatus?.checkedIn && !checkInStatus?.checkedOut
+}"> -->
+    <div *ngIf="getAttendanceHeaderText().isWarning" class="flash-badge">
+      <mat-icon>error</mat-icon>
+      {{ getAttendanceHeaderText().text }}
+    </div>
+
+    <!-- Normal Header -->
+    <h2 *ngIf="!getAttendanceHeaderText().isWarning">
+      {{ getAttendanceHeaderText().text }}
+    </h2>
+    <p>{{ currentDate }}</p>
+
+    <mat-card>
+      <mat-card-header>
+        <div class="header-content">
+          <mat-card-title class="greeting">
+            <span class="hello-static">Hello,</span>
+            <span class="name-animated">{{userInfo.name}}</span>
+          </mat-card-title>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Record your attendance</p>
+        <div class="check-actions-row">
+          <!-- Check In Section -->
+          <div class="check-action">
+            <button mat-raised-button color="primary" *ngIf="!isUserCheckedInToday; else checkedInBadge"
+              (click)="checkIn()" [disabled]="isCheckingIn">
+              <span *ngIf="!isCheckingIn">Check In</span>
+              <span *ngIf="isCheckingIn">Checking In...</span>
+            </button>
+
+            <ng-template #checkedInBadge>
+              <div class="checked-in-badge" [ngClass]="{
+                'on-time': !checkInStatus?.isLate,
+                'late': checkInStatus?.isLate
+              }">
+                <mat-icon class="success-icon">check_circle</mat-icon>
+                <span>{{ checkInStatusDisplay }}</span>
+                <span *ngIf="checkInStatus?.isCheckInOutsideOffice !== undefined" class="location-indicator" [ngClass]="{
+                  'location-inside': !checkInStatus?.isCheckInOutsideOffice,
+                  'location-outside': checkInStatus?.isCheckInOutsideOffice
+                }">
+                  <mat-icon class="location-arrow">arrow_back</mat-icon>
+                  {{ checkInStatus?.isCheckInOutsideOffice ? 'Outside' : 'Inside' }}
+                </span>
+              </div>
+            </ng-template>
+          </div>
+
+          <!-- Check Out Section -->
+          <div class="check-action">
+            <button mat-raised-button color="primary"
+              *ngIf="isUserCheckedInToday && !isUserCheckedOutToday; else checkedOutBadge" (click)="checkOut()"
+              [disabled]="isCheckingOut">
+              <span *ngIf="!isCheckingOut">Check Out</span>
+              <span *ngIf="isCheckingOut">Checking Out...</span>
+            </button>
+
+            <ng-template #checkedOutBadge>
+              <div class="checked-out-badge" *ngIf="isUserCheckedOutToday" [ngClass]="{
+                'on-time': isCheckoutOnTime(),
+                'early-late': !isCheckoutOnTime()
+              }">
+                <mat-icon class="success-icon">logout</mat-icon>
+                <span>{{ checkOutStatusDisplay }}</span>
+                <span *ngIf="checkInStatus?.isCheckOutOutsideOffice !== undefined" class="location-indicator" [ngClass]="{
+                  'location-inside': !checkInStatus?.isCheckOutOutsideOffice,
+                  'location-outside': checkInStatus?.isCheckOutOutsideOffice
+                }">
+                  <mat-icon class="location-arrow">arrow_forward</mat-icon>
+                  {{ checkInStatus?.isCheckOutOutsideOffice ? 'Outside' : 'Inside' }}
+                </span>
+              </div>
+            </ng-template>
+          </div>
+
+          <!-- Timer Display - Bottom Right -->
+          <div class="timer-action" *ngIf="isUserCheckedInToday">
+            <div class="timer-badge">
+              <mat-icon class="timer-icon">schedule</mat-icon>
+              <div class="timer-info">
+                <span class="timer-label">{{ isUserCheckedOutToday ? 'TOTAL TIME' : 'TIME ELAPSED' }}</span>
+                <span class="timer-value">{{ displayTimer }}</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </mat-card-content>
+
+    </mat-card>
+  </div>
+
+  <!-- Attendance Records Section -->
+  <div class="attendance-records">
+    <div class="actions-toolbar">
+      <div class="action-group">
+        <button mat-raised-button color="primary" class="action-button download-button" (click)="downloadCSV()"
+          matTooltip="Download attendance as CSV">
+          <mat-icon>download</mat-icon> Download CSV
+        </button>
+      </div>
+
+      <div class="action-group">
+        <button mat-raised-button color="primary" class="action-button toggle-columns-button"
+          (click)="showColumnToggle = !showColumnToggle" matTooltip="Toggle columns">
+          <mat-icon>view_column</mat-icon> Toggle Columns
+        </button>
+      </div>
+
+      <!-- Filter Columns (Button instead of Checkbox) -->
+      <div class="action-group">
+        <button mat-raised-button color="primary" class="action-button columns-button"
+          (click)="showColumnFilters = !showColumnFilters" [attr.aria-pressed]="showColumnFilters"
+          matTooltip="Show/hide column filters">
+          <mat-icon>filter_alt</mat-icon> Columns
+        </button>
+      </div>
+
+      <div class="action-group" *ngIf="isLeadOrManager()">
+        <button mat-raised-button color="primary" class="action-button self-button" (click)="viewSelfAttendance()"
+          matTooltip="View your own attendance">
+          <mat-icon>{{ showMyAttendance ? 'group' : 'person' }}</mat-icon>
+
+          {{ showMyAttendance ? 'Team' : 'Self' }}
+        </button>
+      </div>
+
+      <div class="toggle-container" *ngIf="canSeeToggle()">
+        <mat-slide-toggle color="primary" [(ngModel)]="showMyDirectReports" (change)="onTeamViewToggle($event)"
+          class="toggle-button">
+          Direct
+        </mat-slide-toggle>
+      </div>
+
+
+      <div class="action-group date-range-group">
+        <mat-form-field appearance="outline" class="date-range-field">
+          <mat-label>Date Range</mat-label>
+          <mat-date-range-input [formGroup]="dateRange" [rangePicker]="picker">
+            <input matStartDate formControlName="start" placeholder="Start date">
+            <input matEndDate formControlName="end" placeholder="End date">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="applyDateFilter()" class="apply-filter-btn">
+          <mat-icon>filter_list</mat-icon> Apply
+        </button>
+      </div>
+    </div>
+
+    <!-- Column Toggle Overlay -->
+    <div *ngIf="showColumnToggle" class="column-toggle-overlay" (click)="showColumnToggle = false"></div>
+
+    <!-- Column Toggle Dialog -->
+    <div *ngIf="showColumnToggle" class="column-toggle-dialog">
+      <div class="column-toggle-header">
+        <h3>Toggle Columns</h3>
+        <mat-form-field appearance="outline" class="column-search">
+          <mat-label>Search columns</mat-label>
+          <input matInput [(ngModel)]="columnSearchText" placeholder="Search columns...">
+        </mat-form-field>
+      </div>
+
+      <div class="column-toggle-content">
+        <mat-checkbox [checked]="allColumnsSelected" (change)="toggleAllColumns($event.checked)">
+          Select All ({{ getFilteredColumns().length }} columns)
+        </mat-checkbox>
+
+        <div class="column-list">
+          <mat-checkbox *ngFor="let column of getFilteredColumns()" [checked]="isColumnDisplayed(column)"
+            (change)="toggleColumn(column)">
+            {{ columnDisplayNames[column] }}
+          </mat-checkbox>
+
+          <!-- Always visible Actions column (disabled checkbox) -->
+          <mat-checkbox [checked]="true" [disabled]="true"
+            matTooltip="Actions column is always visible and cannot be hidden" matTooltipPosition="right">
+            {{ columnDisplayNames['actions'] }} (Always Visible)
+          </mat-checkbox>
+        </div>
+      </div>
+
+      <div class="column-toggle-footer">
+        <button mat-button (click)="showColumnToggle = false">Close</button>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <div class="table-responsive">
+        <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header sticky class="id-header"
+              (mousedown)="startResizing($event, 'id')">
+              <div class="header-container">
+                <span class="header-text">ID</span>
+                <button mat-icon-button #idTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                  [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('id', idTrigger)"
+                  [color]="isFilterActive('id') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let record" class="id-cell">{{ record.id }}</mat-cell>
+          </ng-container>
+
+          <!-- LDAP Column -->
+          <ng-container matColumnDef="ldap">
+            <mat-header-cell *matHeaderCellDef mat-sort-header sticky class="ldap-header"
+              (mousedown)="startResizing($event, 'ldap')">
+              <div class="header-container">
+                <span class="header-text">LDAP</span>
+                <button mat-icon-button #ldapTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                  [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('ldap', ldapTrigger)"
+                  [color]="isFilterActive('ldap') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let record" class="ldap-cell">{{ record.ldap }}</mat-cell>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="name-header"
+              (mousedown)="startResizing($event, 'name')">
+              <div class="header-container">
+                <span class="header-text">Name</span>
+                <button mat-icon-button #nameTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                  [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('name', nameTrigger)"
+                  [color]="isFilterActive('name') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let record" class="name-cell">{{ record.name }}</mat-cell>
+          </ng-container>
+
+          <!-- Team Column -->
+          <ng-container matColumnDef="team">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="team-header"
+              (mousedown)="startResizing($event, 'team')">
+              <div class="header-container">
+                <span class="header-text">Team</span>
+                <button mat-icon-button #checkInTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                  [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('team', checkInTrigger)"
+                  [color]="isFilterActive('team') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let record" class="team-cell">{{ record.team }}</mat-cell>
+          </ng-container>
+
+          <!-- Date Column -->
+          <ng-container matColumnDef="date">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="date-header"
+              (mousedown)="startResizing($event, 'date')">
+              <div class="header-container">
+                <span class="header-text">Date</span>
+                <button mat-icon-button #dateTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                  [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('date', dateTrigger)"
+                  [color]="isFilterActive('date') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let record" class="date-cell">{{ record.date }}</mat-cell>
+          </ng-container>
+
+          <!-- Check-In Date Column -->
+          <ng-container matColumnDef="checkInDate">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="checkInDate-header"
+              (mousedown)="startResizing($event, 'checkInDate')">
+              <div class="header-container">
+                <span class="header-text">Check-In Date</span>
+                <button mat-icon-button #checkInDateTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                  [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('checkInDate', checkInDateTrigger)"
+                  [color]="isFilterActive('checkInDate') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let record" class="checkInDate-cell">{{ record.checkInDate }}</mat-cell>
+          </ng-container>
+
+          <!-- Check-Out Date Column -->
+          <ng-container matColumnDef="checkOutDate">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="checkOutDate-header"
+              (mousedown)="startResizing($event, 'checkOutDate')">
+              <div class="header-container">
+                <span class="header-text">Check-Out Date</span>
+                <button mat-icon-button #checkOutDateTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                  [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('checkOutDate', checkOutDateTrigger)"
+                  [color]="isFilterActive('checkOutDate') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let record" class="checkOutDate-cell">{{ record.checkOutDate }}</mat-cell>
+          </ng-container>
+
+          <!-- Check-In Column -->
+          <ng-container matColumnDef="checkIn">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="checkIn-header"
+              (mousedown)="startResizing($event, 'checkIn')">
+              <div class="header-container">
+                <span class="header-text">Check-In Time</span>
+                <button mat-icon-button #checkInTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                  [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('checkIn', checkInTrigger)"
+                  [color]="isFilterActive('checkIn') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let record" class="checkIn-cell">{{ record.checkIn }}</mat-cell>
+          </ng-container>
+
+          <!-- Check-Out Column -->
+          <ng-container matColumnDef="checkOut">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="checkOut-header"
+              (mousedown)="startResizing($event, 'checkOut')">
+              <div class="header-container">
+                <span class="header-text">Check-Out Time</span>
+                <button mat-icon-button #checkOutTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                  [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('checkOut', checkOutTrigger)"
+                  [color]="isFilterActive('checkOut') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let record" class="checkOut-cell">{{ record.checkOut }}</mat-cell>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>
+              <div class="header-container">
+                <span class="header-text">Status</span>
+                <button mat-icon-button #statusTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                  [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('status', statusTrigger)"
+                  [color]="isFilterActive('status') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let record">
+              <div class="status-capsules-container">
+                <!-- Loop through each status in the statusArray -->
+                <span *ngFor="let statusItem of record.statusArray" class="status-capsule" [ngClass]="{
+    'status-on-time':
+      statusItem?.toUpperCase().includes('ONTIME') ||
+      statusItem?.includes('On-Time CheckIn') ||
+      statusItem?.includes('On-Time Checkout') ||
+      statusItem?.includes('Early-CheckIn'),
+
+    'status-late':
+      !(
+        statusItem?.toUpperCase().includes('ONTIME') ||
+        statusItem?.includes('On-Time CheckIn') ||
+        statusItem?.includes('On-Time Checkout') ||
+        statusItem?.includes('Early-CheckIn')
+      )
+  }" [title]="statusItem">
+                  {{ statusItem }}
+                </span>
+
+
+                <!-- Fallback if no statusArray but status exists -->
+                <span *ngIf="!record.statusArray || record.statusArray.length === 0"
+                  class="status-capsule status-on-time">
+                  On Time
+                </span>
+              </div>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Reason Column -->
+          <ng-container matColumnDef="reason">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="reason-header"
+              (mousedown)="startResizing($event, 'reason')">
+              <div class="header-container">
+                <span class="header-text">Check-In Reason</span>
+                <button mat-icon-button #reasonTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                  [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('reason', reasonTrigger)"
+                  [color]="isFilterActive('reason') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let record" class="reason-cell">{{ record.reason }}</mat-cell>
+          </ng-container>
+
+          <!-- Checkout Reason Column -->
+          <ng-container matColumnDef="checkoutReason">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="checkoutReason-header"
+              (mousedown)="startResizing($event, 'checkoutReason')">
+              <div class="header-container">
+                <span class="header-text">Check-Out Reason</span>
+                <button mat-icon-button #checkoutReasonTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                  [matMenuTriggerFor]="filterMenu"
+                  (menuOpened)="openFilterMenu('checkoutReason', checkoutReasonTrigger)"
+                  [color]="isFilterActive('checkoutReason') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let record" class="checkoutReason-cell">{{ record.checkoutReason }}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="comment">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="comment-header"
+              (mousedown)="startResizing($event, 'comment')">
+              <div class="header-container">
+                <span class="header-text">Check-In Notes</span>
+                <button mat-icon-button #reasonTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                  [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('comment', reasonTrigger)"
+                  [color]="isFilterActive('comment') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let record" class="comment-cell">{{ record.comment }}</mat-cell>
+          </ng-container>
+
+          <!-- Location Column -->
+          <ng-container matColumnDef="isOutsideOffice">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="isOutsideOffice-header"
+              (mousedown)="startResizing($event, 'isOutsideOffice')">
+              <div class="header-container">
+                <span class="header-text">Location</span>
+                <button mat-icon-button #locationTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                  [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('isOutsideOffice', locationTrigger)"
+                  [color]="isFilterActive('isOutsideOffice') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let record" class="isOutsideOffice-cell">
+              <div class="location-badges-row">
+                <!-- Check-in location badge -->
+                <span class="location-badge" [ngClass]="{
+                  'location-inside': !record.isOutsideOffice,
+                  'location-outside': record.isOutsideOffice
+                }">
+                  <mat-icon class="location-icon-small">arrow_back</mat-icon>
+                  {{ record.isOutsideOffice ? 'Outside' : 'Inside' }}
+                </span>
+
+                <!-- Check-out location badge (only if checked out) -->
+                <span *ngIf="record.checkOut && record.checkOut !== '-'" class="location-badge" [ngClass]="{
+                  'location-inside': !record.isCheckOutOutsideOffice,
+                  'location-outside': record.isCheckOutOutsideOffice
+                }">
+                  <mat-icon class="location-icon-small">arrow_forward</mat-icon>
+                  {{ record.isCheckOutOutsideOffice ? 'Outside' : 'Inside' }}
+                </span>
+              </div>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Defaulter Column -->
+          <ng-container matColumnDef="isDefaulter">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="isDefaulter-header"
+              (mousedown)="startResizing($event, 'isDefaulter')">
+              <div class="header-container">
+                <span class="header-text">Compliance</span>
+                <button mat-icon-button #defaulterTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+                  [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('isDefaulter', defaulterTrigger)"
+                  [color]="isFilterActive('isDefaulter') ? 'accent' : ''" (click)="$event.stopPropagation()">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let record" class="isDefaulter-cell">
+              <span class="badge" [ngClass]="{
+            'badge-no': !record.isDefaulter,
+            'badge-yes': record.isDefaulter
+          }">
+                {{ record.isDefaulter ? 'No' : 'Yes' }}
+              </span>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Actions Column (Sticky) -->
+          <ng-container matColumnDef="actions" stickyEnd>
+            <mat-header-cell *matHeaderCellDef class="actions-header sticky-column">
+              <div class="header-container">
+                <span class="header-text">Actions</span>
+              </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let record" class="actions-cell sticky-column">
+              <!-- Actions for leads/managers viewing team records -->
+              <div class="action-buttons" *ngIf="canEditAttendance(record)">
+                <button mat-icon-button color="primary" (click)="openStatusEditDialog(record)" matTooltip="Edit Status"
+                  class="action-btn">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="accent" (click)="openComplianceEditDialog(record)"
+                  matTooltip="Edit Compliance" class="action-btn">
+                  <mat-icon>verified_user</mat-icon>
+                </button>
+                <button mat-icon-button (click)="viewAuditHistory(record)" matTooltip="View History" class="action-btn">
+                  <mat-icon>history</mat-icon>
+                </button>
+              </div>
+
+              <!-- Actions for users viewing their own records (only show history if record was modified) -->
+              <div class="action-buttons" *ngIf="!canEditAttendance(record) && hasAuditHistory(record)">
+                <button mat-icon-button (click)="viewAuditHistory(record)" matTooltip="View History" class="action-btn">
+                  <mat-icon>history</mat-icon>
+                </button>
+              </div>
+
+              <!-- No actions if user cannot edit and record has no history -->
+              <span *ngIf="!canEditAttendance(record) && !hasAuditHistory(record)" class="no-actions">-</span>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"
+            [ngClass]="{'modified-record': hasAuditHistory(row)}"></mat-row>
+        </mat-table>
+      </div>
+
+      <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25, 50]" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </div>
+</div>
+
+<!-- Filter Menu Template -->
+<mat-menu #filterMenu="matMenu" class="filter-menu">
+  <div class="filter-menu-content" (click)="$event.stopPropagation()">
+    <ng-container *ngIf="currentFilterMenuState.columnKey">
+      <!-- Search Input -->
+      <mat-form-field appearance="outline" class="filter-search">
+        <mat-label>Search</mat-label>
+        <input matInput [(ngModel)]="currentFilterMenuState.searchText" placeholder="Search options">
+      </mat-form-field>
+
+      <!-- Select All Checkbox -->
+      <mat-checkbox [checked]="isAllTempSelected()" [indeterminate]="isSomeTempSelected()"
+        (change)="toggleSelectAllTemp($event.checked)">
+        Select All ({{ getUniqueColumnValues(currentFilterMenuState.columnKey).length }} items)
+      </mat-checkbox>
+      <hr>
+
+      <!-- Filter Options -->
+      <div style="max-height: 200px; overflow-y: auto;">
+        <mat-checkbox *ngFor="let value of filteredMenuOptions" [checked]="isTempSelected(value)"
+          (change)="toggleTempSelection(value, $event.checked)">
+          {{ value }}
+        </mat-checkbox>
+      </div>
+      <hr>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+        <button mat-button (click)="onFilterApplied()">Apply</button>
+        <button mat-button (click)="clearColumnFilter()">Clear</button>
+      </div>
+    </ng-container>
+  </div>
+</mat-menu>

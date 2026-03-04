@@ -1,0 +1,17 @@
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a routerLink="/admin/extdashboard">
+        <mat-icon class="home-icon">home</mat-icon>
+      </a>
+    </li>
+    <li class="breadcrumb-item" *ngFor="let breadcrumb of breadcrumbs; let last = last" [class.active]="last">
+      <ng-container *ngIf="!last">
+        <a [routerLink]="breadcrumb.url">{{ breadcrumb.label }}</a>
+      </ng-container>
+      <ng-container *ngIf="last">
+        <span>{{ breadcrumb.label }}</span>
+      </ng-container>
+    </li>
+  </ol>
+</nav>

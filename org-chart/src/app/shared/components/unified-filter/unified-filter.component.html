@@ -1,0 +1,55 @@
+<div class="filter-container">
+    <!-- Active Filters Chips -->
+    <div class="active-filters-row" *ngIf="activeFilterCount > 0">
+        <div class="filter-header">
+            <span class="filter-count">{{ activeFilterCount }} filters applied</span>
+            <button mat-icon-button class="clear-all" (click)="clearAllFilters()" matTooltip="Clear all filters">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <mat-chip-grid #chipGrid aria-label="Active filters">
+            <mat-chip-row *ngFor="let category of objectKeys(activeFilters)" [removable]="true"
+                (removed)="removeFilter(category)">
+                <mat-icon matChipAvatar>{{ getCategoryIcon(category) }}</mat-icon>
+                {{ category }}: {{ activeFilters[category] }}
+                <button matChipRemove [attr.aria-label]="'remove ' + category">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </mat-chip-row>
+        </mat-chip-grid>
+    </div>
+
+    <!-- Main Filter Button -->
+    <button mat-stroked-button color="primary" [matMenuTriggerFor]="categoryMenu" class="filter-trigger-btn">
+        <mat-icon>filter_list</mat-icon>
+        Filters
+        <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+
+    <!-- Primary Category Menu -->
+    <mat-menu #categoryMenu="matMenu" class="category-menu">
+        <ng-container *ngFor="let cat of categories">
+            <button mat-menu-item [matMenuTriggerFor]="valueMenu" [disabled]="isCategoryDisabled(cat.key)"
+                (mouseenter)="onCategoryHover(cat.key)" (click)="onCategoryHover(cat.key)">
+                <mat-icon>{{ cat.icon }}</mat-icon>
+                <span>{{ cat.label }}</span>
+            </button>
+        </ng-container>
+    </mat-menu>
+
+    <!-- Secondary Value Menu (Dynamic) -->
+    <mat-menu #valueMenu="matMenu" class="value-menu">
+        <div class="search-container" (click)="$event.stopPropagation()">
+            <mat-icon>search</mat-icon>
+            <input [formControl]="searchControl" placeholder="Search..." autofocus>
+        </div>
+        <div class="value-list">
+            <button mat-menu-item *ngFor="let val of filteredValues" (click)="selectValue(val)">
+                {{ val }}
+            </button>
+            <div *ngIf="filteredValues.length === 0" class="no-results">
+                No results found
+            </div>
+        </div>
+    </mat-menu>
+</div>

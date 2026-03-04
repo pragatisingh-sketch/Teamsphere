@@ -1,0 +1,126 @@
+<div class="compliance-details-container">
+    <app-page-header *ngIf="dateRange" title="Overall Non-Compliance Details"
+        [subtitle]="formatDate(dateRange.start) + ' - ' + formatDate(dateRange.end)" [showBack]="true"
+        (backClick)="goBack()">
+    </app-page-header>
+
+    <!-- Top 3 Defaulters Section -->
+    <div class="top-defaulters-section">
+        <h3>Top 3 Defaulters</h3>
+        <div class="cards-grid">
+            <!-- Time Entry Card -->
+            <div class="defaulter-card">
+                <div class="card-header time-entry">
+                    <i class="material-icons">access_time</i>
+                    <span>Time Entry</span>
+                </div>
+                <div class="card-body">
+                    <div *ngFor="let defaulter of topTimeEntryDefaulters; let i = index" class="top-item">
+                        <span class="rank">{{i + 1}}</span>
+                        <div class="details">
+                            <span class="name">{{defaulter.employeeName}}</span>
+                            <span class="dept">{{defaulter.department}}</span>
+                        </div>
+                        <span class="count">{{defaulter.issueCount}} Issues</span>
+                    </div>
+                    <div *ngIf="topTimeEntryDefaulters.length === 0" class="no-data">No defaulters found</div>
+                </div>
+            </div>
+
+            <!-- Attendance Card -->
+            <div class="defaulter-card">
+                <div class="card-header attendance">
+                    <i class="material-icons">people</i>
+                    <span>Attendance</span>
+                </div>
+                <div class="card-body">
+                    <div *ngFor="let defaulter of topAttendanceDefaulters; let i = index" class="top-item">
+                        <span class="rank">{{i + 1}}</span>
+                        <div class="details">
+                            <span class="name">{{defaulter.employeeName}}</span>
+                            <span class="dept">{{defaulter.department}}</span>
+                        </div>
+                        <span class="count">{{defaulter.issueCount}} Issues</span>
+                    </div>
+                    <div *ngIf="topAttendanceDefaulters.length === 0" class="no-data">No defaulters found</div>
+                </div>
+            </div>
+
+            <!-- Leaves Card -->
+            <div class="defaulter-card">
+                <div class="card-header leaves">
+                    <i class="material-icons">calendar_today</i>
+                    <span>Leaves</span>
+                </div>
+                <div class="card-body">
+                    <div *ngFor="let defaulter of topLeavesDefaulters; let i = index" class="top-item">
+                        <span class="rank">{{i + 1}}</span>
+                        <div class="details">
+                            <span class="name">{{defaulter.employeeName}}</span>
+                            <span class="dept">{{defaulter.department}}</span>
+                        </div>
+                        <span class="count">{{defaulter.issueCount}} Issues</span>
+                    </div>
+                    <div *ngIf="topLeavesDefaulters.length === 0" class="no-data">No defaulters found</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-section">
+        <app-unified-filter [userRole]="userRole" (filterChange)="handleUnifiedFilterChange($event)">
+        </app-unified-filter>
+    </div>
+
+    <!-- Accordions Section -->
+    <div class="accordions-container">
+        <!-- Time Entry Accordion -->
+        <div class="accordion-item" [class.open]="isTimeEntryOpen">
+            <div class="accordion-header" (click)="toggleAccordion('time')">
+                <div class="header-content">
+                    <i class="material-icons">access_time</i>
+                    <span>Time Entry Compliance</span>
+                    <span class="badge">{{filteredTimeEntryDefaulters.length}}</span>
+                </div>
+                <i class="material-icons chevron">expand_more</i>
+            </div>
+            <div class="accordion-body" *ngIf="isTimeEntryOpen">
+                <app-reusable-table [data]="filteredTimeEntryDefaulters" [config]="timeEntryTableConfig"
+                    tableId="time-entry-compliance-table"></app-reusable-table>
+            </div>
+        </div>
+
+        <!-- Attendance Accordion -->
+        <div class="accordion-item" [class.open]="isAttendanceOpen">
+            <div class="accordion-header" (click)="toggleAccordion('attendance')">
+                <div class="header-content">
+                    <i class="material-icons">people</i>
+                    <span>Attendance Compliance</span>
+                    <span class="badge">{{filteredAttendanceDefaulters.length}}</span>
+                </div>
+                <i class="material-icons chevron">expand_more</i>
+            </div>
+            <div class="accordion-body" *ngIf="isAttendanceOpen">
+                <app-reusable-table [data]="filteredAttendanceDefaulters" [config]="attendanceTableConfig"
+                    tableId="attendance-compliance-table"></app-reusable-table>
+            </div>
+        </div>
+
+        <!-- Leaves Accordion -->
+        <div class="accordion-item" [class.open]="isLeavesOpen">
+            <div class="accordion-header" (click)="toggleAccordion('leaves')">
+                <div class="header-content">
+                    <i class="material-icons">calendar_today</i>
+                    <span>Leaves Compliance</span>
+                    <span class="badge">{{filteredLeavesDefaulters.length}}</span>
+                </div>
+                <i class="material-icons chevron">expand_more</i>
+            </div>
+            <div class="accordion-body" *ngIf="isLeavesOpen">
+                <app-reusable-table [data]="filteredLeavesDefaulters" [config]="leavesTableConfig"
+                    tableId="leaves-compliance-table"></app-reusable-table>
+            </div>
+        </div>
+    </div>
+</div>

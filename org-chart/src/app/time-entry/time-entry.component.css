@@ -1,0 +1,890 @@
+.time-entry-dashboard {
+  padding: 20px;
+}
+
+.actions {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.actions button {
+  margin-right: 10px;
+}
+
+.mat-elevation-z8 {
+  background: white;
+  border-radius: 4px;
+}
+
+/* Update button styling to match admin-dashboard */
+.action-button {
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Add Button specific styling */
+.action-button.add-button {
+  background-color: #fff !important;
+  color: #005cbf !important;
+  transition: all 0.3s ease;
+}
+
+.action-button.add-button:hover {
+  background-color: #005cbf !important;
+  color: #fff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 92, 191, 0.3);
+}
+
+.dropdown-icon {
+  margin-left: 4px;
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+.action-button.add-button[aria-expanded="true"] .dropdown-icon {
+  transform: rotate(180deg);
+}
+
+/* Add Entry Menu Styling */
+::ng-deep .add-entry-menu {
+  margin-top: 8px;
+}
+
+::ng-deep .add-entry-menu .mat-mdc-menu-panel {
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+::ng-deep .add-entry-menu .mat-mdc-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  min-height: 48px;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+::ng-deep .add-entry-menu .mat-mdc-menu-item:hover {
+  background: linear-gradient(90deg, rgba(102, 126, 234, 0.08) 0%, transparent 100%);
+  border-left-color: #667eea;
+  transform: translateX(2px);
+}
+
+::ng-deep .add-entry-menu .mat-mdc-menu-item mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+::ng-deep .add-entry-menu .mat-mdc-menu-item span {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+/* View Button styling */
+.action-button.view-button {
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+.action-button.view-button:hover {
+  background-color: #444444 !important;
+  color: #fff !important;
+}
+
+/* Edit Button styling */
+.action-button.edit-button {
+  background-color: #fff !important;
+  color: #0423bcf7 !important;
+}
+
+.action-button.edit-button:hover {
+  background-color: #3b5998 !important;
+  color: #fff !important;
+}
+
+/* Delete Button styling */
+.action-button.delete-button {
+  background-color: #fff !important;
+  color: #d32f2f !important;
+}
+
+.action-button.delete-button:hover {
+  background-color: #b71c1c !important;
+  color: #fff !important;
+}
+
+/* Toggle Filter Button Styling */
+.toggle-filter-button {
+  background-color: #673ab7 !important;
+  color: white !important;
+  height: 36px;
+  padding: 0 16px !important;
+  font-weight: 500;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.toggle-filter-button:hover {
+  background-color: #5e35b1 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(103, 58, 183, 0.3);
+}
+
+.toggle-filter-button mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+
+/* Style for the search field */
+.search-field {
+  width: 300px;
+}
+
+.search-field input {
+  height: 10px;
+  /* Control the height of the input box inside the field */
+  padding: 4px 8px;
+  /* Adjust padding for better fit */
+  font-size: 14px;
+  /* Adjust font size for better readability */
+}
+
+/* Date range container */
+.date-range-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-range-container .mat-form-field {
+  width: 240px;
+}
+
+.apply-filter-btn {
+  height: 36px;
+  margin-top: -8px;
+}
+
+/* General Button Hover Styles */
+.mat-raised-button:hover {
+  background-color: #9e9e9e !important;
+  /* Darker grey */
+  color: #fff !important;
+  /* White text for contrast */
+}
+
+/* Primary Button Hover */
+.mat-raised-button[color="primary"]:hover {
+  background-color: #9e9e9e !important;
+  /* Darker grey */
+  color: #fff !important;
+  /* White text for contrast */
+}
+
+/* Accent Button Hover */
+.mat-raised-button[color="accent"]:hover {
+  background-color: #9e9e9e !important;
+  /* Darker grey */
+  color: #fff !important;
+  /* White text for contrast */
+}
+
+/* Warn Button Hover */
+.mat-raised-button[color="warn"]:hover {
+  background-color: #d32f2f !important;
+  /* Darker red */
+  color: #fff !important;
+  /* White text for contrast */
+}
+
+/* Search Field Icon Styling on Hover */
+.search-field mat-icon:hover {
+  color: #000 !important;
+  /* Black icon for visibility */
+}
+
+/* Checkbox Column Hover */
+.mat-column-select:hover {
+  background-color: #dcdcdc !important;
+  /* Slightly darker background */
+  color: #000 !important;
+  /* Black text */
+}
+
+/* Search Field Icon Styling */
+.search-field mat-icon {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+/* Force the checkbox column to have a minimal width */
+.mat-column-select {
+  width: 50px !important;
+  /* Enforce small width */
+  max-width: 50px !important;
+  text-align: center;
+  /* Center the checkbox */
+}
+
+/* Table container */
+.table-container {
+  margin: 20px;
+  overflow-x: auto;
+}
+
+/* Table responsive container */
+.table-responsive {
+  margin: 20px;
+  overflow-x: auto;
+  width: calc(100% - 40px);
+  /* Account for margins */
+  position: relative;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Table scroll container */
+.table-scroll-container {
+  overflow-x: auto;
+  width: 100%;
+}
+
+/* Add a subtle horizontal scrollbar indicator */
+.table-responsive:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 50px;
+  height: 4px;
+  background: linear-gradient(to right, transparent, rgba(103, 58, 183, 0.3));
+  border-radius: 0 0 4px 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Show the scroll indicator when the table is scrollable */
+.table-responsive.scrollable:after {
+  opacity: 1;
+}
+
+.mat-mdc-table {
+  width: 100%;
+  min-width: 100%;
+  width: max-content;
+  /* Allow table to expand based on content */
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding-right: 16px;
+  /* Add padding to prevent action buttons from being cut off */
+}
+
+.mat-mdc-header-cell {
+  background-color: #f5f5f5;
+  color: rgba(0, 0, 0, 0.87);
+  font-weight: 500;
+  padding: 12px 16px !important;
+  font-size: 14px;
+}
+
+.mat-mdc-cell {
+  padding: 12px 16px !important;
+  font-size: 14px;
+}
+
+/* Column specific styles */
+.mat-column-select {
+  min-width: 60px;
+  max-width: 60px;
+  padding-left: 8px !important;
+}
+
+.mat-column-date {
+  min-width: 120px;
+}
+
+.mat-column-ldap {
+  min-width: 120px;
+}
+
+.mat-column-leadUsername {
+  min-width: 120px;
+}
+
+.mat-column-projectName {
+  min-width: 150px;
+}
+
+.mat-column-process {
+  min-width: 120px;
+}
+
+.mat-column-activity {
+  min-width: 150px;
+}
+
+.mat-column-timeInMins {
+  min-width: 100px;
+  text-align: right;
+}
+
+.mat-column-attendanceType {
+  min-width: 120px;
+}
+
+.mat-column-isOvertime {
+  min-width: 100px;
+  text-align: center;
+}
+
+.mat-column-comment {
+  min-width: 180px;
+  /* Handle long text with ellipsis */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+/* Show full text on hover */
+.mat-column-comment:hover {
+  white-space: normal;
+  overflow: visible;
+  z-index: 1;
+  position: relative;
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.mat-column-status {
+  min-width: 120px;
+}
+
+.mat-column-createdAt {
+  min-width: 180px;
+  white-space: nowrap;
+}
+
+.mat-column-updatedAt {
+  min-width: 180px;
+  white-space: nowrap;
+}
+
+.mat-column-actions {
+  min-width: 160px;
+  width: 160px;
+  text-align: center;
+}
+
+/* Filter section styles */
+.filters-section {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 20px;
+  background: white;
+  border-radius: 4px;
+  margin: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+}
+
+.date-range-container {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.status-filter {
+  min-width: 150px;
+}
+
+.search-field {
+  width: 300px;
+}
+
+/* Button styles */
+.action-buttons {
+  display: flex;
+  gap: 16px;
+  margin: 20px;
+}
+
+.apply-button {
+  background-color: #673ab7 !important;
+  color: white !important;
+  height: 36px;
+  padding: 0 16px !important;
+  font-weight: 500;
+  border-radius: 4px;
+}
+
+.apply-button:hover {
+  background-color: #5e35b1 !important;
+}
+
+/* Status chip styles */
+.status-chip {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+.status-pending {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.status-approved {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-rejected {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+/* Responsive adjustments */
+@media (max-width: 960px) {
+  .filters-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .date-range-container {
+    flex-direction: column;
+  }
+
+  .search-field {
+    width: 100%;
+  }
+
+  /* Responsive actions column */
+  .mat-column-actions {
+    min-width: 140px;
+    width: 140px;
+  }
+
+  .actions-cell {
+    gap: 2px;
+    min-width: 140px;
+  }
+
+  .action-btn {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    margin: 0 1px;
+  }
+
+  .action-btn mat-icon {
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+  }
+}
+
+/* Header container styling */
+.header-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.header-text {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+  margin-right: 8px;
+}
+
+.filter-input {
+  width: 100%;
+  font-size: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin-top: 4px;
+}
+
+/* Column filter styles */
+.filter-menu-content {
+  padding: 16px;
+  min-width: 250px;
+  max-width: 300px;
+}
+
+.filter-search {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.filter-menu-content hr {
+  margin: 8px 0;
+  border: none;
+  border-top: 1px solid #e0e0e0;
+}
+
+.filter-menu-content mat-checkbox {
+  display: block;
+  margin: 8px 0;
+}
+
+/* Status styling */
+.status-pending {
+  color: #ff9800;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.status-approved {
+  color: #4caf50;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.status-rejected {
+  color: #f44336;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.verified-icon {
+  font-size: 16px;
+  height: 16px;
+  width: 16px;
+}
+
+/* Overtime icon styling */
+.mat-column-isOvertime .mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  line-height: 18px;
+}
+
+.mat-column-isOvertime .mat-icon[color="accent"] {
+  color: #ff4081;
+}
+
+.mat-column-isOvertime .mat-icon[color="disabled"] {
+  color: #bdbdbd;
+}
+
+/* Row hover effect */
+.mat-row:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Checkbox styling */
+.mat-checkbox {
+  margin: 0 8px;
+}
+
+/* View comment button */
+.view-comment-btn {
+  margin-left: 4px;
+}
+
+/* Minutes cell styling */
+.minutes-cell {
+  text-align: right;
+  font-weight: 500;
+}
+
+/* Paginator styling */
+mat-paginator {
+  background-color: transparent;
+  border-top: 1px solid #e0e0e0;
+  margin-top: 16px;
+}
+
+/* Remove old rejection comment styles */
+.rejection-comment,
+.comment-text {
+  display: none;
+}
+
+/* Comment cell styling */
+.comment-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  cursor: pointer;
+}
+
+/* Show full text on hover */
+.comment-cell:hover {
+  white-space: normal;
+  overflow: visible;
+  z-index: 1;
+  position: relative;
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+/* Table header styling */
+.mat-header-cell {
+  background-color: #f5f5f5;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+/* Action buttons in cells */
+.mat-column-actions button {
+  margin: 0 4px;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  line-height: 32px;
+}
+
+/* Ensure action icons are properly sized */
+.mat-column-actions button mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  line-height: 18px;
+}
+
+/* Fix for action buttons container */
+.mat-column-actions .mat-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Actions cell styling */
+.actions-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 160px;
+  padding: 4px 8px;
+}
+
+/* General action button styling */
+.action-btn {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  border-radius: 50% !important;
+  transition: all 0.2s ease;
+  margin: 0 2px;
+}
+
+.action-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+  transform: scale(1.05);
+}
+
+/* Clone button styling */
+.action-btn[color="primary"]:hover {
+  background-color: rgba(103, 58, 183, 0.1) !important;
+}
+
+/* Copy to Week button styling */
+.action-btn[color="accent"]:hover {
+  background-color: rgba(255, 64, 129, 0.1) !important;
+}
+
+/* 3-dot menu button specific styling */
+.actions-cell button[matMenuTriggerFor] {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.actions-cell button[matMenuTriggerFor]:hover {
+  background-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Actions menu styling */
+.actions-menu {
+  min-width: 220px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.actions-menu .mat-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  font-size: 14px;
+  line-height: 1.4;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.actions-menu .mat-menu-item mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  margin-right: 0;
+  transition: transform 0.2s ease;
+}
+
+.actions-menu .mat-menu-item:hover mat-icon {
+  transform: scale(1.1);
+}
+
+/* Delete menu item styling */
+.delete-menu-item {
+  color: #f44336 !important;
+  background-color: rgba(244, 67, 54, 0.05) !important;
+  border-left-color: #f44336 !important;
+  font-weight: 500;
+}
+
+.delete-menu-item:hover {
+  background-color: rgba(244, 67, 54, 0.1) !important;
+  border-left-color: #d32f2f !important;
+  transform: translateX(2px);
+}
+
+.delete-menu-item mat-icon {
+  color: #f44336 !important;
+}
+
+.delete-menu-item:hover mat-icon {
+  color: #d32f2f !important;
+}
+
+/* Disabled menu item styling */
+.disabled-menu-item {
+  opacity: 0.6;
+  pointer-events: none;
+  color: rgba(0, 0, 0, 0.38) !important;
+}
+
+.disabled-menu-item mat-icon {
+  color: rgba(0, 0, 0, 0.38) !important;
+}
+
+/* Menu item hover effects */
+.actions-menu .mat-menu-item:not(.disabled-menu-item):not(.delete-menu-item):hover {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-left-color: #673ab7;
+  transform: translateX(2px);
+}
+
+.actions-menu .mat-menu-item:not(.disabled-menu-item):not(.delete-menu-item):hover mat-icon[color="primary"] {
+  color: #673ab7 !important;
+}
+
+.actions-menu .mat-menu-item:not(.disabled-menu-item):not(.delete-menu-item):hover mat-icon[color="accent"] {
+  color: #ff4081 !important;
+}
+
+/* Tooltip styling for menu items */
+.actions-menu .mat-menu-item[matTooltip] {
+  position: relative;
+}
+
+/* Column Toggle Button Styling */
+.column-toggle-button {
+  background-color: #5e35b1 !important;
+  color: white !important;
+  height: 36px;
+  padding: 0 16px !important;
+  font-weight: 500;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.column-toggle-button:hover {
+  background-color: #5e35b1 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(103, 58, 183, 0.3);
+}
+
+.column-toggle-button mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+
+/* Column Menu Styling */
+.column-menu {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.column-menu-content {
+  padding: 16px;
+  min-width: 280px;
+  max-width: 320px;
+}
+
+.column-menu-title {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.column-search-field {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.select-all-container {
+  margin-bottom: 8px;
+}
+
+.select-all-checkbox {
+  font-weight: 500;
+}
+
+.column-menu-items {
+  max-height: 250px;
+  overflow-y: auto;
+  margin-top: 8px;
+}
+
+.column-toggle-checkbox {
+  display: block;
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.column-toggle-checkbox.mat-mdc-checkbox-disabled {
+  opacity: 0.6;
+}
+
+/* Divider styling */
+.column-menu-content mat-divider {
+  margin: 12px 0;
+}

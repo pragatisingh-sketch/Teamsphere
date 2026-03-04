@@ -1,0 +1,174 @@
+<div class="form-container">
+  <h2>{{ isEditMode ? 'Edit Timesheet' : 'Add Timesheet' }}</h2>
+  <form #timesheetForm="ngForm" (ngSubmit)="onSubmit(timesheetForm)">
+    
+    <!-- First Row -->
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>LDAP</mat-label>
+        <input 
+          matInput 
+          [(ngModel)]="timesheet.ldap" 
+          name="ldap" 
+          [readonly]="isEditMode"
+          required />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Masked Org ID</mat-label>
+        <input 
+          matInput 
+          [(ngModel)]="timesheet.masked_orgid" 
+          name="masked_orgid" 
+          required />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Role</mat-label>
+        <mat-select [(ngModel)]="timesheet.role" name="role" required>
+          <mat-option *ngFor="let level of levels" [value]="level">{{ level }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Subrole</mat-label>
+        <input 
+          matInput 
+          [(ngModel)]="timesheet.subrole" 
+          name="subrole" 
+          required />
+      </mat-form-field>
+    </div>
+
+    <!-- Second Row -->
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>Date</mat-label>
+        <input 
+          matInput 
+          [matDatepicker]="datePicker" 
+          [(ngModel)]="timesheet.date" 
+          name="date" 
+          required />
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Process</mat-label>
+        <mat-select [(ngModel)]="timesheet.process" name="process" required>
+          <mat-option *ngFor="let process of processes" [value]="process">{{ process }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Billing Code</mat-label>
+        <input 
+          matInput 
+          [(ngModel)]="timesheet.billingCode" 
+          name="billingCode" 
+          required />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Activity</mat-label>
+        <input 
+          matInput 
+          [(ngModel)]="timesheet.activity" 
+          name="activity" 
+          required />
+      </mat-form-field>
+    </div>
+
+    <!-- Third Row -->
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="timesheet.status" name="status" required>
+          <mat-option value="Active">Active</mat-option>
+          <mat-option value="Inactive">Inactive</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Lead LDAP</mat-label>
+        <input 
+          matInput 
+          [(ngModel)]="timesheet.lead_ldap" 
+          name="lead_ldap" 
+          required />
+        <button mat-icon-button matSuffix [matTooltip]="'If the user directly reports to the manager, use the same LDAP in the Lead field.'" aria-label="Help">
+          <mat-icon>info</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Vendor</mat-label>
+        <input 
+          matInput 
+          [(ngModel)]="timesheet.vendor" 
+          name="vendor" 
+          required />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Minutes</mat-label>
+        <input 
+          matInput 
+          type="number" 
+          [(ngModel)]="timesheet.minutes" 
+          name="minutes" 
+          required />
+      </mat-form-field>
+    </div>
+
+    <!-- Fourth Row -->
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>Project</mat-label>
+        <input 
+          matInput 
+          [(ngModel)]="timesheet.project" 
+          name="project" 
+          required />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Team</mat-label>
+        <mat-select [(ngModel)]="timesheet.team" name="team" required>
+          <mat-option *ngFor="let team of teams" [value]="team">{{ team }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Comment</mat-label>
+        <textarea 
+          matInput 
+          [(ngModel)]="timesheet.comment" 
+          name="comment" 
+          rows="3">
+        </textarea>
+      </mat-form-field>
+    </div>
+
+    <!-- Buttons -->
+    <div class="buttons">
+      <button 
+        mat-raised-button 
+        color="primary" 
+        type="submit" 
+        [disabled]="!timesheetForm.valid"
+        class="action-button save-button">
+        {{ isEditMode ? 'Update' : 'Save' }}
+      </button>
+      <button 
+        mat-raised-button 
+        color="warn" 
+        type="button" 
+        (click)="cancel()"
+        class="action-button cancel-button">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

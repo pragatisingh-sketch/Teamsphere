@@ -1,0 +1,279 @@
+<div class="user-details">
+    <app-page-header
+    title="Employee Profile"
+    subtitle="View and edit employee information">
+  </app-page-header>
+
+  <!-- Profile Hero Section -->
+  <mat-card class="profile-hero">
+    <div class="hero-content">
+      <div class="profile-avatar">
+        <div class="avatar-container">
+          <img
+            *ngIf="user.profilePic && user.profilePic !== 'NA' && user.profilePic !== 'undefined'; else defaultAvatar"
+            [src]="'data:image/jpeg;base64,' + user.profilePic"
+            alt="{{ user.firstName }}'s Profile Picture"
+            class="avatar-image"
+          />
+          <ng-template #defaultAvatar>
+            <img
+              [src]="'https://ui-avatars.com/api/?name=' + user.firstName + '+' + user.lastName + '&background=4f46e5&color=ffffff&size=120'"
+              alt="{{ user.firstName }}'s Avatar"
+              class="avatar-image"
+            />
+          </ng-template>
+          <div class="status-indicator" [class.active]="user.status === 'Active'"></div>
+        </div>
+      </div>
+      <div class="profile-info">
+        <h2 class="user-name">{{ user.firstName }} {{ user.lastName }}</h2>
+        <div class="user-role">
+          <mat-icon class="role-icon">work</mat-icon>
+          <span>{{ user.newLevel || user.level }}</span>
+        </div>
+        <div class="user-team">
+          <mat-icon class="team-icon">group</mat-icon>
+          <span>{{ user.team }} - {{ user.process }}</span>
+        </div>
+        <div class="contact-info">
+          <div class="contact-item">
+            <mat-icon class="contact-icon">email</mat-icon>
+            <a [href]="'mailto:' + user.email" class="email-link">{{ user.email }}</a>
+          </div>
+          <div class="contact-item">
+            <mat-icon class="contact-icon">badge</mat-icon>
+            <span>{{ user.ldap }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- Information Cards Grid -->
+  <div class="info-grid">
+    <!-- General Information Card -->
+    <mat-card class="info-card">
+      <mat-card-header class="card-header">
+        <mat-icon class="section-icon">info</mat-icon>
+        <mat-card-title class="section-title">General Information</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="card-content">
+        <div class="info-grid-items">
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">schedule</mat-icon>
+              Start Date
+            </div>
+            <div class="info-value">{{ user.startDate || '-' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">language</mat-icon>
+              Language
+            </div>
+            <div class="info-value">{{ user.language || '-' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">location_on</mat-icon>
+              Location
+            </div>
+            <div class="info-value">{{ user.location || '-' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">access_time</mat-icon>
+              Shift
+            </div>
+            <div class="info-value">{{ user.shift || '-' }}</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Role & Hierarchy Card -->
+    <mat-card class="info-card">
+      <mat-card-header class="card-header">
+        <mat-icon class="section-icon">work_outline</mat-icon>
+        <mat-card-title class="section-title">Role & Hierarchy</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="card-content">
+        <div class="info-grid-items">
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">supervisor_account</mat-icon>
+              Manager
+            </div>
+            <div class="info-value">{{ user.programManager || '-' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">person</mat-icon>
+              Lead
+            </div>
+            <div class="info-value">{{ user.lead || '-' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">folder</mat-icon>
+              Project
+            </div>
+            <div class="info-value">{{ user.team || '-' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">business</mat-icon>
+              Vendor
+            </div>
+            <div class="info-value">{{ user.vendor || '-' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">trending_up</mat-icon>
+              Current Level
+            </div>
+            <div class="info-value">{{ user.level || '-' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">new_releases</mat-icon>
+              New Level
+            </div>
+            <div class="info-value">{{ user.newLevel || '-' }}</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Process & Status Card -->
+    <mat-card class="info-card">
+      <mat-card-header class="card-header">
+        <mat-icon class="section-icon">settings</mat-icon>
+        <mat-card-title class="section-title">Process & Status</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="card-content">
+        <div class="info-grid-items">
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">check_circle</mat-icon>
+              Status
+            </div>
+            <div class="info-value">
+              <span class="status-badge" [class.active]="user.status === 'Active'" [class.inactive]="user.status === 'Inactive'">
+                {{ user.status || '-' }}
+              </span>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">build</mat-icon>
+              Process
+            </div>
+            <div class="info-value">{{ user.process || '-' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">assignment</mat-icon>
+              PS&E Program
+            </div>
+            <div class="info-value">{{ user.pnseProgram || '-' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">comment</mat-icon>
+              Inactive Reason
+            </div>
+            <div class="info-value">{{ user.inactiveReason || '-' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">person_add</mat-icon>
+              Backfill LDAP
+            </div>
+            <div class="info-value">{{ user.backfillLdap || '-' }}</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Level Changes Card -->
+    <mat-card class="info-card" *ngIf="user.levelBeforeChange || user.levelAfterChange || user.roleChangeEffectiveDate">
+      <mat-card-header class="card-header">
+        <mat-icon class="section-icon">trending_up</mat-icon>
+        <mat-card-title class="section-title">Level Changes</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="card-content">
+        <div class="info-grid-items">
+          <div class="info-item" *ngIf="user.levelBeforeChange">
+            <div class="info-label">
+              <mat-icon class="field-icon">arrow_back</mat-icon>
+              Level Before Change
+            </div>
+            <div class="info-value">{{ user.levelBeforeChange }}</div>
+          </div>
+          <div class="info-item" *ngIf="user.levelAfterChange">
+            <div class="info-label">
+              <mat-icon class="field-icon">arrow_forward</mat-icon>
+              Level After Change
+            </div>
+            <div class="info-value">{{ user.levelAfterChange }}</div>
+          </div>
+          <div class="info-item" *ngIf="user.roleChangeEffectiveDate">
+            <div class="info-label">
+              <mat-icon class="field-icon">event</mat-icon>
+              Role Change Date
+            </div>
+            <div class="info-value">{{ user.roleChangeEffectiveDate }}</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Important Dates Card -->
+    <mat-card class="info-card">
+      <mat-card-header class="card-header">
+        <mat-icon class="section-icon">event_note</mat-icon>
+        <mat-card-title class="section-title">Important Dates</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="card-content">
+        <div class="info-grid-items">
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">play_arrow</mat-icon>
+              Billing Start Date
+            </div>
+            <div class="info-value">{{ user.billingStartDate || '-' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">stop</mat-icon>
+              Last Billing Date
+            </div>
+            <div class="info-value">{{ user.lastBillingDate || '-' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">timer</mat-icon>
+              Tenure Till Date
+            </div>
+            <div class="info-value">{{ user.tenureTillDate || '-' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">
+              <mat-icon class="field-icon">exit_to_app</mat-icon>
+              LWD/ML Start Date
+            </div>
+            <div class="info-value">{{ user.lwdMlStartDate || '-' }}</div>
+          </div>
+          <div class="info-item" *ngIf="user.resignationDate">
+            <div class="info-label">
+              <mat-icon class="field-icon">logout</mat-icon>
+              Resignation Date
+            </div>
+            <div class="info-value">{{ user.resignationDate }}</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

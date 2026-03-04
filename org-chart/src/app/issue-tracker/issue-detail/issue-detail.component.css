@@ -1,0 +1,151 @@
+.issue-detail-container {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.content-card {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    color: #333;
+}
+
+.description-text {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #444;
+    white-space: pre-wrap;
+}
+
+.divider {
+    height: 1px;
+    background: #eee;
+    margin: 24px 0;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 24px;
+}
+
+.detail-item .label {
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 4px;
+}
+
+.detail-item .value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* Badge Colors (Consolidated with List) */
+.badge.bug {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.badge.feature {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.badge.high {
+    color: #d32f2f;
+    background: #ffebee;
+}
+
+.badge.medium {
+    color: #f57c00;
+    background: #fff3e0;
+}
+
+.badge.low {
+    color: #388e3c;
+    background: #e8f5e9;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.loading-shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.05);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.comment-form {
+    margin-top: 16px;
+}
+
+.comment-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.comment-item {
+    padding: 16px;
+    border-bottom: 1px solid #eee;
+}
+
+.comment-item:last-child {
+    border-bottom: none;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.comment-header .author {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.comment-header .date {
+    color: #888;
+    font-size: 12px;
+}
+
+.comment-body {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #333;
+}
+
+.no-data {
+    color: #888;
+    font-style: italic;
+    padding: 16px;
+    text-align: center;
+}

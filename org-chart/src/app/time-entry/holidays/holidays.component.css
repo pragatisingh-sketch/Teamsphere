@@ -1,0 +1,138 @@
+.holidays-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-section {
+  margin-bottom: 24px;
+}
+
+.header-section h2 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-weight: 500;
+}
+
+.subtitle {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.upload-section {
+  margin-bottom: 24px;
+}
+
+.upload-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.file-name {
+  color: #666;
+  font-style: italic;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.csv-format-info {
+  background-color: #f5f5f5;
+  padding: 12px;
+  border-radius: 4px;
+  border-left: 4px solid #2196f3;
+}
+
+.csv-format-info p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #555;
+}
+
+.table-section {
+  margin-bottom: 24px;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 16px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.holidays-table {
+  width: 100%;
+  min-width: 800px;
+}
+
+.holidays-table th {
+  background-color: #fafafa;
+  font-weight: 600;
+  color: #333;
+}
+
+.holidays-table td {
+  padding: 12px 8px;
+}
+
+.holidays-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .holidays-container {
+    padding: 16px;
+  }
+  
+  .upload-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .upload-controls button {
+    width: 100%;
+  }
+  
+  .file-name {
+    max-width: none;
+    text-align: center;
+  }
+}
+
+/* Material Design enhancements */
+mat-card {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+mat-card-header {
+  padding-bottom: 16px;
+}
+
+mat-chip {
+  font-size: 12px;
+  min-height: 24px;
+}
+
+.mat-mdc-raised-button {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.mat-mdc-icon-button {
+  width: 36px;
+  height: 36px;
+}
+
+/* Loading spinner in button */
+.mat-mdc-raised-button mat-spinner {
+  margin-right: 8px;
+}

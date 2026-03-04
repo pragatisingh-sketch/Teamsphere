@@ -1,0 +1,24 @@
+<div class="page-header">
+  <div class="accent-bar"></div>
+  <div class="header-content">
+    <div class="title-container">
+      <div class="title-row">
+        <button mat-icon-button *ngIf="showBack" (click)="onBack()" class="back-button">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h1 class="page-title">{{ title }}</h1>
+      </div>
+      <p class="page-subtitle">{{ subtitle }}</p>
+    </div>
+
+    <div class="header-actions">
+      <ng-content select="[actions]"></ng-content>
+    </div>
+
+    <div class="header-decoration">
+      <div class="decoration-circle"></div>
+      <div class="decoration-circle"></div>
+      <div class="decoration-circle"></div>
+    </div>
+  </div>
+</div>

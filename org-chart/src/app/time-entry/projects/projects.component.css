@@ -1,0 +1,168 @@
+.projects-dashboard {
+  padding: 20px;
+}
+
+.actions {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+}
+
+.actions button {
+  margin-right: 10px;
+}
+
+.mat-elevation-z8 {
+  width: 100%;
+}
+
+/* Add spacing between buttons */
+.action-button {
+  margin-right: 8px; /* Space between buttons */
+}
+
+/* Remove margin from the last button */
+.action-button:last-child {
+  margin-right: 0;
+}
+
+/* Style for the search field */
+.search-field {
+  width: 400px; /* Adjust width to make it longer */
+  height: 30px; /* Reduce height to make it shorter */
+  margin-left: 16px; /* Add spacing to separate it from other elements */
+  margin-bottom: 30px;
+}
+
+.search-field input {
+  height: 10px; /* Control the height of the input box inside the field */
+  padding: 4px 8px; /* Adjust padding for better fit */
+  font-size: 14px; /* Adjust font size for better readability */
+}
+
+/* General Button Hover Styles */
+.mat-raised-button:hover {
+  background-color: #9e9e9e !important; /* Darker grey */
+  color: #fff !important; /* White text for contrast */
+}
+
+/* Primary Button Hover */
+.mat-raised-button[color="primary"]:hover {
+  background-color: #9e9e9e !important; /* Darker grey */
+  color: #fff !important; /* White text for contrast */
+}
+
+/* Add Button */
+.action-button.add-button {
+  background-color: #fff !important; /* Light blue */
+  color: #005cbf !important; /* Dark blue text */
+}
+
+.action-button.add-button:hover {
+  background-color: #005cbf !important; /* Dark blue */
+  color: #fff !important; /* White text */
+}
+
+/* Search Field Icon Styling */
+.search-field mat-icon {
+  color: #757575 !important; /* Dark grey for icon */
+}
+
+/* Table styles */
+.table-responsive {
+  overflow-x: auto;
+}
+
+/* Header container for filter inputs */
+.header-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-text {
+  margin-bottom: 8px;
+}
+
+.filter-input {
+  width: 90%;
+  font-size: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+/* Status styling */
+.status-active {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.status-completed {
+  color: #2196f3;
+  font-weight: 500;
+}
+
+.status-on-hold {
+  color: #ff9800;
+  font-weight: 500;
+}
+
+/* Cell styling */
+mat-cell {
+  padding: 8px 0;
+}
+
+/* Action buttons in cells */
+mat-cell button {
+  margin-right: 4px;
+}
+
+mat-cell button:last-child {
+  margin-right: 0;
+}
+
+/* Overtime Eligibility Chip Styles */
+.overtime-eligible {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.overtime-not-eligible {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+.overtime-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.overtime-yes {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.overtime-no {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.status-icon {
+  font-size: 14px;
+  height: 14px;
+  width: 14px;
+  margin-right: 4px;
+}
+
+.status-text {
+  line-height: 1;
+}

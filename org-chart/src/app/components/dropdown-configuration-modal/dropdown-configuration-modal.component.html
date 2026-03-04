@@ -1,0 +1,129 @@
+
+<div class="dropdown-config-modal">
+ <div class="modal-header">
+   <h2 mat-dialog-title>{{ data.title }} Configuration</h2>
+   <button mat-icon-button (click)="onClose()" class="close-button">
+     <mat-icon>close</mat-icon>
+   </button>
+ </div>
+
+
+ <mat-dialog-content class="modal-content">
+   <!-- Add/Edit Form -->
+   <div class="form-section">
+     <h3>{{ isEditMode ? 'Edit' : 'Add New' }} Value</h3>
+     <form [formGroup]="dropdownForm" (ngSubmit)="onSubmit()" class="dropdown-form">
+       <div class="form-row">
+         <mat-form-field appearance="outline" class="form-field">
+           <mat-label>Value</mat-label>
+           <input matInput formControlName="optionValue" placeholder="Enter option value" #optionValueInput>
+           <mat-error *ngIf="dropdownForm.get('optionValue')?.hasError('required')">
+              Value is required
+           </mat-error>
+           <mat-error *ngIf="dropdownForm.get('optionValue')?.hasError('maxlength')">
+              Value must not exceed 100 characters
+           </mat-error>
+         </mat-form-field>
+       </div>
+
+
+       <div class="form-row">
+         <mat-form-field appearance="outline" class="form-field">
+           <mat-label>Sort Order</mat-label>
+           <input matInput type="number" formControlName="sortOrder" placeholder="0">
+           <mat-error *ngIf="dropdownForm.get('sortOrder')?.hasError('min')">
+             Sort order must be 0 or greater
+           </mat-error>
+         </mat-form-field>
+
+
+         <div class="checkbox-field">
+           <mat-checkbox formControlName="isActive">Active</mat-checkbox>
+         </div>
+       </div>
+
+
+       <div class="form-actions">
+         <button mat-raised-button type="submit" color="primary" [disabled]="!dropdownForm.valid || isSubmitting">
+           {{ isSubmitting ? 'Processing...' : (isEditMode ? 'Update' : 'Add') }}
+         </button>
+         <button mat-button type="button" (click)="onCancel()" *ngIf="isEditMode">
+           Cancel
+         </button>
+       </div>
+     </form>
+   </div>
+
+
+   <!-- Options List -->
+   <div class="list-section">
+     <h3>Existing Values</h3>
+     <div class="table-container" *ngIf="!isLoading">
+       <table mat-table [dataSource]="dataSource" class="options-table">
+         <!-- Option Value Column -->
+         <ng-container matColumnDef="optionValue">
+           <th mat-header-cell *matHeaderCellDef>Option Value</th>
+           <td mat-cell *matCellDef="let element">{{ element.optionValue }}</td>
+         </ng-container>
+
+
+         <!-- Status Column -->
+         <ng-container matColumnDef="isActive">
+           <th mat-header-cell *matHeaderCellDef>Status</th>
+           <td mat-cell *matCellDef="let element">
+             <span [class]="getStatusClass(element.isActive)">
+               {{ getStatusText(element.isActive) }}
+             </span>
+           </td>
+         </ng-container>
+
+
+         <!-- Sort Order Column -->
+         <ng-container matColumnDef="sortOrder">
+           <th mat-header-cell *matHeaderCellDef>Order</th>
+           <td mat-cell *matCellDef="let element">{{ element.sortOrder }}</td>
+         </ng-container>
+
+
+         <!-- Actions Column -->
+         <ng-container matColumnDef="actions">
+           <th mat-header-cell *matHeaderCellDef>Actions</th>
+           <td mat-cell *matCellDef="let element">
+             <button mat-icon-button (click)="editItem(element)" matTooltip="Edit">
+               <mat-icon>edit</mat-icon>
+             </button>
+             <button mat-icon-button (click)="deleteItem(element)" matTooltip="Delete" class="delete-button">
+               <mat-icon>delete</mat-icon>
+             </button>
+           </td>
+         </ng-container>
+
+
+         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+       </table>
+
+
+       <div *ngIf="dataSource.data.length === 0" class="no-data">
+         <p>No values configured yet. Add your first value above.</p>
+       </div>
+     </div>
+
+
+     <div *ngIf="isLoading" class="loading-container">
+       <mat-spinner diameter="40"></mat-spinner>
+       <p>Loading values...</p>
+     </div>
+   </div>
+ </mat-dialog-content>
+
+
+ <mat-dialog-actions class="modal-actions">
+   <button mat-raised-button (click)="onClose()">Close</button>
+ </mat-dialog-actions>
+</div>
+
+
+
+
+

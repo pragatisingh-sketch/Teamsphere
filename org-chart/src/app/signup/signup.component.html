@@ -1,0 +1,74 @@
+<div class="signup-container">
+  <img src="assets/highspring-logo.png" alt="Highspring Logo" class="logo">
+    <h2>Create an Account</h2>
+    <p class="signup-subtitle">Sign up to get started with your dashboard</p>
+  
+    <form (ngSubmit)="onSignup()">
+      <mat-form-field class="custom-field">
+        <mat-label>Username</mat-label>
+        <input matInput [(ngModel)]="username" name="username" required placeholder="Enter your ldap here" autofocus />
+        <mat-icon matSuffix>person</mat-icon>
+      </mat-form-field>
+  
+      <!-- <mat-form-field class="custom-field">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [(ngModel)]="password"
+          name="password"
+          type="password"
+          required
+          placeholder="Enter your password"
+        />
+        <mat-icon matSuffix>lock</mat-icon>
+      </mat-form-field> -->
+      <mat-form-field class="custom-field">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [(ngModel)]="password"
+          name="password"
+          type="password"
+          required
+          placeholder="Enter your password"
+          #passwordInput="ngModel"
+          [pattern]="passwordPattern"
+        />
+        <mat-icon matSuffix>lock</mat-icon>
+      
+        <mat-error *ngIf="passwordInput.invalid && passwordInput.dirty">
+          Password must contain at least 8 characters, including uppercase, lowercase, number, and special character.
+        </mat-error>
+      </mat-form-field>
+      
+  
+      <mat-form-field class="custom-field">
+        <mat-label>Confirm Password</mat-label>
+        <input
+          matInput
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          required
+          placeholder="Confirm your password"
+        />
+        <mat-icon matSuffix>lock</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="custom-field">
+        <mat-label>Role</mat-label>
+        <mat-select [(ngModel)]="role" name="role" required>
+          <mat-option value="USER">User</mat-option>
+          <mat-option value="LEAD">Lead</mat-option>
+          <mat-option value="MANAGER">Manager</mat-option>
+          <mat-option value="ACCOUNT_MANAGER">Account Manager</mat-option>
+          <mat-option value="ADMIN_OPS_MANAGER">Admin Ops Manager</mat-option>
+        </mat-select>
+      </mat-form-field>
+      
+      <div class="buttons">
+        <button mat-raised-button color="primary" type="submit" class="action-button">Sign Up</button>
+      </div>
+    </form>
+    <p class="footer-text">Already have an account? <a routerLink="/login" class="link">Login here</a>.</p>
+  </div>

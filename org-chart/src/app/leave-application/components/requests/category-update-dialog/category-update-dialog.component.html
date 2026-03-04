@@ -1,0 +1,106 @@
+<h2 mat-dialog-title class="title-row">
+    <mat-icon class="info-icon">info</mat-icon>
+    <div class="title-text">
+        <div class="main-title">
+            Update Leave Category
+        </div>
+        <div class="sub-title">
+            Modify the leave category. A reason is required for audit purposes.
+        </div>
+    </div>
+
+    <button mat-icon-button class="close-btn" (click)="cancel()" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+    </button>
+</h2>
+
+<mat-dialog-content class="dialog-content">
+
+    <!-- SINGLE MODE CARD -->
+    <div class="employee-card" *ngIf="rows?.length">
+        <div class="card-header">
+            <mat-icon class="card-icon">person</mat-icon>
+            <span class="card-title">Employee Information</span>
+        </div>
+        
+        <div class="ec-row">
+            <span class="ec-label">Employee:</span>
+            <span class="ec-value">{{ rows[0].requestorName }}</span>
+        </div>
+
+        <div class="ec-row">
+            <span class="ec-label">Leave Type:</span>
+            <span class="ec-value">{{ rows[0].leaveType }}</span>
+        </div>
+
+        <div class="ec-row">
+            <span class="ec-label">Period:</span>
+            <span class="ec-value">
+                {{ rows[0].startDate | date:'MMM d, y' }} –
+                {{ rows[0].endDate | date:'MMM d, y' }}
+            </span>
+        </div>
+
+        <div class="ec-row">
+            <span class="ec-label">Current Category:</span>
+            <span class="pill">{{ rows[0].leaveCategory || 'NA' }}</span>
+        </div>
+    </div>
+
+    <!-- FORM -->
+    <form [formGroup]="form" class="form-root">
+        <div class="form-section">
+            <div class="section-header">
+                <mat-icon class="section-icon">category</mat-icon>
+                <span class="section-title">Category Selection</span>
+            </div>
+            
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>New Leave Category *</mat-label>
+                <mat-select formControlName="newCategory">
+                    <mat-option *ngFor="let c of categoryOptions" [value]="c">
+                        {{ c }}
+                    </mat-option>
+                </mat-select>
+
+                <mat-error *ngIf="form.get('newCategory')?.hasError('required')">
+                    Category selection is required
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="form-section">
+            <div class="section-header">
+                <mat-icon class="section-icon">description</mat-icon>
+                <span class="section-title">Reason for Update</span>
+            </div>
+            
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Reason for Update *</mat-label>
+
+                <textarea matInput rows="4" formControlName="reason"
+                    placeholder="Please provide a detailed reason for changing the leave category..."></textarea>
+
+                <mat-hint align="start">
+                    {{ form.get('reason')?.value?.length || 0 }}/500
+                </mat-hint>
+
+                <mat-error *ngIf="form.get('reason')?.hasError('required')">
+                    Reason is required
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-stroked-button (click)="cancel()">
+        <mat-icon class="btn-icon">cancel</mat-icon>
+        Cancel
+    </button>
+    <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="submit()">
+        <mat-icon class="btn-icon">save</mat-icon>
+        Update Category
+    </button>
+</mat-dialog-actions>

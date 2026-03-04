@@ -1,0 +1,180 @@
+<div class="time-entry-form-container">
+  <h2 mat-dialog-title>
+    {{ isEditMode ? 'Edit Time Entry' : 'Add Time Entry' }}
+  </h2>
+
+  <!-- Toggle buttons container -->
+  <div class="toggle-container">
+    <!-- Toggle button for leads/managers -->
+    <mat-slide-toggle
+      *ngIf="isLeadOrManager"
+      color="primary"
+      [checked]="isOnBehalfMode"
+      (change)="toggleOnBehalfMode()"
+      [disabled]="isEditMode"
+      class="toggle-button">
+      {{ isOnBehalfMode ? 'On Behalf of Team Member' : 'My Time Entry' }}
+    </mat-slide-toggle>
+
+    <!-- Toggle button for overtime - only visible when overtime eligible project is selected -->
+    <mat-slide-toggle
+      *ngIf="showOvertimeToggle"
+      color="accent"
+      [checked]="isOvertimeEntry"
+      (change)="toggleOvertimeMode()"
+      class="toggle-button">
+      {{ isOvertimeEntry ? 'Overtime Entry' : 'Regular Entry' }}
+    </mat-slide-toggle>
+  </div>
+
+  <form [formGroup]="timeEntryForm" (ngSubmit)="onSubmit()">
+    <div mat-dialog-content>
+      <div class="form-row">
+        <!-- Date Selection -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="datePicker" formControlName="entryDate" required>
+          <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+          <mat-datepicker #datePicker></mat-datepicker>
+          <mat-error *ngIf="timeEntryForm.get('entryDate')?.hasError('required')">
+            Date is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Team Member Selection (when on behalf mode is active) -->
+        <mat-form-field appearance="outline" class="full-width" *ngIf="isLeadOrManager && isOnBehalfMode">
+          <mat-label>Team Member</mat-label>
+          <mat-select formControlName="ldap" required>
+            <div class="search-box">
+              <mat-form-field appearance="outline" class="search-field">
+                <input matInput (keyup)="filterTeamMembers($event)" placeholder="Search team members...">
+              </mat-form-field>
+            </div>
+            <mat-option *ngFor="let member of filteredTeamMembers" [value]="member.ldap">
+              {{ member.ldap }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="timeEntryForm.get('ldap')?.hasError('required')">
+            Team member is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- User LDAP (for personal mode or regular users) -->
+        <mat-form-field appearance="outline" class="full-width" *ngIf="!isOnBehalfMode || !isLeadOrManager">
+          <mat-label>Ldap</mat-label>
+          <input matInput formControlName="ldap" [readonly]="true">
+          <mat-error *ngIf="timeEntryForm.get('ldap')?.hasError('required')">
+            Ldap is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <!-- Lead Selection -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Lead</mat-label>
+          <mat-select formControlName="leadId" required>
+            <div class="search-box">
+              <mat-form-field appearance="outline" class="search-field">
+                <input matInput (keyup)="filterLeads($event)" placeholder="Search leads...">
+              </mat-form-field>
+            </div>
+            <mat-option *ngFor="let lead of filteredLeads" [value]="lead.id">
+              {{ lead.ldap }} ({{ lead.role }})
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="timeEntryForm.get('leadId')?.hasError('required')">
+            Lead is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Project Selection -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Project</mat-label>
+          <mat-select formControlName="projectId" required>
+            <mat-option *ngFor="let project of projects" [value]="project.projectId || project.id">
+              {{ project.projectName || project.name }} ({{ project.projectCode || project.code }})
+              <span *ngIf="project.isOvertimeEligible" class="overtime-eligible-indicator"> - Overtime Eligible</span>
+            </mat-option>
+          </mat-select>
+          <mat-hint *ngIf="showOvertimeToggle" class="overtime-hint">Overtime toggle is available for this project</mat-hint>
+          <mat-error *ngIf="timeEntryForm.get('projectId')?.hasError('required')">
+            Project is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <!-- Process -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Process</mat-label>
+          <input matInput formControlName="process" required>
+          <mat-error *ngIf="timeEntryForm.get('process')?.hasError('required')">
+            Process is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Activity -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Activity</mat-label>
+          <mat-select formControlName="activity" required>
+            <mat-option *ngFor="let activity of activities" [value]="activity.value">
+              {{ activity.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="timeEntryForm.get('activity')?.hasError('required')">
+            Activity is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <!-- Time in Minutes -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Time in Minutes</mat-label>
+          <input matInput type="number" min="1" [max]="maxTimeInMins" formControlName="timeInMins" required>
+          <mat-error *ngIf="timeEntryForm.get('timeInMins')?.hasError('required')">
+            Time is required
+          </mat-error>
+          <mat-error *ngIf="timeEntryForm.get('timeInMins')?.hasError('min')">
+            Time must be at least 1 minute
+          </mat-error>
+          <mat-error *ngIf="timeEntryForm.get('timeInMins')?.hasError('max')">
+            Time cannot exceed {{ maxTimeInMins }} minutes (8 hours)
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Attendance Type -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Attendance Type</mat-label>
+          <mat-select formControlName="attendanceType" required>
+            <mat-option *ngFor="let type of filteredAttendanceTypes" [value]="type.value">
+              {{ type.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="timeEntryForm.get('attendanceType')?.hasError('required')">
+            Attendance Type is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <!-- Comment -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Comment</mat-label>
+          <textarea matInput formControlName="comment" rows="3"></textarea>
+          <mat-error *ngIf="timeEntryForm.get('comment')?.hasError('required')">
+            Comment is required for overtime eligible projects
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div mat-dialog-actions align="end">
+      <button mat-button type="button" (click)="onCancel()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="timeEntryForm.invalid">
+        {{ isEditMode ? 'Update' : 'Submit' }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,73 @@
+<div class="audit-dialog">
+    <h2 mat-dialog-title>
+        <mat-icon>history</mat-icon>
+        Audit History
+    </h2>
+
+    <div class="dialog-subtitle">
+        <strong>{{ data.requestorName }}</strong> - {{ data.leaveType }}
+    </div>
+
+    <mat-dialog-content>
+        <div *ngIf="loading" class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading audit history...</p>
+        </div>
+
+        <div *ngIf="error" class="error-container">
+            <mat-icon color="warn">error</mat-icon>
+            <p>{{ error }}</p>
+        </div>
+
+        <div *ngIf="!loading && !error && auditHistory.length === 0" class="no-history">
+            <mat-icon>info</mat-icon>
+            <p>No audit history available for this request.</p>
+        </div>
+
+        <div *ngIf="!loading && !error && auditHistory.length > 0" class="audit-timeline">
+            <div *ngFor="let entry of auditHistory" class="audit-entry"
+                [ngClass]="getActionTypeColor(entry.actionType)">
+                <div class="audit-icon">
+                    <mat-icon>{{ getActionTypeIcon(entry.actionType) }}</mat-icon>
+                </div>
+
+                <div class="audit-content">
+                    <div class="audit-header">
+                        <span class="action-type">{{ entry.actionType.replace('_', ' ') }}</span>
+                        <span class="timestamp">{{ formatDate(entry.changedAt) }}</span>
+                    </div>
+
+                    <div class="audit-details">
+                        <p class="changed-by">
+                            <mat-icon>person</mat-icon>
+                            {{ entry.changedBy }} ({{ entry.changedByRole }})
+                        </p>
+
+                        <div class="change-info"
+                            *ngIf="entry.previousValues || entry.newValues || entry.previousStatus || entry.newStatus">
+                            <div class="change-row">
+                                <span class="label">Previous:</span>
+                                <span class="value old">{{ formatValue(entry.previousValues, entry.actionType,
+                                    entry.previousStatus) }}</span>
+                            </div>
+                            <div class="change-row">
+                                <span class="label">New:</span>
+                                <span class="value new">{{ formatValue(entry.newValues, entry.actionType,
+                                    entry.newStatus) }}</span>
+                            </div>
+                        </div>
+
+                        <div class="reason-box" *ngIf="entry.changeReason">
+                            <strong>Reason:</strong>
+                            <p>{{ entry.changeReason }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="dialog-actions-end">
+        <button mat-button (click)="close()">Close</button>
+    </mat-dialog-actions>
+</div>

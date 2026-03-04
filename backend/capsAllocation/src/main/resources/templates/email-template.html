@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+</head>
+<body>
+
+<p><b>tl;dr:</b> {{subject}}</p>
+<p>Program Aligned: {{program}}</p>
+
+{{#if isApproval}}
+<p>Please, reach out to the aligned backup in his/her absence.</p>
+<p><b>Feel free to contact Leads in case you don't find any secondary aligned to his/her tasks.</b></p>
+{{else}}
+<p>You have received a new request with the following information:</p>
+<ul>
+    <li>Total {{applicationType}} Taken in Current Year: {{totalCount}}</li>
+    <li>Total {{applicationType}} Taken in Current Quarter: {{currentQtrCount}}</li>
+    <li>Requester: {{requester}}</li>
+    <li>Duration: {{time}}</li>
+    {{#if isLeave}}
+    <li>Request Type: {{leaveType}}</li>
+    {{/if}}
+</ul>
+<p>Please approve or deny this request.</p>
+<p>
+    <strong><a style="color: #97bf0d;" href="{{approvalUrl}}">Approve</a></strong> or
+    <strong><a style="color: #e95f47;" href="{{denyUrl}}">Deny</a></strong>
+</p>
+{{/if}}
+
+</body>
+</html>

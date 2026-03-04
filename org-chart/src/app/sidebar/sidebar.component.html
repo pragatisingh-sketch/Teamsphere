@@ -1,0 +1,114 @@
+<div class="sidebar" [class.collapsed]="collapsed">
+  <!-- Top section with logo and toggle -->
+  <div class="sidebar-header">
+    <div class="logo-container">
+      <!-- Highspring Logo (shown when expanded) -->
+      <img *ngIf="!collapsed" src="assets/highspring-logo.png" alt="Highspring Logo" class="logo logo-full">
+
+      <!-- Highspring Logo Icon (shown when collapsed) -->
+      <img *ngIf="collapsed" src="assets/highspring-logo.png" alt="Highspring" class="logo logo-icon"
+        (click)="toggleSidebar()" matTooltip="Expand sidebar" matTooltipPosition="right">
+    </div>
+    <button mat-icon-button class="toggle-btn" (click)="toggleSidebar()" [class.collapsed]="collapsed">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+
+  <!-- Navigation Links -->
+  <nav class="sidebar-nav">
+    <a routerLink="/reports" routerLinkActive="active" class="nav-item" *ngIf="isAdmin()">
+      <mat-icon>dashboard</mat-icon>
+      <span *ngIf="!collapsed">Dashboard</span>
+    </a>
+    <a routerLink="/time-entry" routerLinkActive="active" class="nav-item">
+      <mat-icon>schedule</mat-icon>
+      <span *ngIf="!collapsed">Time Entries</span>
+    </a>
+    <a routerLink="/time-summary" routerLinkActive="active" class="nav-item" *ngIf="isAdmin()">
+      <mat-icon>summarize</mat-icon>
+      <span *ngIf="!collapsed">Time Summary</span>
+    </a>
+    <!-- <a routerLink="/attendance" routerLinkActive="active" class="nav-item">
+      <mat-icon>event_note</mat-icon>
+      <span *ngIf="!collapsed">Attendance</span>
+    </a> -->
+    <a routerLink="/vunno" routerLinkActive="active" class="nav-item">
+      <mat-icon>event_available</mat-icon>
+      <span *ngIf="!collapsed">Leaves/WFH</span>
+    </a>
+    <!-- <a routerLink="/example-table" routerLinkActive="active" class="nav-item">
+      <mat-icon>table_chart</mat-icon>
+      <span *ngIf="!collapsed">Example Table</span>
+    </a> -->
+    <!-- <a routerLink="/reports" routerLinkActive="active" class="nav-item">
+      <mat-icon>assessment</mat-icon>
+      <span *ngIf="!collapsed">Reports</span>
+    </a> -->
+    <a routerLink="/approve" routerLinkActive="active" class="nav-item" *ngIf="isAdmin()">
+      <div class="nav-item-content">
+        <mat-icon>approval</mat-icon>
+        <span *ngIf="!collapsed">Requests</span>
+        <span *ngIf="requestCounts.pending > 0" class="notification-badge" [matTooltip]="getRequestTooltip()"
+          [matTooltipPosition]="collapsed ? 'right' : 'above'" matTooltipClass="request-tooltip"
+          matTooltipShowDelay="500">
+          {{ requestCounts.pending }}
+        </span>
+      </div>
+    </a>
+    <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item" *ngIf="isAdmin()">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span *ngIf="!collapsed">Admin Panel</span>
+    </a>
+    <a class="nav-item revert-delegation" *ngIf="hasActiveDelegation" (click)="revertDelegation()"
+      [matTooltip]="isDelegator ? 'Delegate role back to me' : 'Revert Delegation'" matTooltipPosition="right"
+      style="cursor: pointer; color: #f44336;">
+      <mat-icon>undo</mat-icon>
+      <span *ngIf="!collapsed">
+        <ng-container *ngIf="isDelegator">Delegate role back to me</ng-container>
+        <ng-container *ngIf="!isDelegator">
+          Revert Delegation
+          <span *ngIf="delegationPartnerLdap" class="delegatee-info">(to {{ delegationPartnerLdap }})</span>
+        </ng-container>
+      </span>
+    </a>
+    <a class="nav-item report-issue" (click)="openReportIssueDialog()" style="cursor: pointer;"
+      matTooltip="Report Issue" matTooltipPosition="right">
+      <mat-icon>bug_report</mat-icon>
+      <span *ngIf="!collapsed">Report Issue</span>
+    </a>
+    <a routerLink="/releases" routerLinkActive="active" class="nav-item" *ngIf="isReleaseManager()"
+      matTooltip="Release Management" matTooltipPosition="right">
+      <mat-icon>new_releases</mat-icon>
+      <span *ngIf="!collapsed">Release Management</span>
+    </a>
+  </nav>
+
+  <!-- User Profile Section -->
+  <div class="user-profile">
+    <div class="avatar">
+      <div class="avatar-circle">
+        {{ userName.charAt(0).toUpperCase() }}
+      </div>
+    </div>
+    <div class="user-info" *ngIf="!collapsed">
+      <div class="user-name">{{ userName }}</div>
+      <div class="user-role">{{ userRole }}</div>
+      <div class="app-version" *ngIf="currentVersion">v{{ currentVersion }}</div>
+    </div>
+    <button mat-icon-button class="help-btn" (click)="openFaqDialog()" matTooltip="Help & FAQ">
+      <mat-icon>help_outline</mat-icon>
+    </button>
+    <button mat-icon-button class="sign-out-btn" (click)="logout()" matTooltip="Sign Out">
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
+  </div>
+</div>
+
+
+<!-- Main Content Container -->
+<div class="main-content" [class.expanded]="collapsed">
+  <div class="content-wrapper">
+    <router-outlet></router-outlet>
+    <!-- Router outlet removed from here -->
+  </div>
+</div>

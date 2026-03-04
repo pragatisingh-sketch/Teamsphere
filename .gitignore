@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Angular cache
+.angular/
+**/.angular/
+
+# Build outputs
+dist/
+**/dist/
+build/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+**/logs/
+backend/capsAllocation/src/main/resources/ops-excellence-a969197613f8.json
+backend/capsAllocation/src/main/resources/credentials.json
+
+# IntelliJ build output (contains copies of resources/credentials)
+backend/out/
+out/
+
+# OAuth tokens
+**/tokens/StoredCredential
+tokens/
+
+# Build output (contains credential copies)
+backend/out/
+out/
+
+# Tokens
+**/tokens/
+backend/capsAllocation/tokens/

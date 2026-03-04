@@ -1,0 +1,141 @@
+<div class="container">
+  <!-- Top Half: Two Charts Side by Side -->
+  <app-page-header
+  title="Dashboard"
+  subtitle="Overview of time allocation and project distribution">
+</app-page-header>
+  <div class="charts-row">
+    <!-- Left: Pie Chart -->
+    <div class="chart-item" [class.fullscreen]="isPieFullscreen">
+      <div class="chart-header">
+        <h3>Employee Distribution by Program</h3>
+        <button mat-icon-button class="fullscreen-button" (click)="toggleFullscreen('pie')">
+          <mat-icon>{{ isPieFullscreen ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+        </button>
+      </div>
+      <highcharts-chart
+        [Highcharts]="Highcharts"
+        [options]="pieChartOptions"
+        [update]="updateFlagPie"
+        [oneToOne]="true"
+        style="width: 100%; height: 100%; display: block;"
+      ></highcharts-chart>
+    </div>
+    <!-- Right: Column Chart -->
+    <div class="chart-item" [class.fullscreen]="isColumnFullscreen">
+      <div class="chart-header">
+        <h3>Employee Distribution</h3>
+        <button mat-icon-button class="fullscreen-button" (click)="toggleFullscreen('column')">
+          <mat-icon>{{ isColumnFullscreen ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+        </button>
+      </div>
+      <highcharts-chart
+        [Highcharts]="Highcharts"
+        [options]="columnChartOptions"
+        [update]="updateFlagColumn"
+        [oneToOne]="true"
+        style="width: 100%; height: 100%; display: block;"
+      ></highcharts-chart>
+    </div>
+  </div>
+
+  <div class="table-container">
+      <!-- Column Controls Dropdown -->
+  <div class="column-controls">
+    <button mat-button [matMenuTriggerFor]="columnMenu" class="column-menu-button">
+      <div class="column-icon">
+        <div class="column-icon-bar"></div>
+        <div class="column-icon-bar"></div>
+        <div class="column-icon-bar"></div>
+      </div>
+      
+    </button>
+    <span>Columns</span>
+    <mat-menu #columnMenu="matMenu" class="column-menu">
+      <!-- Search Box -->
+      <div class="search-box">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput [formControl]="columnSearchControl" placeholder="Search columns...">
+        </mat-form-field>
+      </div>
+
+      <!-- Select All -->
+      <div class="select-all-container">
+        <mat-checkbox
+          [checked]="areAllColumnsSelected()"
+          [indeterminate]="areSomeColumnsSelected()"
+          (change)="selectAllColumns($event.checked)"
+        >
+          Select All
+        </mat-checkbox>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Column List -->
+      <div class="column-list">
+        <ng-container *ngIf="filteredColumns | async as filteredColumnsList">
+          <div *ngFor="let serie of filteredColumnsList" class="column-item">
+            <mat-checkbox
+              [checked]="columnVisibility[serie.name]"
+              (change)="toggleColumn(serie.name)"
+            >
+              {{ serie.name }}
+            </mat-checkbox>
+          </div>
+        </ng-container>
+      </div>
+    </mat-menu>
+  </div>
+    <table border="1" cellspacing="0" cellpadding="6">
+      <tr>
+        <th (click)="sortTable('program')" class="resizable">
+          <div class="column-content">Program</div>
+          <div class="resize-handle" (mousedown)="startResize($event, 'program')"></div>
+        </th>
+        <th
+          *ngFor="let serie of getVisibleColumns()"
+          cdkDrag
+          [cdkDragData]="serie.name"
+          (cdkDragStarted)="draggedColumn = serie.name"
+          (cdkDragEnded)="draggedColumn = null"
+          (click)="sortTable(serie.name)"
+          [class.dragging]="draggedColumn === serie.name"
+          class="resizable"
+        >
+          <div class="column-content">
+            {{ serie.name }} {{ sortColumn === serie.name ? (sortAscending ? '⬆' : '⬇') : '⬍' }}
+          </div>
+          <div class="resize-handle" (mousedown)="startResize($event, serie.name)"></div>
+        </th>
+        <th (click)="sortTable('total')" class="resizable">
+          <div class="column-content">Total</div>
+          <div class="resize-handle" (mousedown)="startResize($event, 'total')"></div>
+        </th>
+      </tr>
+
+      <tr *ngFor="let category of categories; let i = index">
+        <td [style.width]="columnWidths['program']">{{ category }}</td>
+        <td
+          *ngFor="let serie of getVisibleColumns()"
+          [style.width]="columnWidths[serie.name]"
+        >
+          {{ serie.data[i] }}
+        </td>
+        <td [style.width]="columnWidths['total']">{{ calculateProgramTotal(i) }}</td>
+      </tr>
+
+      <tr>
+        <td [style.width]="columnWidths['program']"><strong>Total</strong></td>
+        <td
+          *ngFor="let serie of getVisibleColumns()"
+          [style.width]="columnWidths[serie.name]"
+        >
+          <strong>{{ calculateTeamTotal(serie.data) }}</strong>
+        </td>
+        <td [style.width]="columnWidths['total']"><strong>{{ calculateGrandTotal() }}</strong></td>
+      </tr>
+    </table>
+  </div>
+</div>

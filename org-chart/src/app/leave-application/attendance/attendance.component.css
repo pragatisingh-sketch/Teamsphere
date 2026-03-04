@@ -1,0 +1,1670 @@
+/* src/app/attendance-management.component.css */
+
+/* styles.css */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+.greeting {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 1.5rem;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.hello-static {
+    font-weight: 500;
+}
+
+.name-animated {
+    font-weight: 600;
+    color: #3f51b5;
+    /* Angular Material primary color */
+}
+
+@keyframes fadeName {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    20%,
+    80% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+.attendance-management {
+    padding: 16px;
+    font-family: Arial, sans-serif;
+}
+
+.attendance-management .mat-card-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+
+.today-attendance,
+.recent-attendance {
+    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: #f5f5f5;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+/* Center the button in the card */
+
+.mat-card {
+    padding: 16px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mat-card-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.mat-card-content {
+    display: flex;
+    flex-direction: column;
+}
+
+mat-card-content button {
+    margin-top: 10px;
+    /* Adjust as needed for spacing */
+}
+
+/* Modern UI Styles */
+.requests-tab {
+    padding: 24px;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    color: #333;
+}
+
+.tab-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.tab-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* Button Styles */
+.btn-primary,
+.btn-secondary {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+.btn-secondary {
+    background-color: white;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+}
+
+.btn-secondary:hover {
+    background-color: #f9fafb;
+}
+
+/* Filter Card */
+.filter-card {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+    border: 1px solid #e5e7eb;
+}
+
+.filter-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #374151;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filter-group label {
+    font-size: 14px;
+    color: #4b5563;
+    font-weight: 500;
+}
+
+.filter-group select,
+.filter-group input {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border 0.2s ease;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.filter-btn {
+    height: 100%;
+    justify-content: center;
+}
+
+.filter-icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Table Styles */
+.table-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+/* Table wrapper - contains both table and scrollbar */
+.table-wrapper {
+    margin: 20px;
+    position: relative;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: white;
+    max-width: 100%;
+    /* Ensure wrapper doesn't exceed viewport */
+}
+
+/* Table container with horizontal and vertical scroll */
+.table-responsive {
+    overflow-x: auto;
+    overflow-y: auto;
+    position: relative;
+    border-radius: 8px 8px 0 0;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+    width: 100%;
+    /* Increased max-height to show at least 10 records */
+    max-height: calc(100vh - 350px);
+}
+
+/* Ensure the table takes up the full width of its content */
+.table-responsive .mat-table {
+    min-width: 100%;
+    width: max-content;
+    table-layout: auto;
+    display: table;
+}
+
+/* Sticky header for vertical scrolling */
+.table-responsive .mat-mdc-header-row {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: #f8f9fa;
+}
+
+/* Minimal scrollbar styling - matching History tab */
+.table-responsive::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* Firefox scrollbar styling */
+.table-responsive {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* Removed gradient shadows - keeping it clean */
+
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.modern-table th {
+    background-color: #f9fafb;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: #374151;
+    font-size: 14px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.modern-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #4b5563;
+    font-size: 14px;
+}
+
+.modern-table tr:last-child td {
+    border-bottom: none;
+}
+
+.modern-table tr:hover {
+    background-color: #f9fafb;
+}
+
+.text-right {
+    text-align: right;
+}
+
+/* Status Badges */
+/* Add this to your existing CSS */
+.time-column {
+    width: 90px;
+    /* Fixed width for time column */
+    white-space: nowrap;
+}
+
+/* Ensure table columns have consistent spacing */
+.leave-history-table th,
+.leave-history-table td {
+    padding: 10px 12px;
+}
+
+/* Action Buttons */
+.actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.text-btn {
+    background: none;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 4px 0;
+}
+
+.approve-btn {
+    color: #10b981;
+}
+
+.approve-btn:hover {
+    color: #059669;
+}
+
+.deny-btn {
+    color: #ef4444;
+}
+
+.deny-btn:hover {
+    color: #dc2626;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.pagination-info {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.pagination-info span {
+    font-weight: 600;
+    color: #374151;
+}
+
+.page-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.page-btn:hover {
+    background: #f9fafb;
+}
+
+.page-btn.active {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.header h2 {
+    font-size: 24px;
+    font-weight: 500;
+    color: #3f51b5;
+}
+
+.current-date {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Table styling improvements */
+.mat-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mat-header-row {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.mat-row {
+    border-bottom: 1px solid #e9ecef;
+    transition: background-color 0.2s ease;
+}
+
+.mat-row:hover {
+    background-color: #f8f9fa;
+}
+
+.mat-header-cell {
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: #495057;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+    font-size: 14px;
+    min-width: 120px;
+    /* Prevent columns from being too narrow */
+    white-space: nowrap;
+}
+
+.mat-cell {
+    padding: 12px 16px;
+    text-align: left;
+    color: #495057;
+    font-size: 14px;
+    line-height: 1.5;
+    border-bottom: 1px solid #e9ecef;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 120px;
+    /* Prevent columns from being too narrow */
+    max-width: 300px;
+    /* Prevent columns from being too wide */
+}
+
+/* Specific column widths for better layout */
+.id-header,
+.id-cell {
+    min-width: 80px;
+    max-width: 100px;
+}
+
+.ldap-header,
+.ldap-cell {
+    min-width: 120px;
+    max-width: 150px;
+}
+
+.name-header,
+.name-cell {
+    min-width: 150px;
+    max-width: 200px;
+}
+
+.team-header,
+.team-cell {
+    min-width: 120px;
+    max-width: 180px;
+}
+
+.date-header,
+.date-cell,
+.checkInDate-header,
+.checkInDate-cell,
+.checkOutDate-header,
+.checkOutDate-cell {
+    min-width: 130px;
+    max-width: 150px;
+}
+
+.checkIn-header,
+.checkIn-cell,
+.checkOut-header,
+.checkOut-cell {
+    min-width: 140px;
+    max-width: 160px;
+}
+
+.reason-header,
+.reason-cell,
+.checkoutReason-header,
+.checkoutReason-cell,
+.comment-header,
+.comment-cell {
+    min-width: 180px;
+    max-width: 300px;
+}
+
+.isOutsideOffice-header,
+.isOutsideOffice-cell {
+    min-width: 130px;
+    max-width: 150px;
+}
+
+.isDefaulter-header,
+.isDefaulter-cell {
+    min-width: 110px;
+    max-width: 130px;
+}
+
+/* Status column - increased width for better visibility */
+.mat-column-status {
+    min-width: 180px !important;
+    max-width: 220px !important;
+}
+
+/* Resizable columns */
+.mat-table {
+    position: relative;
+}
+
+.mat-header-cell {
+    position: relative;
+    overflow: visible;
+}
+
+.mat-header-cell::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 5px;
+    cursor: col-resize;
+    background: transparent;
+    transition: background-color 0.2s ease;
+}
+
+.mat-header-cell:hover::after {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.mat-header-cell.resizing::after {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Scrollbar styles moved to main table-responsive section above */
+
+/* Header container styling */
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 24px;
+}
+
+.header-text {
+    flex: 1;
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Status badges styling */
+.status-badge,
+.compliance-badge,
+.location-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    min-width: fit-content;
+}
+
+.status-badge {
+    min-width: 80px;
+}
+
+.compliance-badge {
+    min-width: 70px;
+}
+
+.location-badge {
+    min-width: 90px;
+    gap: 4px;
+    padding: 3px 10px;
+    font-size: 11px;
+    text-transform: none;
+}
+
+/* Location badges row - stacked below status */
+.location-badges-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+}
+
+/* Location badge colors */
+.location-inside {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.location-outside {
+    background-color: #fff3e0;
+    color: #e65100;
+}
+
+/* Location icon sizing */
+.location-icon-small {
+    font-size: 14px !important;
+    width: 14px !important;
+    height: 14px !important;
+}
+
+/* Status capsules container */
+.status-capsules-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Filter button styling */
+.mat-icon-button {
+    margin-left: 8px;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.mat-icon-button:hover {
+    opacity: 1;
+}
+
+/* Sticky column styling */
+.mat-cell.sticky {
+    position: sticky;
+    left: 0;
+    background: white;
+    z-index: 1;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Column toggle overlay */
+.column-toggle-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+/* Column toggle dialog styling */
+.column-toggle-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.column-toggle-header {
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+    background: #f8f9fa;
+    border-radius: 12px 12px 0 0;
+}
+
+.column-toggle-header h3 {
+    margin: 0 0 16px 0;
+    color: #495057;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.column-search {
+    width: 100%;
+}
+
+.column-toggle-content {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.column-list {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.column-list mat-checkbox {
+    margin: 0;
+}
+
+.column-toggle-footer {
+    padding: 16px 20px;
+    border-top: 1px solid #e9ecef;
+    background: #f8f9fa;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Toggle columns button styling */
+.toggle-columns-button {
+    background-color: #6c757d;
+    color: white;
+}
+
+.toggle-columns-button:hover {
+    background-color: #5a6268;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .column-toggle-dialog {
+        width: 95%;
+        max-width: 90%;
+    }
+
+    .mat-header-cell,
+    .mat-cell {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .status-badge,
+    .compliance-badge,
+    .location-badge {
+        font-size: 11px;
+        padding: 3px 8px;
+    }
+
+    .column-toggle-header,
+    .column-toggle-content,
+    .column-toggle-footer {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .mat-header-cell,
+    .mat-cell {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+
+    .status-badge,
+    .compliance-badge,
+    .location-badge {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+}
+
+/* Make status badges more compact */
+.no-data {
+    padding: 24px;
+    text-align: center;
+    color: #666;
+}
+
+.footer {
+    margin-top: 16px;
+    font-size: 14px;
+    color: #666;
+    text-align: right;
+}
+
+.tab-content {
+    padding: 20px 0;
+}
+
+/* Container styles */
+.leave-history-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.leave-history-container h2 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Table styles */
+.leave-history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.leave-history-table th {
+    background-color: #f5f5f5;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #555;
+    border-bottom: 2px solid #ddd;
+}
+
+.leave-history-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    color: #333;
+}
+
+.leave-history-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Status badges */
+
+.status-approved {
+    background-color: #e6f7ee;
+    color: #00a854;
+}
+
+.status-pending {
+    background-color: #fff7e6;
+    color: #fa8c16;
+}
+
+.status-rejected {
+    background-color: #fff1f0;
+    color: #f5222d;
+}
+
+/* Pagination styles */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.showing-text {
+    font-size: 14px;
+    color: #666;
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.pagination-controls button,
+.pagination-controls span {
+    padding: 5px 10px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 3px;
+    min-width: 30px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.pagination-controls button:hover:not(:disabled),
+.pagination-controls span:hover:not(.active) {
+    background-color: #f0f0f0;
+}
+
+.pagination-controls span.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Main container */
+.attendance-container {
+    padding: 24px;
+    font-family: 'Roboto', sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+/* Today's attendance section */
+.today-attendance {
+    margin-bottom: 30px;
+}
+
+.today-attendance h2 {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: #3f51b5;
+}
+
+
+.checkin-card {
+    max-width: 500px;
+    margin: 0 auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.instruction {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.checkin-btn,
+.checkout-btn {
+    width: 150px;
+}
+
+.checked-in-status {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.checked-in-time {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    margin: 0;
+}
+
+.actions-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.action-group {
+    display: flex;
+    align-items: center;
+    /* gap: 8px; */
+}
+
+.switch-group {
+    position: relative;
+}
+
+.check-actions-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.check-action {
+    flex: 0 0 auto;
+}
+
+.timer-action {
+    flex: 0 0 auto;
+    margin-left: auto;
+}
+
+/* Timer Badge - Uniform with Check-in/Check-out badges */
+.timer-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(103, 58, 183, 0.1);
+    border: 1px solid rgba(103, 58, 183, 0.3);
+    color: #4527a0;
+    min-width: 180px;
+    transition: all 0.3s ease;
+}
+
+.timer-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(103, 58, 183, 0.15);
+    border-color: rgba(103, 58, 183, 0.4);
+}
+
+.timer-badge .timer-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: #4527a0;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+.timer-badge .timer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.timer-badge .timer-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #4527a0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+}
+
+.timer-badge .timer-value {
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+    color: #4527a0;
+}
+
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 2px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.toggle-container:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border-color: #1976d2;
+}
+
+.toggle-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.team-toggle {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.team-toggle .mat-slide-toggle-label {
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .actions-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .action-group {
+        justify-content: center;
+    }
+
+    .toggle-container {
+        justify-content: center;
+    }
+
+    .check-actions-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .timer-action {
+        margin-left: 0;
+        align-self: center;
+    }
+
+    .timer-badge {
+        min-width: 160px;
+        justify-content: center;
+    }
+
+    .timer-badge .timer-label {
+        font-size: 9px;
+    }
+
+    .timer-badge .timer-value {
+        font-size: 14px;
+    }
+}
+
+.date-range-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-range-field {
+    width: 245px;
+}
+
+.filter-toggle {
+    margin-right: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .actions-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .date-range-group {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 80%;
+    }
+}
+
+@media (max-width: 768px) {
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .pagination-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* Add these styles to your existing CSS file */
+
+/* Status Badges - Enhanced */
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    min-width: 80px;
+    text-align: center;
+}
+
+.status-badge.on-time {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+
+.status-badge.late {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.status-badge.approved {
+    background-color: #e6f7ee;
+    color: #00a854;
+}
+
+.status-badge.pending {
+    background-color: #fff7e6;
+    color: #fa8c16;
+}
+
+.status-badge.rejected {
+    background-color: #fff1f0;
+    color: #f5222d;
+}
+
+/* Defaulter Badges */
+.compliance-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    min-width: 60px;
+    text-align: center;
+}
+
+.compliance-badge.compliant {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+
+.compliance-badge.non-compliant {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+/* Location Badges - Enhanced */
+.location-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.location-badge.inside {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+
+.location-badge.outside {
+    background-color: #fff3e0;
+    color: #e65100;
+    border: 1px solid #ffe0b2;
+}
+
+
+
+/* Hover effects for better interactivity */
+.status-badge.late:hover,
+.compliance-badge.non-compliant:hover {
+    background-color: #ffcdd2;
+    transition: background-color 0.2s ease;
+}
+
+.status-badge.on-time:hover,
+.compliance-badge.compliant:hover {
+    background-color: #c8e6c9;
+    transition: background-color 0.2s ease;
+}
+
+/* Icon colors for location */
+.location-badge .mat-icon {
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+}
+
+.location-badge.inside .mat-icon {
+    color: #2e7d32;
+}
+
+.location-badge.outside .mat-icon {
+    color: #e65100;
+}
+
+/* Status capsules container - stacked vertically for each record */
+.status-capsules-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Status capsule styling - matching location badge style */
+.status-capsule {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    text-transform: none;
+}
+
+/* Hover effect for status capsules */
+.status-capsule:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Green for On Time - matching location inside */
+.status-capsule.status-on-time {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+/* Red for Late/Early - subtle like location outside */
+.status-capsule.status-late {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+/* Shared pill style for other badges */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: -2px;
+    /* reduced gap between icon and text */
+    padding: 2px 8px;
+    border-radius: 14px;
+    font-size: 13.5px;
+    /* slightly bigger than normal text */
+    font-weight: 500;
+    line-height: 1.3;
+    animation: fadeIn 0.3s ease-in;
+    white-space: nowrap;
+}
+
+/* Status pills (keeping for backward compatibility) */
+.badge-on-time {
+    background: rgba(76, 175, 80, 0.08);
+    /* softer green */
+    color: #388e3c;
+    border: 1px solid rgba(56, 142, 60, 0.4);
+}
+
+.badge-late {
+    background: rgba(244, 67, 54, 0.08);
+    /* softer red */
+    color: #d32f2f;
+    border: 1px solid rgba(211, 47, 47, 0.4);
+}
+
+/* Location pills */
+.badge-inside {
+    background: rgba(76, 175, 80, 0.08);
+    color: #388e3c;
+    border: 1px solid rgba(56, 142, 60, 0.4);
+}
+
+.badge-outside {
+    background: rgba(255, 152, 0, 0.08);
+    /* softer orange */
+    color: #ef6c00;
+    border: 1px solid rgba(239, 108, 0, 0.4);
+}
+
+/* Defaulter pills */
+.badge-no {
+    background: rgba(76, 175, 80, 0.08);
+    color: #388e3c;
+    border: 1px solid rgba(56, 142, 60, 0.4);
+}
+
+.badge-yes {
+    background: rgba(244, 67, 54, 0.08);
+    color: #d32f2f;
+    border: 1px solid rgba(211, 47, 47, 0.4);
+}
+
+/* Location icon */
+.location-icon {
+    font-size: 15px;
+    margin-right: 2px;
+    /* ensures icon is snug to text */
+    vertical-align: middle;
+}
+
+/* Smooth animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* Adding new Styles and Replacing Old one  */
+
+body {
+    font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+/* Add these styles to your existing CSS */
+.checked-in-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+/* Disabled check-in button style */
+button[disabled] {
+    background-color: #e0e0e0 !important;
+    color: #9e9e9e !important;
+    cursor: not-allowed;
+}
+
+.check-in-status {
+    display: flex;
+    gap: 0.5rem;
+    /* Adds space between text and time */
+    align-items: center;
+}
+
+.checked-in-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(76, 175, 80, 0.1);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+/* Green for on-time check-in */
+.checked-in-badge.on-time {
+    color: #2e7d32;
+    background: rgba(76, 175, 80, 0.1);
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+.checked-in-badge.on-time .mat-icon {
+    color: #2e7d32;
+}
+
+/* Orange for late check-in */
+.checked-in-badge.late {
+    color: #e65100;
+    background: rgba(255, 152, 0, 0.1);
+    border-color: rgba(255, 152, 0, 0.3);
+}
+
+.checked-in-badge.late .mat-icon {
+    color: #e65100;
+}
+
+.checked-out-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(33, 150, 243, 0.1);
+    border: 1px solid rgba(33, 150, 243, 0.3);
+}
+
+/* Green for on-time checkout */
+.checked-out-badge.on-time {
+    color: #2e7d32;
+    background: rgba(76, 175, 80, 0.1);
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+.checked-out-badge.on-time .mat-icon {
+    color: #2e7d32;
+}
+
+/* Orange for early/late checkout */
+.checked-out-badge.early-late {
+    color: #e65100;
+    background: rgba(255, 152, 0, 0.1);
+    border-color: rgba(255, 152, 0, 0.3);
+}
+
+.checked-out-badge.early-late .mat-icon {
+    color: #e65100;
+}
+
+.success-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.warning-text {
+    color: rgb(231, 100, 100) !important;
+    font-weight: 600;
+}
+
+.flash-badge {
+    background-color: #ffcccc;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-weight: 700;
+    color: #09098f;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    border-left: 6px solid #ff0000;
+    animation: flash 1s infinite;
+    font-size: 1.1rem;
+}
+
+.flash-badge mat-icon {
+    font-size: 24px;
+    color: #ed6969;
+}
+
+@keyframes flash {
+
+    0%,
+    100% {
+        background-color: #ffcccc;
+    }
+
+    50% {
+        background-color: #ff7f7f;
+    }
+}
+
+/* Actions column styling */
+.actions-header,
+.actions-cell {
+    min-width: 150px;
+    max-width: 180px;
+    text-align: center;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    align-items: center;
+}
+
+.action-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-btn mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.no-actions {
+    color: #999;
+    font-style: italic;
+}
+
+/* Sticky Actions Column */
+.sticky-column {
+    position: sticky !important;
+    right: 0;
+    background-color: white;
+    z-index: 10;
+}
+
+.mat-header-cell.sticky-column {
+    background-color: #f8f9fa;
+}
+
+.mat-row:hover .sticky-column {
+    background-color: #f8f9fa;
+}
+
+/* Highlight modified records - targeting Angular Material MDC classes */
+::ng-deep .mat-mdc-row.modified-record {
+    background-color: #f0b877 !important;
+}
+
+::ng-deep .mat-mdc-row.modified-record:hover {
+    background-color: #ffe8a2 !important;
+}
+
+/* Target the MDC cells specifically */
+::ng-deep .mat-mdc-row.modified-record .mat-mdc-cell {
+    background-color: #fff3cd !important;
+}
+
+::ng-deep .mat-mdc-row.modified-record:hover .mat-mdc-cell {
+    background-color: #ffe8a2 !important;
+}
+
+/* Also target mdc-data-table__cell */
+::ng-deep .mat-mdc-row.modified-record .mdc-data-table__cell {
+    background-color: #fff3cd !important;
+}
+
+::ng-deep .mat-mdc-row.modified-record:hover .mdc-data-table__cell {
+    background-color: #ffe8a2 !important;
+}
+
+/* Sticky column in modified rows */
+::ng-deep .mat-mdc-row.modified-record .sticky-column {
+    background-color: #fff3cd !important;
+}
+
+::ng-deep .mat-mdc-row.modified-record:hover .sticky-column {
+    background-color: #ffe69c !important;
+}

@@ -1,0 +1,1180 @@
+.time-entry-dashboard {
+    padding: 20px;
+}
+
+.actions {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.actions button {
+    margin-right: 10px;
+}
+
+.mat-elevation-z8 {
+    background: white;
+    border-radius: 4px;
+}
+
+/* Update button styling to match admin-dashboard */
+.action-button {
+    font-size: 13px;
+    padding: 6px 14px;
+    min-width: 64px;
+}
+
+
+/* Add Button specific styling */
+.action-button.add-button {
+    background-color: #fff !important;
+    color: #005cbf !important;
+}
+
+.action-button.add-button:hover {
+    background-color: #005cbf !important;
+    color: #fff !important;
+}
+
+/* View Button styling */
+.action-button.view-button {
+    background-color: #fff !important;
+    color: #000 !important;
+}
+
+.action-button.view-button:hover {
+    background-color: #444444 !important;
+    color: #fff !important;
+}
+
+/* Edit Button styling */
+.action-button.edit-button {
+    background-color: #fff !important;
+    color: #0423bcf7 !important;
+}
+
+.action-button.edit-button:hover {
+    background-color: #3b5998 !important;
+    color: #fff !important;
+}
+
+/* Delete Button styling */
+.action-button.delete-button {
+    padding: 8px 28px;
+    background-color: #fff !important;
+    color: #d32f2f !important;
+}
+
+.action-button.delete-button:hover {
+    background-color: #b71c1c !important;
+    color: #fff !important;
+}
+
+.action-button.approve-button {
+    padding: 8px 32px;
+    background-color: #fff !important;
+    color: #388e3c !important;
+    /* Dark green text */
+}
+
+.action-button.approve-button:hover {
+    background-color: #2e7d32 !important;
+    /* Darker green background */
+    color: #fff !important;
+}
+
+.revoke-button {
+    color: #673ab7;
+    /* Deep Purple 500 */
+    background-color: white;
+}
+
+.revoke-button:hover {
+    background-color: #5e35b1;
+    /* Darker shade on hover */
+    color: #fff;
+}
+
+.btn-lg {
+    padding: 10px 24px;
+    font-size: 15px;
+    min-width: 120px;
+}
+
+
+/* Apply to disabled raised buttons with your specific classes */
+.action-button.edit-button[disabled],
+.action-button.delete-button[disabled] {
+    background-color: #f0f0f0 !important;
+    color: #9e9e9e !important;
+    cursor: not-allowed;
+    box-shadow: none;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+
+/* Toggle Filter Button Styling */
+.toggle-filter-button {
+    background-color: #673ab7 !important;
+    color: white !important;
+    height: 36px;
+    padding: 0 16px !important;
+    font-weight: 500;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.toggle-filter-button:hover {
+    background-color: #5e35b1 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(103, 58, 183, 0.3);
+}
+
+.toggle-filter-button mat-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+}
+
+/* Style for the search field */
+.search-field {
+    width: 300px;
+}
+
+.search-field input {
+    height: 10px;
+    /* Control the height of the input box inside the field */
+    padding: 4px 8px;
+    /* Adjust padding for better fit */
+    font-size: 14px;
+    /* Adjust font size for better readability */
+}
+
+/* Date range container */
+.date-range-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.date-range-container .mat-form-field {
+    width: 235px;
+}
+
+.apply-filter-btn {
+    height: 36px;
+    margin-top: -8px;
+}
+
+/* General Button Hover Styles */
+.mat-raised-button:hover {
+    background-color: #9e9e9e !important;
+    /* Darker grey */
+    color: #fff !important;
+    /* White text for contrast */
+}
+
+/* Primary Button Hover */
+.mat-raised-button[color="primary"]:hover {
+    background-color: #9e9e9e !important;
+    /* Darker grey */
+    color: #fff !important;
+    /* White text for contrast */
+}
+
+/* Accent Button Hover */
+.mat-raised-button[color="accent"]:hover {
+    background-color: #9e9e9e !important;
+    /* Darker grey */
+    color: #fff !important;
+    /* White text for contrast */
+}
+
+/* Warn Button Hover */
+.mat-raised-button[color="warn"]:hover {
+    background-color: #d32f2f !important;
+    /* Darker red */
+    color: #fff !important;
+    /* White text for contrast */
+}
+
+/* Search Field Icon Styling on Hover */
+.search-field mat-icon:hover {
+    color: #000 !important;
+    /* Black icon for visibility */
+}
+
+/* Checkbox Column Hover */
+.mat-column-select:hover {
+    background-color: #dcdcdc !important;
+    /* Slightly darker background */
+    color: #000 !important;
+    /* Black text */
+}
+
+/* Search Field Icon Styling */
+.search-field mat-icon {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+/* Force the checkbox column to have a minimal width */
+.mat-column-select {
+    width: 50px !important;
+    /* Enforce small width */
+    max-width: 50px !important;
+    text-align: center;
+    /* Center the checkbox */
+}
+
+/* Table container */
+.table-container {
+    margin: 20px;
+    overflow-x: auto;
+}
+
+/* Table responsive container */
+.table-responsive {
+    margin: 20px;
+    width: calc(100% - 40px);
+    position: relative;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: white;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Table wrapper with scroll */
+.table-wrapper {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: calc(100vh - 400px);
+}
+
+.mat-mdc-table {
+    width: max-content;
+    min-width: 100%;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Sticky header */
+.mat-mdc-header-row {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: #f5f5f5;
+}
+
+.mat-mdc-header-cell {
+    background-color: #f5f5f5;
+    color: rgba(0, 0, 0, 0.87);
+    font-weight: 500;
+    padding: 12px 16px !important;
+    font-size: 14px;
+    white-space: nowrap;
+    border-right: none !important;
+}
+
+.mat-mdc-cell {
+    padding: 12px 16px !important;
+    font-size: 14px;
+    white-space: nowrap;
+    border-right: none !important;
+}
+
+/* Column specific styles */
+.mat-column-select {
+    min-width: 60px;
+    max-width: 60px;
+    padding-left: 8px !important;
+}
+
+.mat-column-date {
+    min-width: 120px;
+}
+
+.mat-column-ldap {
+    min-width: 120px;
+}
+
+.mat-column-leadUsername {
+    min-width: 120px;
+}
+
+.mat-column-projectName {
+    min-width: 150px;
+}
+
+.mat-column-process {
+    min-width: 120px;
+}
+
+.mat-column-activity {
+    min-width: 150px;
+}
+
+.mat-column-timestamp {
+    min-width: 180px;
+}
+
+.mat-column-requestType {
+    min-width: 160px;
+}
+
+.mat-column-leaveType {
+    min-width: 160px;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+
+.mat-column-leaveDetails {
+    min-width: 200px;
+    max-width: 300px;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+
+.mat-column-duration {
+    min-width: 100px;
+    text-align: right;
+}
+
+.mat-column-timeInMins {
+    min-width: 100px;
+    text-align: right;
+}
+
+.mat-column-attendanceType {
+    min-width: 120px;
+}
+
+.mat-column-isOvertime {
+    min-width: 100px;
+    text-align: center;
+}
+
+/* Reason and Backup columns - expandable on hover */
+.mat-column-reason {
+    min-width: 180px;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+}
+
+.mat-column-backupInfo {
+    min-width: 250px;
+    max-width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+}
+
+.mat-column-reason .mat-mdc-cell,
+.mat-column-backupInfo .mat-mdc-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Expand on hover - only for cells with meaningful content */
+.mat-mdc-cell.mat-column-reason:hover:not(.empty-cell),
+.mat-mdc-cell.mat-column-backupInfo:hover:not(.empty-cell) {
+    white-space: normal;
+    overflow: visible;
+    background-color: #f5f5f5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    padding: 12px 16px !important;
+    z-index: 100;
+    position: relative;
+}
+
+.mat-column-comment {
+    min-width: 180px;
+    /* Handle long text with ellipsis */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+/* Show full text on hover */
+.mat-column-comment:hover {
+    white-space: normal;
+    overflow: visible;
+    z-index: 1;
+    position: relative;
+    background-color: #f5f5f5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+.mat-column-status {
+    min-width: 120px;
+    position: sticky;
+    right: 160px;
+    background-color: white;
+    z-index: 10;
+}
+
+/* Sticky header for status */
+.mat-mdc-header-cell.mat-column-status {
+    position: sticky;
+    right: 160px;
+    background-color: #f5f5f5;
+    z-index: 101;
+}
+
+.mat-column-actions {
+    min-width: 160px;
+    width: 160px;
+    text-align: center;
+    position: sticky;
+    right: 0;
+    background-color: white;
+    z-index: 10;
+}
+
+/* Sticky header for actions */
+.mat-mdc-header-cell.mat-column-actions {
+    position: sticky;
+    right: 0;
+    background-color: #f5f5f5;
+    z-index: 101;
+}
+
+/* Filter section styles */
+.filters-section {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 20px;
+    background: white;
+    border-radius: 4px;
+    margin: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;
+}
+
+.date-range-container {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.status-filter {
+    min-width: 150px;
+}
+
+.search-field {
+    width: 300px;
+}
+
+/* Button styles */
+.mat-column-actions {
+    flex: 0 0 180px;
+    /* fixed width */
+    max-width: 180px;
+}
+
+/* keep buttons side by side */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.apply-button {
+    background-color: #673ab7 !important;
+    color: white !important;
+    height: 36px;
+    padding: 0 16px !important;
+    font-weight: 500;
+    border-radius: 4px;
+}
+
+.apply-button:hover {
+    background-color: #5e35b1 !important;
+}
+
+/* Status chip styles - matching History tab */
+.status-chip {
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: capitalize;
+    display: inline-block;
+}
+
+.status-pending {
+    background-color: #fff3e0;
+    color: #e65100;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.status-approved {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.status-rejected {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.status-revoked {
+    background-color: #ede7f6;
+    color: #6a1b9a;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 960px) {
+    .filters-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .date-range-container {
+        flex-direction: column;
+    }
+
+    .search-field {
+        width: 100%;
+    }
+
+    /* Responsive actions column */
+    .mat-column-actions {
+        min-width: 140px;
+        width: 140px;
+    }
+
+    .actions-cell {
+        gap: 2px;
+        min-width: 140px;
+    }
+
+    .action-btn {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        margin: 0 1px;
+    }
+
+    .action-btn mat-icon {
+        font-size: 16px;
+        height: 16px;
+        width: 16px;
+    }
+}
+
+/* Actions toolbar */
+.actions-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+.action-group {
+    display: flex;
+    align-items: center;
+}
+
+.date-range-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-range-field {
+    width: 280px;
+}
+
+.filter-toggle {
+    margin-right: 10px;
+}
+
+
+
+/* Header container styling */
+.header-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.header-text {
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.87);
+    margin-right: 8px;
+}
+
+.filter-input {
+    width: 100%;
+    font-size: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 4px 8px;
+    margin-top: 4px;
+}
+
+/* Column filter styles */
+.filter-menu-content {
+    padding: 16px;
+    min-width: 250px;
+    max-width: 300px;
+}
+
+.filter-search {
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.filter-menu-content hr {
+    margin: 8px 0;
+    border: none;
+    border-top: 1px solid #e0e0e0;
+}
+
+.filter-menu-content mat-checkbox {
+    display: block;
+    margin: 8px 0;
+}
+
+.verified-icon {
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+}
+
+/* Overtime icon styling */
+.mat-column-isOvertime .mat-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+    line-height: 18px;
+}
+
+.mat-column-isOvertime .mat-icon[color="accent"] {
+    color: #ff4081;
+}
+
+.mat-column-isOvertime .mat-icon[color="disabled"] {
+    color: #bdbdbd;
+}
+
+/* Row hover effect */
+.mat-row:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Checkbox styling */
+.mat-checkbox {
+    margin: 0 8px;
+}
+
+/* View comment button */
+.view-comment-btn {
+    margin-left: 4px;
+}
+
+/* Minutes cell styling */
+.minutes-cell {
+    text-align: right;
+    font-weight: 500;
+}
+
+/* Paginator styling - Fixed at bottom, doesn't scroll horizontally */
+mat-paginator {
+    background-color: white;
+    border-top: 1px solid #e0e0e0;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+/* Remove old rejection comment styles */
+.rejection-comment,
+.comment-text {
+    display: none;
+}
+
+/* Comment cell styling */
+.comment-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    cursor: pointer;
+}
+
+/* Show full text on hover */
+.comment-cell:hover {
+    white-space: normal;
+    overflow: visible;
+    z-index: 1;
+    position: relative;
+    background-color: #f5f5f5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+/* Table header styling */
+.mat-header-cell {
+    background-color: #f5f5f5;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+/* Action buttons in cells */
+.mat-column-actions button {
+    margin-left: 10px;
+    width: 64px;
+    min-width: 48px;
+}
+
+/* Only apply compact style to icon-only buttons */
+.mat-column-actions button.mat-icon-button {
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    line-height: 32px;
+}
+
+/* Ensure action icons are properly sized */
+.mat-column-actions button mat-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+}
+
+/* Fix for action buttons container */
+.mat-column-actions .mat-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Actions cell styling */
+.actions-cell {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    min-width: 100px;
+    padding: 4px 8px;
+}
+
+.actions-cell button.mat-mdc-icon-button {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.actions-cell button.mat-mdc-icon-button:hover {
+    background: transparent !important;
+}
+
+.actions-cell button.mat-mdc-icon-button:active {
+    background: transparent !important;
+}
+
+.actions-cell button.mat-mdc-icon-button .mat-mdc-button-persistent-ripple,
+.actions-cell button.mat-mdc-icon-button .mat-ripple,
+.actions-cell button.mat-mdc-icon-button .mat-mdc-button-ripple,
+.actions-cell button.mat-mdc-icon-button::before,
+.actions-cell button.mat-mdc-icon-button::after {
+    display: none !important;
+    opacity: 0 !important;
+    background: transparent !important;
+}
+
+.actions-cell .menu-icon {
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+
+/* General action button styling */
+.action-btn {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    border-radius: 50% !important;
+    transition: all 0.2s ease;
+    margin: 0 2px;
+}
+
+.action-btn:hover {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    transform: scale(1.05);
+}
+
+/* Clone button styling */
+.action-btn[color="primary"]:hover {
+    background-color: rgba(103, 58, 183, 0.1) !important;
+}
+
+/* Copy to Week button styling */
+.action-btn[color="accent"]:hover {
+    background-color: rgba(255, 64, 129, 0.1) !important;
+}
+
+/* 3-dot menu button specific styling */
+.actions-cell button[matMenuTriggerFor] {
+    background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.actions-cell button[matMenuTriggerFor]:hover {
+    background-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Actions menu styling */
+.actions-menu {
+    min-width: 220px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.menu-icon {
+    cursor: pointer;
+    font-size: 22px;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.menu-icon:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+
+.actions-menu .mat-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    font-size: 14px;
+    line-height: 1.4;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+.actions-menu .mat-menu-item mat-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+    margin-right: 0;
+    transition: transform 0.2s ease;
+}
+
+.actions-menu .mat-menu-item:hover mat-icon {
+    transform: scale(1.1);
+}
+
+/* Delete menu item styling */
+.delete-menu-item {
+    color: #f44336 !important;
+    background-color: rgba(244, 67, 54, 0.05) !important;
+    border-left-color: #f44336 !important;
+    font-weight: 500;
+}
+
+.delete-menu-item:hover {
+    background-color: rgba(244, 67, 54, 0.1) !important;
+    border-left-color: #d32f2f !important;
+    transform: translateX(2px);
+}
+
+.delete-menu-item mat-icon {
+    color: #f44336 !important;
+}
+
+.delete-menu-item:hover mat-icon {
+    color: #d32f2f !important;
+}
+
+/* Disabled menu item styling */
+.disabled-menu-item {
+    opacity: 0.6;
+    pointer-events: none;
+    color: rgba(0, 0, 0, 0.38) !important;
+}
+
+.disabled-menu-item mat-icon {
+    color: rgba(0, 0, 0, 0.38) !important;
+}
+
+/* Menu item hover effects */
+.actions-menu .mat-menu-item:not(.disabled-menu-item):not(.delete-menu-item):hover {
+    background-color: rgba(0, 0, 0, 0.04);
+    border-left-color: #673ab7;
+    transform: translateX(2px);
+}
+
+.actions-menu .mat-menu-item:not(.disabled-menu-item):not(.delete-menu-item):hover mat-icon[color="primary"] {
+    color: #673ab7 !important;
+}
+
+.actions-menu .mat-menu-item:not(.disabled-menu-item):not(.delete-menu-item):hover mat-icon[color="accent"] {
+    color: #ff4081 !important;
+}
+
+/* Tooltip styling for menu items */
+.actions-menu .mat-menu-item[matTooltip] {
+    position: relative;
+}
+
+/* Column toggle overlay */
+.column-toggle-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+/* Column toggle dialog styling */
+.column-toggle-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.column-toggle-header {
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+    background: #f8f9fa;
+    border-radius: 12px 12px 0 0;
+}
+
+.column-toggle-header h3 {
+    margin: 0 0 16px 0;
+    color: #495057;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.column-search {
+    width: 100%;
+}
+
+.column-toggle-content {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.column-list {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.column-list mat-checkbox {
+    margin: 0;
+}
+
+.column-toggle-footer {
+    padding: 16px 20px;
+    border-top: 1px solid #e9ecef;
+    background: #f8f9fa;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Toggle columns button styling */
+.toggle-columns-button {
+    background-color: #6c757d;
+    color: white;
+}
+
+.toggle-columns-button:hover {
+    background-color: #5a6268;
+}
+
+/* Column Toggle Button Styling */
+.column-toggle-button {
+    background-color: #5e35b1 !important;
+    color: white !important;
+    height: 36px;
+    padding: 0 16px !important;
+    font-weight: 500;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.column-toggle-button:hover {
+    background-color: #5e35b1 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(103, 58, 183, 0.3);
+}
+
+.column-toggle-button mat-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+}
+
+/* Column Menu Styling */
+.column-menu {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.column-menu-content {
+    padding: 16px;
+    min-width: 280px;
+    max-width: 320px;
+}
+
+.column-menu-title {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+.column-search-field {
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.select-all-container {
+    margin-bottom: 8px;
+}
+
+.select-all-checkbox {
+    font-weight: 500;
+}
+
+.column-menu-items {
+    max-height: 250px;
+    overflow-y: auto;
+    margin-top: 8px;
+}
+
+.column-toggle-checkbox {
+    display: block;
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+.column-toggle-checkbox.mat-mdc-checkbox-disabled {
+    opacity: 0.6;
+}
+
+/* Divider styling */
+.column-menu-content mat-divider {
+    margin: 12px 0;
+}
+
+mat-button-toggle-group {
+    margin-bottom: 12px;
+}
+
+mat-button-toggle {
+    font-weight: 500;
+    color: #555;
+    background-color: transparent;
+    border: none;
+    padding: 6px 16px;
+}
+
+mat-button-toggle.mat-button-toggle-checked {
+    background-color: #ede7f6;
+    color: #5e35b1;
+}
+
+.toggle-group {
+    margin-bottom: 12px;
+    /* optional styling */
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    width: 100%;
+}
+
+/* Highlight modified records - targeting Angular Material MDC classes */
+::ng-deep .mat-mdc-row.modified-record {
+    background-color: #f0b877 !important;
+}
+
+::ng-deep .mat-mdc-row.modified-record:hover {
+    background-color: #ffe8a2 !important;
+}
+
+/* Target the MDC cells specifically */
+::ng-deep .mat-mdc-row.modified-record .mat-mdc-cell {
+    background-color: #fff3cd !important;
+}
+
+::ng-deep .mat-mdc-row.modified-record:hover .mat-mdc-cell {
+    background-color: #ffe8a2 !important;
+}
+
+/* Also target mdc-data-table__cell */
+::ng-deep .mat-mdc-row.modified-record .mdc-data-table__cell {
+    background-color: #fff3cd !important;
+}
+
+::ng-deep .mat-mdc-row.modified-record:hover .mdc-data-table__cell {
+    background-color: #ffe8a2 !important;
+}

@@ -1,0 +1,82 @@
+<h2 mat-dialog-title>Edit Request</h2>
+<mat-dialog-content [formGroup]="editForm">
+  <div class="form-grid">
+    <mat-form-field appearance="fill">
+      <mat-label>Start Date</mat-label>
+      <input matInput [matDatepicker]="startPicker" formControlName="startDate">
+      <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+      <mat-datepicker #startPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>End Date</mat-label>
+      <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+      <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+      <mat-datepicker #endPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Application Type</mat-label>
+      <mat-select formControlName="applicationType">
+        <mat-option value="Leave">Leave</mat-option>
+        <mat-option value="Work From Home">Work From Home</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Duration</mat-label>
+      <mat-select formControlName="duration">
+        <mat-option value="Full Day">Full Day</mat-option>
+        <mat-option value="Half Day AM">Half Day AM</mat-option>
+        <mat-option value="Half Day PM">Half Day PM</mat-option>
+        <mat-option value="Multiple Days">Multiple Days</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" *ngIf="editForm.value.applicationType === 'Leave'">
+      <mat-label>Leave Type</mat-label>
+      <mat-select formControlName="leaveType">
+        <mat-option value="Casual Leave">Casual Leave</mat-option>
+        <mat-option value="Sick Leave">Sick Leave</mat-option>
+        <mat-option value="Earned Leave">Earned Leave</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Timesheet / Screenshot (only for Leave) -->
+    <ng-container *ngIf="editForm.value.applicationType === 'Leave'">
+      <mat-form-field appearance="fill">
+        <mat-label>OOO Screenshot Link</mat-label>
+        <input matInput formControlName="oooProof">
+        <mat-error *ngIf="editForm.get('oooProof')?.hasError('required')">
+          OOO proof is required.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Backup Info</mat-label>
+        <textarea matInput formControlName="backupInfo" rows="3"></textarea>
+        <mat-error *ngIf="editForm.get('backupInfo')?.hasError('required')">
+          Backup info is required.
+        </mat-error>
+      </mat-form-field>
+    </ng-container>
+
+    <ng-container *ngIf="editForm.value.applicationType === 'Work From Home'">
+      <label>Attach Supporting Document (Optional - [pdf, png, jpg, jpeg])</label>
+      <input type="file" accept=".pdf,.png,.jpg,.jpeg" (change)="onFileSelected($event)">
+
+      <mat-form-field appearance="fill">
+        <mat-label>Reason for Work From Home</mat-label>
+        <textarea matInput formControlName="reason" rows="3"></textarea>
+        <mat-error *ngIf="editForm.get('reason')?.hasError('required')">
+          Reason is required for WFH.
+        </mat-error>
+      </mat-form-field>
+    </ng-container>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSave()">Save</button>
+</mat-dialog-actions>

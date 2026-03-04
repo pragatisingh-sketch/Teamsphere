@@ -1,0 +1,70 @@
+<h2 mat-dialog-title>Edit History for {{ data.user.firstName }} {{ data.user.lastName }}</h2>
+
+<div mat-dialog-content>
+  <div class="filter-container">
+    <mat-form-field appearance="outline">
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Search in edit logs" #input>
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading edit logs...</p>
+  </div>
+
+  <div class="table-container" *ngIf="!isLoading">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+      <!-- Field Name Column -->
+      <ng-container matColumnDef="fieldName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Field</th>
+        <td mat-cell *matCellDef="let log">{{ log.fieldName }}</td>
+      </ng-container>
+
+      <!-- Old Value Column -->
+      <ng-container matColumnDef="oldValue">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Previous Value</th>
+        <td mat-cell *matCellDef="let log">{{ log.oldValue || 'N/A' }}</td>
+      </ng-container>
+
+      <!-- New Value Column -->
+      <ng-container matColumnDef="newValue">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>New Value</th>
+        <td mat-cell *matCellDef="let log">{{ log.newValue || 'N/A' }}</td>
+      </ng-container>
+
+      <!-- Changed By Column -->
+      <ng-container matColumnDef="changedBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Changed By</th>
+        <td mat-cell *matCellDef="let log">{{ log.changedBy }}</td>
+      </ng-container>
+
+      <!-- Changed At Column -->
+      <ng-container matColumnDef="changedAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Changed</th>
+        <td mat-cell *matCellDef="let log">{{ log.changedAt | date:'medium' }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="5">
+          <div class="no-data-message">
+            <mat-icon>info</mat-icon>
+            <span *ngIf="input.value">No edit logs matching "{{input.value}}"</span>
+            <span *ngIf="!input.value">No edit logs found for this user</span>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="close()">Close</button>
+</div>

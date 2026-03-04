@@ -1,0 +1,130 @@
+<div class="issue-detail-container" *ngIf="issue; else loading">
+    <app-page-header style="width: 100%" title="Issue Details" subtitle="#{{issueId}} - {{issue.title}}"
+        [showBack]="true" (backClick)="goBack()">
+        <div actions>
+            <button mat-flat-button [matMenuTriggerFor]="statusMenu"
+                [color]="issue.status === 'Resolved' ? 'accent' : 'primary'">
+                {{issue.status || 'Active'}}
+                <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+            <mat-menu #statusMenu="matMenu">
+                <button mat-menu-item (click)="updateStatus('Open')">Open</button>
+                <button mat-menu-item (click)="updateStatus('Assigned')">Assigned</button>
+                <button mat-menu-item (click)="updateStatus('In Progress')">In Progress</button>
+                <button mat-menu-item (click)="updateStatus('Resolved')">Resolved</button>
+                <button mat-menu-item (click)="updateStatus('Closed')">Closed</button>
+            </mat-menu>
+        </div>
+    </app-page-header>
+
+    <div class="content-card">
+        <!-- Description Section -->
+        <div class="section-title">Description</div>
+        <div class="field-value description-text">{{issue.description}}</div>
+
+        <div class="section-title" *ngIf="issue.stepsToReproduce">Steps to Reproduce</div>
+        <div class="field-value description-text" *ngIf="issue.stepsToReproduce">{{issue.stepsToReproduce}}</div>
+
+        <div class="divider"></div>
+
+        <!-- Details Grid -->
+        <div class="details-grid">
+            <div class="detail-item">
+                <div class="label">Type</div>
+                <div class="value"><span class="badge" [ngClass]="issue.type.toLowerCase()">{{issue.type}}</span></div>
+            </div>
+            <div class="detail-item">
+                <div class="label">Priority</div>
+                <div class="value"><span class="badge"
+                        [ngClass]="issue.priority.toLowerCase()">{{issue.priority}}</span></div>
+            </div>
+            <div class="detail-item">
+                <div class="label">Reporter</div>
+                <div class="value" [title]="issue.reporterEmail">{{issue.reporterName || issue.reporterEmail}}</div>
+            </div>
+            <div class="detail-item">
+                <div class="label">Created</div>
+                <div class="value">{{issue.createdAt | date:'mediumDate'}}</div>
+            </div>
+            <div class="detail-item">
+                <div class="label">Severity</div>
+                <div class="value">{{issue.severity || '-'}}</div>
+            </div>
+            <div class="detail-item">
+                <div class="label">Feature</div>
+                <div class="value">{{issue.feature || '-'}}</div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-row">
+            <div class="full-width">
+                <div class="label" style="margin-bottom: 8px;">CC Users</div>
+                <mat-form-field class="full-width" appearance="outline">
+                    <mat-chip-grid #chipGrid aria-label="CC selection">
+                        <mat-chip-row *ngFor="let user of ccUsers" (removed)="remove(user)">
+                            {{user}}
+                            <button matChipRemove [attr.aria-label]="'remove ' + user">
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip-row>
+                    </mat-chip-grid>
+                    <input placeholder="Add person..." #ccInput [formControl]="ccCtrl" [matChipInputFor]="chipGrid"
+                        [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        (matChipInputTokenEnd)="add($event)" />
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                        <mat-option *ngFor="let user of filteredEmployees | async" [value]="user">
+                            {{user}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Comments Section -->
+        <div class="section-title">Comments ({{issue.comments?.length || 0}})</div>
+
+        <form [formGroup]="commentForm" (ngSubmit)="addComment()" class="comment-form">
+            <mat-form-field class="full-width" appearance="outline">
+                <mat-label>Add a comment...</mat-label>
+                <textarea matInput formControlName="content" rows="3" [matAutocomplete]="autoMention"
+                    (input)="onCommentInput($event)"></textarea>
+                <mat-autocomplete #autoMention="matAutocomplete" (optionSelected)="selectedMention($event)">
+                    <mat-option *ngFor="let user of filteredMentions | async" [value]="user">
+                        {{user}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-hint>Type @ to mention people.</mat-hint>
+            </mat-form-field>
+            <div class="comment-actions">
+                <button mat-raised-button color="primary" type="submit" [disabled]="commentForm.invalid">
+                    Post Comment
+                </button>
+            </div>
+        </form>
+
+
+
+        <div class="comments-list">
+            <div *ngFor="let comment of issue.comments" class="comment-item">
+                <div class="comment-header">
+                    <span class="author">{{comment.authorName || comment.authorEmail || 'Unknown'}}</span>
+                    <span class="date">{{comment.createdAt | date:'short'}}</span>
+                </div>
+                <div class="comment-body" [innerHTML]="formatComment(comment.content)"></div>
+            </div>
+            <div *ngIf="!issue.comments?.length" class="no-data">
+                No comments yet.
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #loading>
+    <div class="loading-shade">
+        <mat-spinner diameter="40"></mat-spinner>
+    </div>
+</ng-template>

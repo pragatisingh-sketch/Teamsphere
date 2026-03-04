@@ -1,0 +1,113 @@
+<div class="insight-card"
+     [class]="layout"
+     [class.compact-table]="data.layoutType === 'compact-table'"
+     [class.clickable]="clickable && !loading"
+     [class.loading]="loading"
+     (click)="onCardClick()">
+  
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-overlay">
+    <mat-spinner [diameter]="30" class="loading-spinner"></mat-spinner>
+  </div>
+
+  <!-- Compact Table Layout -->
+  <div *ngIf="data.layoutType === 'compact-table'" class="compact-table-layout">
+    <!-- Header section with rounded square icon background -->
+    <div class="compact-header">
+      <div class="compact-icon-section">
+        <mat-icon class="compact-card-icon">{{ data.icon }}</mat-icon>
+      </div>
+      <div class="compact-title-section">
+        <h3 class="compact-card-title">{{ data.title }}</h3>
+        <div class="compact-card-subtitle" *ngIf="data.subtitle">
+          {{ data.subtitle }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Row (Top Bar) -->
+    <div class="summary-row">
+      <span class="summary-text">{{ data.summaryText || 'Summary Overview' }}</span>
+      <div class="summary-values">
+        <span class="summary-total">{{ formattedValue }}</span>
+        <span class="summary-trend" *ngIf="data.trend && data.trend.value !== 0" [ngClass]="trendColor">
+          {{ data.trend.direction === 'up' ? '+' : '' }}{{ formattedTrendValue }}%
+        </span>
+      </div>
+    </div>
+
+    <!-- Data Table Section -->
+    <div class="table-section" *ngIf="data.tableRows && data.tableRows.length > 0">
+      <div class="table-row" *ngFor="let row of data.tableRows">
+        <div class="table-cell category-cell">
+          <mat-icon class="table-icon" *ngIf="row.icon" [class]="row.color">{{ row.icon }}</mat-icon>
+          <span class="category-name">{{ row.category }}</span>
+        </div>
+        <div class="table-cell count-cell" [class]="row.color">
+          {{ row.count }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Default Layout (existing design) -->
+  <div *ngIf="!data.layoutType || data.layoutType === 'default'" class="card-content">
+    <!-- Header section -->
+    <div class="card-header">
+      <div class="icon-section">
+        <mat-icon [color]="data.color || 'primary'" class="card-icon">
+          {{ data.icon }}
+        </mat-icon>
+      </div>
+      <div class="title-section">
+        <h3 class="card-title">{{ data.title }}</h3>
+        <div class="card-subtitle" *ngIf="data.subtitle">
+          {{ data.subtitle }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Main value section -->
+    <div class="value-section">
+      <div class="main-value">
+        <span class="value-text">{{ formattedValue }}</span>
+        <div class="trend-section" *ngIf="data.trend && data.trend.value !== 0">
+          <mat-icon [color]="trendColor" class="trend-icon">
+            {{ trendIcon }}
+          </mat-icon>
+          <span [ngClass]="trendColor" class="trend-text">
+            {{ data.trend.direction === 'up' ? '+' : '' }}{{ formattedTrendValue }}%
+            <span class="trend-label">{{ data.trend.label || 'from last period' }}</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Secondary value section -->
+      <div class="secondary-value" *ngIf="showSecondary && data.secondaryValue">
+        <span class="secondary-label">{{ data.secondaryLabel }}</span>
+        <span class="secondary-text">{{ data.secondaryValue }}</span>
+      </div>
+    </div>
+
+    <!-- Progress bar section -->
+    <div class="progress-section" *ngIf="showProgress && data.progress !== undefined">
+      <div class="progress-bar-container">
+        <div class="progress-bar"
+             [style.width.%]="data.progress"
+             [class.primary]="data.color === 'primary'"
+             [class.accent]="data.color === 'accent'"
+             [class.warn]="data.color === 'warn'"
+             [class.success]="data.color === 'success'">
+        </div>
+      </div>
+      <div class="progress-label">
+        {{ data.progress }}%
+      </div>
+    </div>
+
+    <!-- Drill down indicator -->
+    <div class="drill-down" *ngIf="clickable && !loading">
+      <mat-icon class="drill-icon">arrow_forward</mat-icon>
+    </div>
+  </div>
+</div>

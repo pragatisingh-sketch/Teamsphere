@@ -1,0 +1,117 @@
+<div class="otp-verification-container">
+  <img src="assets/highspring-logo.png" alt="Highspring Logo" class="logo">
+  <h2>Verify OTP</h2>
+  <p class="subtitle">Enter the verification code sent to your email</p>
+
+  <!-- OTP Verification Form -->
+  <div *ngIf="!otpVerified">
+    <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
+      <mat-form-field class="custom-field">
+        <mat-label>OTP Code</mat-label>
+        <input
+          matInput
+          formControlName="otpCode"
+          placeholder="Enter 6-digit code"
+          autofocus
+          maxlength="6"
+        />
+        <mat-icon matSuffix>lock</mat-icon>
+        <mat-error *ngIf="otpCode?.invalid && otpCode?.touched">
+          <span *ngIf="otpCode?.errors?.['required']">OTP code is required.</span>
+          <span *ngIf="otpCode?.errors?.['pattern']">Please enter a valid 6-digit numeric code.</span>
+          <span *ngIf="otpCode?.errors?.['minlength'] || otpCode?.errors?.['maxlength']">OTP code must be exactly 6 digits.</span>
+        </mat-error>
+        <mat-hint *ngIf="!otpCode?.invalid || !otpCode?.touched">
+          Enter the 6-digit code sent to your email
+        </mat-hint>
+      </mat-form-field>
+
+      <div class="buttons">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="action-button"
+          [disabled]="otpForm.invalid || isVerifying"
+        >
+          <span *ngIf="!isVerifying">Verify OTP</span>
+          <span *ngIf="isVerifying">Verifying...</span>
+        </button>
+      </div>
+
+      <div class="resend-otp">
+        <a (click)="requestNewOtp()" class="link" [class.disabled]="isRequestingNewOtp">
+          <span *ngIf="!isRequestingNewOtp">Didn't receive the code? Resend OTP</span>
+          <span *ngIf="isRequestingNewOtp">Sending new OTP...</span>
+        </a>
+      </div>
+
+      <div class="back-to-login">
+        <a routerLink="/forgot-password" class="link">Back to Forgot Password</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Password Reset Form (shown after OTP verification) -->
+  <div *ngIf="otpVerified">
+    <h2>Set New Password</h2>
+    <p class="subtitle">Please enter your new password</p>
+
+    <form [formGroup]="passwordResetForm" (ngSubmit)="resetPassword()">
+      <mat-form-field class="custom-field">
+        <mat-label>New Password</mat-label>
+        <input
+          matInput
+          [type]="hidePassword ? 'password' : 'text'"
+          formControlName="newPassword"
+          placeholder="Enter new password"
+        />
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="newPassword?.invalid && newPassword?.touched">
+          <span *ngIf="newPassword?.errors?.['required']">Password is required.</span>
+          <span *ngIf="newPassword?.errors?.['minlength']">Password must be at least 8 characters long.</span>
+          <span *ngIf="newPassword?.errors?.['pattern']">
+            Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).
+          </span>
+        </mat-error>
+        <mat-hint *ngIf="!newPassword?.invalid || !newPassword?.touched">
+          Must be at least 8 characters with uppercase, lowercase, number, and special character.
+        </mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="custom-field">
+        <mat-label>Confirm Password</mat-label>
+        <input
+          matInput
+          [type]="hideConfirmPassword ? 'password' : 'text'"
+          formControlName="confirmPassword"
+          placeholder="Confirm new password"
+        />
+        <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
+          <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="confirmPassword?.invalid && confirmPassword?.touched">
+          <span *ngIf="confirmPassword?.errors?.['required']">Please confirm your password.</span>
+        </mat-error>
+        <mat-error *ngIf="hasPasswordMismatch">
+          Passwords do not match.
+        </mat-error>
+      </mat-form-field>
+
+      <div class="buttons">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="action-button"
+          [disabled]="passwordResetForm.invalid || isResetting"
+        >
+          <span *ngIf="!isResetting">Reset Password</span>
+          <span *ngIf="isResetting">Resetting...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

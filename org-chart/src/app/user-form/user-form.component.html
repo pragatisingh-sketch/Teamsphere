@@ -1,0 +1,342 @@
+<div class="form-container">
+  <app-page-header style="width: 1400px" title="User Form" subtitle="Add or edit user information">
+  </app-page-header>
+  <h2>{{ isEditMode ? 'Edit User' : 'Add User' }}</h2>
+
+
+
+  <form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
+
+    <!-- First Row of Fields (4 fields) -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>First Name</mat-label>
+        <input matInput [(ngModel)]="user.firstName" name="firstName" [readonly]="isEditMode" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Last Name</mat-label>
+        <input matInput [(ngModel)]="user.lastName" name="lastName" [readonly]="isEditMode" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Ldap</mat-label>
+        <input matInput [(ngModel)]="user.ldap" name="ldap" [readonly]="isEditMode" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Program Manager(Ldap)</mat-label>
+        <input type="text" matInput [formControl]="managerSearchControl" [matAutocomplete]="autoManager"
+          name="programManager" required (blur)="validateManagerInput()">
+        <mat-autocomplete #autoManager="matAutocomplete" [displayWith]="getManagerDisplayName"
+          (optionSelected)="onManagerSelected($event)">
+          <mat-option *ngFor="let manager of filteredManagers" [value]="manager.ldap">
+            {{manager.ldap}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+
+    <!-- Second Row of Fields (4 fields) -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Lead(Ldap)</mat-label>
+        <input type="text" matInput [formControl]="leadSearchControl" [matAutocomplete]="autoLead" name="lead" required
+          (blur)="validateLeadInput()">
+        <mat-autocomplete #autoLead="matAutocomplete" [displayWith]="getLeadDisplayName"
+          (optionSelected)="onLeadSelected($event)">
+          <mat-option *ngFor="let lead of filteredLeads" [value]="lead.ldap">
+            {{lead.ldap}}
+          </mat-option>
+        </mat-autocomplete>
+        <button mat-icon-button matSuffix
+          [matTooltip]="'If the user directly reports to the manager, use the same LDAP in the Lead field.'"
+          aria-label="Help">
+          <mat-icon>info</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Project</mat-label>
+        <input type="text" matInput [formControl]="teamSearchControl" [matAutocomplete]="teamAuto" required
+          (blur)="validateTeamInput()">
+        <mat-autocomplete #teamAuto="matAutocomplete" [displayWith]="getTeamDisplayName"
+          (optionSelected)="onTeamSelected($event)">
+          <mat-option *ngFor="let team of filteredTeams" [value]="team">
+            {{team}}
+          </mat-option>
+        </mat-autocomplete>
+        <button mat-icon-button matSuffix type="button" *ngIf="canManageDropdowns()"
+          (click)="$event.stopPropagation(); openDropdownConfigModal('PROJECT', 'Project')"
+          matTooltip="Configure Project Options" class="config-button">
+          <mat-icon>settings</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Level</mat-label>
+        <input type="text" matInput [formControl]="levelSearchControl" [matAutocomplete]="levelAuto" required
+          (blur)="validateLevelInput()">
+        <mat-autocomplete #levelAuto="matAutocomplete" [displayWith]="getLevelDisplayName"
+          (optionSelected)="onLevelSelected($event)">
+          <mat-option *ngFor="let level of filteredLevels" [value]="level">
+            {{level}}
+          </mat-option>
+        </mat-autocomplete>
+        <button mat-icon-button matSuffix type="button" *ngIf="canManageDropdowns()"
+          (click)="$event.stopPropagation(); openDropdownConfigModal('LEVEL', 'Level (Before Change)')" matTooltip="Configure Level Options"
+          class="config-button">
+          <mat-icon>settings</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>New Level</mat-label>
+        <input type="text" matInput [formControl]="newLevelSearchControl" [matAutocomplete]="newLevelAuto"
+          (blur)="validateNewLevelInput()">
+        <mat-autocomplete #newLevelAuto="matAutocomplete" [displayWith]="getLevelDisplayName"
+          (optionSelected)="onNewLevelSelected($event)">
+          <mat-option *ngFor="let level of filteredNewLevels" [value]="level">
+            {{level}}
+          </mat-option>
+        </mat-autocomplete>
+        <button mat-icon-button matSuffix type="button" *ngIf="canManageDropdowns()"
+          (click)="$event.stopPropagation(); openDropdownConfigModal('LEVEL', 'New Level')" matTooltip="Configure Level Options"
+          class="config-button">
+          <mat-icon>settings</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <!-- Third Row of Fields -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Vendor</mat-label>
+        <mat-select [(ngModel)]="user.vendor" name="vendor" required>
+          <mat-option *ngFor="let vendor of vendors" [value]="vendor">{{ vendor }}</mat-option>
+        </mat-select>
+        <button mat-icon-button matSuffix type="button" *ngIf="canManageDropdowns()"
+          (click)="$event.stopPropagation(); openDropdownConfigModal('VENDOR', 'Vendor')" matTooltip="Configure Vendor Options"
+          class="config-button">
+          <mat-icon>settings</mat-icon>
+        </button>
+
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email Address</mat-label>
+        <input matInput [(ngModel)]="user.email" name="email" type="email" [readonly]="isEditMode" required
+          #emailInput="ngModel" email />
+        <mat-error *ngIf="emailInput.invalid && emailInput.touched">
+          <ng-container *ngIf="emailInput.errors?.['required']">Email is required.</ng-container>
+          <ng-container *ngIf="emailInput.errors?.['email']">Please enter a valid email address.</ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="user.status" name="status" required>
+          <mat-option value="Active">Active</mat-option>
+          <mat-option value="Inactive">Inactive</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Process</mat-label>
+        <input type="text" matInput [formControl]="processSearchControl" [matAutocomplete]="processAuto" required
+          (blur)="validateProcessInput()">
+        <mat-autocomplete #processAuto="matAutocomplete" [displayWith]="getProcessDisplayName"
+          (optionSelected)="onProcessSelected($event)">
+          <mat-option *ngFor="let process of filteredProcesses" [value]="process">
+            {{process}}
+          </mat-option>
+        </mat-autocomplete>
+        <button mat-icon-button matSuffix type="button" *ngIf="canManageDropdowns()"
+          (click)="$event.stopPropagation(); openDropdownConfigModal('PROCESS', 'Process')" matTooltip="Configure Process Options"
+          class="config-button">
+          <mat-icon>settings</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <!-- Fourth Row of Fields -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Profile Picture</mat-label>
+        <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none" />
+        <input matInput placeholder="Select a profile picture" [value]="fileName || ''" readonly
+          (click)="fileInput.click()" />
+        <button mat-icon-button matSuffix (click)="fileInput.click()" aria-label="Upload profile picture">
+          <mat-icon>upload</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>PS&E Program</mat-label>
+        <input type="text" matInput [formControl]="pseProgramSearchControl" [matAutocomplete]="pseProgramAuto"
+          name="pnseProgram" required (blur)="validatePseProgramInput()">
+        <mat-autocomplete #pseProgramAuto="matAutocomplete" [displayWith]="getPseProgramDisplayName"
+          (optionSelected)="onPseProgramSelected($event)">
+          <mat-option *ngFor="let program of filteredPsePrograms" [value]="program">
+            {{program}}
+          </mat-option>
+        </mat-autocomplete>
+        <button mat-icon-button matSuffix type="button" *ngIf="canManageDropdowns()"
+          (click)="$event.stopPropagation(); openDropdownConfigModal('PSE_PROGRAM', 'PS&E Program')" matTooltip="Configure PS&E Program Options"
+          class="config-button">
+          <mat-icon>settings</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Role Change Effective Date</mat-label>
+        <input matInput [matDatepicker]="roleChangeEffectiveDatePicker" [(ngModel)]="user.roleChangeEffectiveDate"
+          name="roleChangeEffectiveDate" />
+        <mat-datepicker-toggle matSuffix [for]="roleChangeEffectiveDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #roleChangeEffectiveDatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Level (Before Change)</mat-label>
+        <input type="text" matInput [formControl]="levelBeforeChangeSearchControl"
+          [matAutocomplete]="levelBeforeChangeAuto" name="levelBeforeChange" (blur)="validateLevelBeforeChangeInput()">
+        <mat-autocomplete #levelBeforeChangeAuto="matAutocomplete" [displayWith]="getLevelDisplayName"
+          (optionSelected)="onLevelBeforeChangeSelected($event)">
+          <mat-option *ngFor="let level of filteredLevelsBeforeChange" [value]="level">
+            {{level}}
+          </mat-option>
+        </mat-autocomplete>
+        <button mat-icon-button matSuffix type="button" *ngIf="canManageDropdowns()"
+          (click)="$event.stopPropagation(); openDropdownConfigModal('LEVEL', 'Level (Before Change)')" matTooltip="Configure Level Options"
+          class="config-button">
+          <mat-icon>settings</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <!-- Fifth Row of Fields -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Level (After Change)</mat-label>
+        <input type="text" matInput [formControl]="levelAfterChangeSearchControl"
+          [matAutocomplete]="levelAfterChangeAuto" name="levelAfterChange" (blur)="validateLevelAfterChangeInput()">
+        <mat-autocomplete #levelAfterChangeAuto="matAutocomplete" [displayWith]="getLevelDisplayName"
+          (optionSelected)="onLevelAfterChangeSelected($event)">
+          <mat-option *ngFor="let level of filteredLevelsAfterChange" [value]="level">
+            {{level}}
+          </mat-option>
+        </mat-autocomplete>
+        <button mat-icon-button matSuffix type="button" *ngIf="canManageDropdowns()"
+          (click)="$event.stopPropagation(); openDropdownConfigModal('LEVEL', 'Level (After Change)')" matTooltip="Configure Level Options"
+          class="config-button">
+          <mat-icon>settings</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Last Billing Date</mat-label>
+        <input matInput [matDatepicker]="lastBillingDatePicker" [(ngModel)]="user.lastBillingDate"
+          name="lastBillingDate" />
+        <mat-datepicker-toggle matSuffix [for]="lastBillingDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #lastBillingDatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Backfill Ldap</mat-label>
+        <input matInput [(ngModel)]="user.backfillLdap" name="backfillLdap" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Billing Start Date</mat-label>
+        <input matInput [matDatepicker]="billingStartDatePicker" [(ngModel)]="user.billingStartDate"
+          name="billingStartDate" />
+        <mat-datepicker-toggle matSuffix [for]="billingStartDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #billingStartDatePicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <!-- Sixth Row of Fields -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Language</mat-label>
+        <input type="text" matInput [formControl]="languageSearchControl" [matAutocomplete]="languageAuto"
+          name="language" (blur)="validateLanguageInput()">
+        <mat-autocomplete #languageAuto="matAutocomplete" [displayWith]="getLanguageDisplayName"
+          (optionSelected)="onLanguageSelected($event)">
+          <mat-option *ngFor="let language of filteredLanguages" [value]="language">
+            {{language}}
+          </mat-option>
+        </mat-autocomplete>
+        <button mat-icon-button matSuffix type="button" *ngIf="canManageDropdowns()"
+          (click)="$event.stopPropagation(); openDropdownConfigModal('LANGUAGE', 'Language')" matTooltip="Configure Language Options"
+          class="config-button">
+          <mat-icon>settings</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Location</mat-label>
+        <input matInput [formControl]="locationSearchControl" [matAutocomplete]="locationAuto"
+          (blur)="validateLocationInput()" name="location" />
+        <mat-autocomplete #locationAuto="matAutocomplete" (optionSelected)="onLocationSelected($event)">
+          <mat-option *ngFor="let location of filteredLocations" [value]="location">
+            {{ getLocationDisplayName(location) }}
+          </mat-option>
+        </mat-autocomplete>
+        <button mat-icon-button matSuffix type="button" *ngIf="canManageDropdowns()"
+          (click)="$event.stopPropagation(); openDropdownConfigModal('LOCATION', 'Location')" matTooltip="Configure Location Options"
+          class="config-button">
+          <mat-icon>settings</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Shift</mat-label>
+        <mat-select [(ngModel)]="user.shift" name="shift" required>
+          <mat-option *ngFor="let shift of shifts" [value]="shift">{{ shift }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Comments / Reason of Inactive Status</mat-label>
+        <input matInput [(ngModel)]="user.inactiveReason" name="inactiveReason" />
+      </mat-form-field>
+    </div>
+
+    <!-- Seventh Row of Fields -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>LWD / ML Start Date</mat-label>
+        <input matInput [matDatepicker]="lwdMlStartDatePicker" [(ngModel)]="user.lwdMlStartDate"
+          name="lwdMlStartDate" />
+        <mat-datepicker-toggle matSuffix [for]="lwdMlStartDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #lwdMlStartDatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Resignation Date</mat-label>
+        <input matInput [matDatepicker]="resignationDatePicker" [(ngModel)]="user.resignationDate"
+          name="resignationDate" />
+        <mat-datepicker-toggle matSuffix [for]="resignationDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #resignationDatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="user.startDate" name="startDate" required />
+        <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <!-- Buttons -->
+    <div class="buttons">
+      <button mat-raised-button color="primary" class="action-button save-button" type="submit">
+        Save
+      </button>
+      <button mat-raised-button color="warn" class="action-button cancel-button" (click)="cancel()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

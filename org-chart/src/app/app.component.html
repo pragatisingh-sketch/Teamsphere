@@ -1,0 +1,9 @@
+<!-- app.component.html -->
+<app-sidebar *ngIf="showSidebar"></app-sidebar>
+<app-notification></app-notification>
+<app-loader></app-loader> <!-- Loader at root level -->
+
+<!-- Login/Signup pages will be shown here when sidebar is hidden -->
+<div class="auth-container" *ngIf="!showSidebar">
+  <router-outlet></router-outlet>
+</div>

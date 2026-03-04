@@ -1,0 +1,221 @@
+<div class="multiple-time-entry-dialog">
+    <div class="dialog-header">
+        <h2 mat-dialog-title style="margin-top: 30px;">
+            <mat-icon class="header-icon">event_note</mat-icon>
+            Multiple Time Entry
+        </h2>
+        <button mat-icon-button class="close-button" (click)="onCancel()" matTooltip="Close">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <!-- Sticky Time Warning Banner (positioned outside scrollable content) -->
+    <div class="time-warning-banner sticky" *ngIf="showTimeWarning()" [class.warning]="getTotalTime() < maxTimeInMins"
+        [class.error]="getTotalTime() > maxTimeInMins">
+        <mat-icon>{{ getTotalTime() > maxTimeInMins ? 'error' : 'warning' }}</mat-icon>
+        <span>{{ getTimeWarningMessage() }}</span>
+    </div>
+
+    <mat-dialog-content>
+        <form [formGroup]="mainForm" class="time-entry-form">
+
+            <!-- Common Fields Section -->
+            <div class="common-fields-section">
+                <div class="section-header">
+                    <mat-icon class="section-icon">info</mat-icon>
+                    <h3>General Information</h3>
+                </div>
+
+                <!-- Toggle buttons container -->
+                <div class="toggle-container" *ngIf="isLeadOrManager" style="margin-bottom: 20px;">
+                    <!-- Toggle button for leads/managers -->
+                    <mat-slide-toggle color="primary" [checked]="isOnBehalfMode" (change)="toggleOnBehalfMode()"
+                        class="toggle-button">
+                        {{ isOnBehalfMode ? 'On Behalf of Team Member' : 'My Time Entry' }}
+                    </mat-slide-toggle>
+                </div>
+
+                <div class="common-fields-grid">
+                    <!-- Date Field -->
+                    <mat-form-field appearance="outline" class="field-date">
+                        <mat-label>Entry Date</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="entryDate" required>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+                    <!-- LDAP Field (Auto-filled, disabled) -->
+                    <mat-form-field appearance="outline" class="field-ldap" *ngIf="!isOnBehalfMode">
+                        <mat-label>LDAP</mat-label>
+                        <input matInput formControlName="ldap" readonly>
+                        <mat-icon matSuffix class="auto-filled-icon" matTooltip="Auto-filled">check_circle</mat-icon>
+                    </mat-form-field>
+
+                    <!-- Team Member Selection (when on behalf mode is active) -->
+                    <mat-form-field appearance="outline" class="field-ldap" *ngIf="isOnBehalfMode">
+                        <mat-label>Team Member</mat-label>
+                        <mat-select formControlName="ldap" required>
+                            <div class="search-box" style="padding: 10px;">
+                                <input matInput (keyup)="filterTeamMembers($event)" placeholder="Search team members..."
+                                    (click)="$event.stopPropagation()"
+                                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                            </div>
+                            <mat-option *ngFor="let member of filteredTeamMembers" [value]="member.ldap">
+                                {{ member.ldap }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- Attendance Type Field (Editable) -->
+                    <mat-form-field appearance="outline" class="field-attendance">
+                        <mat-label>Attendance Type</mat-label>
+                        <mat-select formControlName="attendanceType" required>
+                            <mat-option *ngFor="let type of filteredAttendanceTypes" [value]="type.value">
+                                {{ type.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- Lead Field (Auto-filled dropdown) -->
+                    <mat-form-field appearance="outline" class="field-lead">
+                        <mat-label>Lead</mat-label>
+                        <mat-select formControlName="leadId" required>
+                            <div class="search-box" style="padding: 10px;">
+                                <input matInput (keyup)="filterLeads($event)" placeholder="Search leads..."
+                                    (click)="$event.stopPropagation()"
+                                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                            </div>
+                            <mat-option *ngFor="let lead of filteredLeads" [value]="lead.id">
+                                {{ lead.ldap }} <span *ngIf="lead.role">({{ lead.role }})</span>
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon matSuffix class="auto-filled-icon" matTooltip="Auto-filled">check_circle</mat-icon>
+                    </mat-form-field>
+
+                    <!-- Overtime Toggle -->
+                    <div class="overtime-toggle" *ngIf="hasOvertimeEligibleProject()">
+                        <mat-slide-toggle [checked]="isOvertimeEntry" color="accent" (change)="toggleOvertimeMode()">
+                            <span class="toggle-label">
+                                <mat-icon>access_time</mat-icon>
+                                Overtime Entry
+                            </span>
+                        </mat-slide-toggle>
+                        <div class="overtime-hint" *ngIf="!isOvertimeEntry">
+                            Overtime toggle is available for eligible projects
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Blocks Section -->
+            <div class="project-blocks-section">
+                <div class="section-header">
+                    <mat-icon class="section-icon">folder</mat-icon>
+                    <h3>Time Entries</h3>
+                    <div class="total-time-chip">
+                        <mat-icon>schedule</mat-icon>
+                        <span>Total: {{ getTotalTime() }} / {{ maxTimeInMins }} mins</span>
+                    </div>
+                </div>
+
+                <!-- Project Blocks -->
+                <div formArrayName="projectBlocks" class="project-blocks-container">
+                    <div *ngFor="let block of projectBlocks.controls; let i = index" [formGroupName]="i"
+                        class="project-block">
+
+                        <div class="block-header">
+                            <div class="block-number">
+                                <mat-icon>assignment</mat-icon>
+                                <span>Entry {{ i + 1 }}</span>
+                            </div>
+                            <button mat-icon-button class="delete-button" (click)="removeProjectBlock(i)"
+                                matTooltip="Remove this entry" *ngIf="projectBlocks.length > 1">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </div>
+
+                        <div class="block-content">
+                            <!-- Project Selection Row -->
+                            <div class="project-row">
+                                <mat-form-field appearance="outline" class="field-project">
+                                    <mat-label>Project</mat-label>
+                                    <mat-select formControlName="projectId"
+                                        (selectionChange)="onProjectSelected(i, $event.value)" required>
+                                        <mat-option *ngFor="let project of projects"
+                                            [value]="project.projectId || project.id">
+                                            {{ project.projectName || project.name }} ({{ project.projectCode ||
+                                            project.code }})
+                                            <span *ngIf="project.isOvertimeEligible" class="overtime-badge">- Overtime
+                                                Eligible</span>
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-icon matPrefix>business</mat-icon>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Process, Activity, and Time Row -->
+                            <div class="inline-fields-row">
+                                <mat-form-field appearance="outline" class="field-process">
+                                    <mat-label>Process / Bug ID</mat-label>
+                                    <input matInput formControlName="process" required placeholder="b/">
+                                    <mat-icon matPrefix>engineering</mat-icon>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="field-activity">
+                                    <mat-label>Activity</mat-label>
+                                    <mat-select formControlName="activity" required>
+                                        <mat-option *ngFor="let activity of activities" [value]="activity.value">
+                                            {{ activity.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-icon matPrefix>category</mat-icon>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="field-time">
+                                    <mat-label>Time (mins)</mat-label>
+                                    <input matInput type="number" formControlName="timeInMins" required min="1"
+                                        placeholder="0">
+                                    <mat-icon matPrefix>access_time</mat-icon>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Description/Comment Row -->
+                            <div class="description-row">
+                                <mat-form-field appearance="outline" class="field-comment">
+                                    <mat-label>Description / Comments</mat-label>
+                                    <textarea matInput formControlName="comment" rows="2"
+                                        placeholder="Add detailed description of your work..."></textarea>
+                                    <mat-icon matPrefix>description</mat-icon>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add Time Entry Block Button -->
+                    <div class="add-block-container">
+                        <span [matTooltip]="getAddBlockTooltip()" [matTooltipDisabled]="!isAddBlockDisabled()"
+                            matTooltipPosition="above">
+                            <button mat-raised-button type="button" class="add-block-button"
+                                [disabled]="isAddBlockDisabled()" (click)="addProjectBlock()">
+                                <mat-icon>add_circle</mat-icon>
+                                Add Another Time-Entry
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="dialog-actions">
+        <button mat-stroked-button type="button" (click)="onCancel()" class="cancel-button">
+            <mat-icon>close</mat-icon>
+            Cancel
+        </button>
+        <button mat-raised-button color="primary" (click)="onSubmit()" class="submit-button"
+            [disabled]="mainForm.invalid || projectBlocks.length === 0" style="margin-right: 22px;">
+            <mat-icon>save</mat-icon>
+            Create {{ projectBlocks.length }} {{ projectBlocks.length === 1 ? 'Entry' : 'Entries' }}
+        </button>
+    </mat-dialog-actions>
+</div>

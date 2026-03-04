@@ -1,0 +1,17 @@
+<div id="sample">
+  <div id="myDiagramDiv"></div>
+  <div class="button-container">
+    <button mat-raised-button color="primary" (click)="zoomToFit()" class="action-button zoom-to-fit-button">
+      Zoom to Fit
+    </button>
+    <button mat-raised-button color="accent" (click)="centerRoot()" class="action-button center-root-button">
+      Center on Root
+    </button>
+    <button mat-icon-button color="warn" aria-label="Info" class="unclickable-info-icon">
+      <mat-icon>info</mat-icon>
+    </button>
+    <span class="info-text">
+      Single click on the node to expand and collapse the data. Double click on the node to view the data.
+    </span>
+  </div>
+</div>

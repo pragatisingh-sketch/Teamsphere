@@ -1,0 +1,20 @@
+<div class="release-list-container">
+    <app-page-header title="Release Management" subtitle="Manage application versions and send release notifications">
+    </app-page-header>
+
+    <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="openCreateDialog()">
+            <mat-icon>add</mat-icon>
+            Create Release
+        </button>
+    </div>
+
+    <div class="content-section">
+        <div *ngIf="isLoading" class="loading-spinner">
+            <mat-spinner diameter="40"></mat-spinner>
+        </div>
+        <app-reusable-table *ngIf="!isLoading" [data]="releases" [config]="tableConfig"
+            tableId="release-management-table">
+        </app-reusable-table>
+    </div>
+</div>

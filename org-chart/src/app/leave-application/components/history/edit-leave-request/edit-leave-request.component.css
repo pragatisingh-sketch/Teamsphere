@@ -1,0 +1,14 @@
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* Two-column layout */
+    gap: 16px;
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+mat-form-field {
+    width: 100%;
+}

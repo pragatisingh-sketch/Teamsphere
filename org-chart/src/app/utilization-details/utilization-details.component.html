@@ -1,0 +1,147 @@
+<div class="utilization-details-container">
+    <app-page-header *ngIf="dateRange" title="Overall Utilization Details"
+        [subtitle]="formatDate(dateRange.start) + ' - ' + formatDate(dateRange.end)" [showBack]="true"
+        (backClick)="goBack()">
+    </app-page-header>
+
+    <!-- Top Section: Card + Legend Side by Side -->
+    <div class="top-section-grid">
+        <!-- Top 3 Low Utilization Card -->
+        <div class="defaulter-card">
+            <div class="card-header zero-utilization">
+                <i class="material-icons">cancel</i>
+                <span>Top 3 Lowest Utilization</span>
+            </div>
+            <div class="card-body">
+                <div *ngFor="let user of topLowUtilizationUsers; let i = index" class="top-item">
+                    <span class="rank">{{i + 1}}</span>
+                    <div class="details">
+                        <span class="name">{{user.employeeName}}</span>
+                        <span class="dept">{{user.department}}</span>
+                    </div>
+                    <span class="count"
+                        [ngClass]="{'red-text': user.utilizationPercentage < 50, 'orange-text': user.utilizationPercentage >= 50 && user.utilizationPercentage < 80}">
+                        {{user.utilizationPercentage}}%
+                    </span>
+                </div>
+                <div *ngIf="topLowUtilizationUsers.length === 0" class="no-data">No data found</div>
+            </div>
+        </div>
+
+        <!-- Utilization Legend/Info Card -->
+        <div class="utilization-legend">
+            <div class="legend-header">
+                <i class="material-icons">info</i>
+                <span>How Utilization is Calculated</span>
+            </div>
+            <div class="legend-body">
+                <!-- Day Classification -->
+                <div class="legend-section">
+                    <div class="section-title">Day Classification</div>
+                    <div class="legend-items-row">
+                        <div class="legend-item-compact fully">
+                            <i class="material-icons">check_circle</i>
+                            <div class="legend-text">
+                                <span class="title">Full Day (1.0)</span>
+                                <span class="desc">≥ 480 mins</span>
+                            </div>
+                        </div>
+                        <div class="legend-item-compact partial">
+                            <i class="material-icons">timelapse</i>
+                            <div class="legend-text">
+                                <span class="title">Partial Day (0.5)</span>
+                                <span class="desc">1 - 479 mins</span>
+                            </div>
+                        </div>
+                        <div class="legend-item-compact zero">
+                            <i class="material-icons">cancel</i>
+                            <div class="legend-text">
+                                <span class="title">Zero Day (0)</span>
+                                <span class="desc">0 productive mins</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formula Section -->
+                <div class="legend-section formula-section">
+                    <div class="section-title">Utilization % Formula</div>
+                    <div class="formula-box">
+                        <div class="formula">
+                            <span class="formula-text">
+                                ( Full Days × 1 + Partial Days × 0.5 + Zero Days × 0 ) / Total Working Days × 100
+                            </span>
+                        </div>
+                        <div class="formula-example">
+                            <span class="example-label">Example:</span>
+                            <span class="example-calc">( 1 + 0.5 + 0.5 + 0 + 0 ) / 5 × 100 = <strong>40%</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="legend-footer">
+                <span class="footnote">
+                    <i class="material-icons">info_outline</i>
+                    Note: Absenteeisms are considered non-productive days
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-section">
+        <app-unified-filter [userRole]="userRole" (filterChange)="handleUnifiedFilterChange($event)">
+        </app-unified-filter>
+    </div>
+
+    <!-- Accordions Section -->
+    <div class="accordions-container">
+        <!-- Zero Utilization Accordion -->
+        <div class="accordion-item" [class.open]="isZeroOpen">
+            <div class="accordion-header" (click)="toggleAccordion('zero')">
+                <div class="header-content">
+                    <i class="material-icons zero-icon">cancel</i>
+                    <span>Zero Utilization (< 50%)</span>
+                            <span class="badge">{{filteredZeroUtilization.length}}</span>
+                </div>
+                <i class="material-icons chevron">expand_more</i>
+            </div>
+            <div class="accordion-body" *ngIf="isZeroOpen">
+                <app-reusable-table [data]="filteredZeroUtilization" [config]="tableConfig"
+                    tableId="zero-utilization-table"></app-reusable-table>
+            </div>
+        </div>
+
+        <!-- Partially Utilized Accordion -->
+        <div class="accordion-item" [class.open]="isPartialOpen">
+            <div class="accordion-header" (click)="toggleAccordion('partial')">
+                <div class="header-content">
+                    <i class="material-icons partial-icon">timelapse</i>
+                    <span>Partially Utilized (50% - 79%)</span>
+                    <span class="badge">{{filteredPartiallyUtilized.length}}</span>
+                </div>
+                <i class="material-icons chevron">expand_more</i>
+            </div>
+            <div class="accordion-body" *ngIf="isPartialOpen">
+                <app-reusable-table [data]="filteredPartiallyUtilized" [config]="tableConfig"
+                    tableId="partial-utilization-table"></app-reusable-table>
+            </div>
+        </div>
+
+        <!-- Fully Utilized Accordion -->
+        <div class="accordion-item" [class.open]="isFullyOpen">
+            <div class="accordion-header" (click)="toggleAccordion('fully')">
+                <div class="header-content">
+                    <i class="material-icons fully-icon">check_circle</i>
+                    <span>Fully Utilized (>= 80%)</span>
+                    <span class="badge">{{filteredFullyUtilized.length}}</span>
+                </div>
+                <i class="material-icons chevron">expand_more</i>
+            </div>
+            <div class="accordion-body" *ngIf="isFullyOpen">
+                <app-reusable-table [data]="filteredFullyUtilized" [config]="tableConfig"
+                    tableId="fully-utilization-table"></app-reusable-table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,244 @@
+.release-details-container {
+    padding: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.back-button-container {
+    margin-bottom: 20px;
+}
+
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    padding: 60px;
+}
+
+.release-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Release Header Card */
+.release-header-card {
+    background: linear-gradient(135deg, #005cbf 0%, #003d82 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    box-shadow: 0 4px 20px rgba(0, 92, 191, 0.3);
+}
+
+.version-badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 12px 24px;
+    border-radius: 24px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.release-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.release-meta span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.9;
+    font-size: 14px;
+}
+
+.release-meta mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.notification-status.sent {
+    color: #90EE90;
+}
+
+/* Section Styles */
+.section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.section-icon {
+    font-size: 24px;
+}
+
+.section-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    flex: 1;
+}
+
+.count-badge {
+    background: #e0e7ff;
+    color: #005cbf;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.bug-fixes .section-header {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+}
+
+.bug-fixes .count-badge {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.enhancements .section-header {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+
+.enhancements .count-badge {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.features .section-header {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.features .count-badge {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+/* Items List */
+.items-list {
+    padding: 16px 24px;
+}
+
+.release-item {
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    border-left: 4px solid #005cbf;
+}
+
+.release-item:last-child {
+    margin-bottom: 0;
+}
+
+.item-header h3 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.item-description {
+    color: #666;
+    margin: 0 0 16px 0;
+    line-height: 1.6;
+}
+
+/* Steps */
+.steps-container {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.steps-container h4 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+}
+
+.steps-list {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.step-item {
+    padding: 8px 0;
+    line-height: 1.6;
+}
+
+.step-explanation {
+    color: #444;
+}
+
+.step-screenshot {
+    display: block;
+    max-width: 100%;
+    margin-top: 12px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.step-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 12px;
+    color: #005cbf;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.step-link:hover {
+    text-decoration: underline;
+}
+
+.step-link mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px;
+    color: #666;
+}
+
+.empty-state mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #ccc;
+    margin-bottom: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .release-header-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .release-meta {
+        justify-content: center;
+    }
+}

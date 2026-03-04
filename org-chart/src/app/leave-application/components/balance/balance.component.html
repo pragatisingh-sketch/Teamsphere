@@ -1,0 +1,64 @@
+<div class="tab-content">
+
+  <!-- Upload CSV Button aligned right -->
+  <div *ngIf="canUpload">
+    <h2>Upload Leave Balances</h2>
+    <div class="upload-container">
+      <input type="file" #fileInput style="display: none" accept=".csv" (change)="onFileSelected($event)" />
+
+      <button mat-raised-button color="primary" class="action-button upload-button" (click)="fileInput.click()">
+        <mat-icon>upload</mat-icon> Choose CSV
+      </button>
+
+      <button *ngIf="selectedFile" mat-raised-button color="accent" class="action-button upload-button"
+        (click)="uploadLeaveBalance()">
+        <mat-icon>cloud_upload</mat-icon> Upload
+      </button>
+
+      <div *ngIf="selectedFile" class="filename">
+        Selected File: {{ selectedFile.name }}
+      </div>
+    </div>
+
+    <!-- Info hint about skipped report -->
+    <div class="upload-info-hint"
+      style="margin-top: 8px; font-size: 12px; color: #888; display: flex; align-items: center; gap: 4px;">
+      <mat-icon style="font-size: 14px; width: 14px; height: 14px;">info</mat-icon>
+      <span>If any LDAPs/emails are not found in the system, a <strong>skipped report CSV</strong> will auto-download
+        after upload.</span>
+    </div>
+
+    <div class="divider"></div>
+  </div>
+
+
+  <h2>Leave Balances and WFH Taken</h2>
+
+  <!-- All leave + WFH details in a single row -->
+  <div class="leave-balance-cards single-row">
+    <div class="leave-card">
+      <p class="leave-card-title">Sick Leaves</p>
+      <p class="leave-card-days">{{leaveBalance.sick}}</p>
+    </div>
+    <div class="leave-card">
+      <p class="leave-card-title">Casual Leaves</p>
+      <p class="leave-card-days">{{leaveBalance.casual}}</p>
+    </div>
+    <div class="leave-card">
+      <p class="leave-card-title">Earned Leaves</p>
+      <p class="leave-card-days">{{leaveBalance.earned}}</p>
+    </div>
+    <div class="leave-card">
+      <p class="leave-card-title">Total Leaves</p>
+      <p class="leave-card-days">{{leaveBalance.total}}</p>
+    </div>
+    <div class="leave-card">
+      <p class="leave-card-title">Total WFH's</p>
+      <p class="leave-card-days">{{leaveBalance.totalwfh}}</p>
+    </div>
+    <div class="leave-card">
+      <p class="leave-card-title">Current Qtr WFH's</p>
+      <p class="leave-card-days">{{leaveBalance.qtrwfh}}</p>
+    </div>
+  </div>
+</div>

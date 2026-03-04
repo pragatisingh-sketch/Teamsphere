@@ -1,0 +1,117 @@
+<!-- <div class="actions-toolbar">
+    <button mat-raised-button color="primary" (click)="downloadCSV()">
+        <mat-icon>download</mat-icon> Download CSV
+    </button>
+</div>
+
+<div class="table-responsive">
+    <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <ng-container *ngFor="let col of displayedColumns" [matColumnDef]="col">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>
+                <div class="header-container">
+                    {{ columnDisplayNames[col] || col }}
+                    <button *ngIf="columnFilters" mat-icon-button (click)="openFilter(col)">
+                        <mat-icon>filter_list</mat-icon>
+                    </button>
+                </div>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{ row[col] }}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 50]" showFirstLastButtons></mat-paginator>
+</div>
+
+<div *ngIf="currentFilterColumn" class="filter-panel mat-elevation-z4">
+    <h2>Filter: {{ currentFilterColumn }}</h2>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <input matInput [(ngModel)]="searchText">
+    </mat-form-field>
+
+    <div *ngFor="let value of getFilteredValues()">
+        <mat-checkbox [checked]="isSelected(value)" (change)="toggleSelection(value, $event.checked)">
+            {{ value }}
+        </mat-checkbox>
+    </div>
+
+    <div class="filter-actions">
+        <button mat-raised-button color="primary" (click)="applyFilter()">Apply</button>
+        <button mat-button (click)="clearFilter()">Clear</button>
+    </div>
+</div> -->
+
+<div class="actions-toolbar">
+    <button mat-raised-button color="primary" (click)="downloadCSV()">
+      <mat-icon>download</mat-icon> Download CSV
+    </button>
+  </div>
+  
+  <div class="table-responsive">
+    <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 modern-table">
+  
+      <ng-container *ngFor="let col of displayedColumns" [matColumnDef]="col">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            {{ columnDisplayNames[col] || col }}
+            <button *ngIf="columnFilters" mat-icon-button (click)="openFilter(col)">
+              <mat-icon>filter_list</mat-icon>
+            </button>
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <span *ngIf="col === 'status'" class="status-badge"
+                [ngClass]="{
+                  'late': row[col]?.toLowerCase() === 'late',
+                  'on-time': row[col]?.toLowerCase() === 'on time'
+                }">{{ row[col] }}</span>
+  
+          <span *ngIf="col === 'isOutsideOffice'" class="location-badge" 
+                [ngClass]="row[col] ? 'outside' : 'inside'">
+            <mat-icon>{{ row[col] ? 'location_off' : 'location_on' }}</mat-icon>
+            {{ row[col] ? 'Outside' : 'Inside' }}
+          </span>
+  
+          <span *ngIf="col === 'isDefaulter'" class="compliance-badge"
+                [ngClass]="row[col] ? 'non-compliant' : 'compliant'">
+            {{ row[col] ? 'Yes' : 'No' }}
+          </span>
+  
+          <ng-container *ngIf="col !== 'status' && col !== 'isOutsideOffice' && col !== 'isDefaulter'">
+            {{ row[col] }}
+          </ng-container>
+        </mat-cell>
+      </ng-container>
+  
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+  
+    <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+  </div>
+  
+  <!-- Filter panel -->
+  <div *ngIf="currentFilterColumn" class="filter-panel mat-elevation-z4">
+    <h3>Filter: {{ currentFilterColumn }}</h3>
+  
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+      <input matInput [(ngModel)]="searchText">
+    </mat-form-field>
+  
+    <div *ngFor="let value of getFilteredValues()">
+      <mat-checkbox [checked]="isSelected(value)" (change)="toggleSelection(value, $event.checked)">
+        {{ value }}
+      </mat-checkbox>
+    </div>
+  
+    <div class="filter-actions">
+      <button mat-raised-button color="primary" (click)="applyFilter()">Apply</button>
+      <button mat-button (click)="clearFilter()">Clear</button>
+    </div>
+  </div>
+  

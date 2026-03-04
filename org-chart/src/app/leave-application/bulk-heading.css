@@ -1,0 +1,19 @@
+/* New bulk layout structure - heading above selector */
+.bulk-heading-new {
+    margin-bottom: 12px;
+}
+
+.bulk-title-new {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.bulk-select-row-new {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}

@@ -1,0 +1,491 @@
+/* Sidebar Container */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 250px;
+  background-color: #ffffff;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+/* Logo and Toggle Button */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+/* Full logo styling */
+.logo-full {
+  width: 140px;
+  height: auto;
+  transition: all 0.3s ease;
+  object-fit: contain;
+}
+
+/* Logo icon styling (collapsed state) */
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  object-fit: contain;
+}
+
+.logo-icon:hover {
+  transform: scale(1.05);
+}
+
+/* General logo styling */
+.logo {
+  transition: all 0.3s ease;
+}
+
+.logo-full:hover {
+  transform: scale(1.02);
+}
+
+.toggle-btn {
+  color: #134472;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.toggle-btn:hover {
+  background-color: rgba(19, 68, 114, 0.1);
+}
+
+/* Adjust header layout for collapsed state */
+.sidebar.collapsed .sidebar-header {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  gap: 6px;
+  min-height: 80px;
+}
+
+.sidebar.collapsed .logo-container {
+  order: 2;
+}
+
+.sidebar.collapsed .toggle-btn {
+  order: 1;
+  position: relative;
+  top: auto;
+  right: auto;
+  padding: 4px;
+  margin: 0;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+}
+
+/* Navigation Items */
+.sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 0;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.sidebar.collapsed .sidebar-nav {
+  padding: 8px 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  margin-bottom: 4px;
+}
+
+.nav-item:hover {
+  background-color: #f0f7ff;
+}
+
+.nav-item.active {
+  background-color: #e6f0ff;
+  color: #134472;
+  border-left: 3px solid #134472;
+}
+
+.nav-item mat-icon {
+  margin-right: 16px;
+  color: #666;
+}
+
+.nav-item.active mat-icon {
+  color: #134472;
+}
+
+.disabled-nav-item {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.revert-delegation {
+  margin-top: auto;
+}
+
+.delegatee-info {
+  display: block;
+  font-size: 11px;
+  color: #f57c00;
+  margin-top: 2px;
+  font-weight: normal;
+}
+
+.report-issue {
+  margin-top: auto;
+  cursor: pointer;
+  color: #134472;
+}
+
+.report-issue mat-icon {
+  color: #134472;
+}
+
+.sidebar.collapsed .nav-item {
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.sidebar.collapsed .nav-item mat-icon {
+  margin-right: 0;
+}
+
+/* Navigation Item Content for Badge Support */
+.nav-item-content {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+/* Notification Badge */
+.notification-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #ff4444;
+  color: white;
+  border-radius: 50%;
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  padding: 2px 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+/* Badge positioning for collapsed sidebar */
+.sidebar.collapsed .notification-badge {
+  top: -5px;
+  right: 5px;
+}
+
+/* Badge animation */
+.notification-badge {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Custom tooltip styling */
+::ng-deep .request-tooltip {
+  background-color: #333 !important;
+  color: white !important;
+  font-size: 12px !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  max-width: 250px !important;
+  white-space: nowrap !important;
+}
+
+::ng-deep .request-tooltip .mat-tooltip-arrow {
+  border-right-color: #333 !important;
+}
+
+/* User Profile Section */
+.user-profile {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-top: 1px solid #f0f0f0;
+  background-color: #f9f9f9;
+}
+
+.avatar {
+  margin-right: 12px;
+}
+
+.avatar-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #134472;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.user-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-role {
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.app-version {
+  font-size: 11px;
+  color: #999;
+  margin-top: 2px;
+}
+
+.sign-out-btn {
+  color: #666;
+}
+
+.sidebar.collapsed .user-info {
+  display: none;
+}
+
+.sidebar.collapsed .avatar {
+  margin-right: 0;
+}
+
+.sidebar.collapsed .user-profile {
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  gap: 6px;
+  min-height: 70px;
+}
+
+.sidebar.collapsed .sign-out-btn {
+  padding: 4px;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+}
+
+.sidebar.collapsed .avatar-circle {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+}
+
+/* Main Content */
+.main-content {
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.main-content.expanded {
+  margin-left: 70px;
+}
+
+.content-wrapper {
+  padding: 20px;
+}
+
+
+
+/* Form Overlay */
+.form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+}
+
+.form-container {
+  position: relative;
+  width: 480px;
+  background: white;
+  padding: 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: #ff4444;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1101;
+}
+
+.close-btn:hover {
+  background: #cc0000;
+}
+
+.form-container iframe {
+  display: block;
+  width: 100%;
+  height: 680px;
+  border: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 70px;
+  }
+
+  .sidebar .nav-item span,
+  .sidebar .user-info {
+    display: none;
+  }
+
+  .sidebar .nav-item {
+    justify-content: center;
+    padding: 12px 0;
+  }
+
+  .sidebar .nav-item mat-icon {
+    margin-right: 0;
+  }
+
+  .sidebar .avatar {
+    margin-right: 0;
+  }
+
+  .main-content {
+    margin-left: 70px;
+  }
+
+  .sidebar.expanded {
+    width: 250px;
+    z-index: 1050;
+  }
+
+  .sidebar.expanded .nav-item span,
+  .sidebar.expanded .user-info {
+    display: block;
+  }
+
+  .sidebar.expanded .nav-item {
+    justify-content: flex-start;
+    padding: 12px 16px;
+  }
+
+  .sidebar.expanded .nav-item mat-icon {
+    margin-right: 16px;
+  }
+
+  .sidebar.expanded .avatar {
+    margin-right: 12px;
+  }
+
+  /* Logo responsive adjustments */
+  .logo-full {
+    width: 120px;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Additional responsive adjustments for very small screens */
+@media (max-width: 480px) {
+  .logo-full {
+    width: 100px;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .sidebar-header {
+    padding: 12px 16px;
+  }
+
+  .sidebar.collapsed .sidebar-header {
+    padding: 12px 8px;
+  }
+}
