@@ -117,7 +117,10 @@ jobs:
           username: ${{ secrets.GCE_USERNAME }}
           key: ${{ secrets.GCE_SSH_KEY }}
           envs: TESTING_DOMAIN,PRODUCTION_DOMAIN,TARGET_BRANCH,DEPLOY_USER
+          request_pty: false
           script: |
+            set -e
+
             # Step A: Determine domain based on branch
             if [ "$TARGET_BRANCH" == "main" ]; then
               APP_DOMAIN=$PRODUCTION_DOMAIN
@@ -137,7 +140,7 @@ jobs:
               echo "Java already installed: $(java -version 2>&1 | head -1)"
             fi
 
-            # Step C: Write Nginx config using echo (avoids heredoc SSH issues)
+            # Step C: Write Nginx config
             NGINX_CONF="/etc/nginx/sites-available/teamsphere"
             {
               echo "server {"
@@ -166,27 +169,48 @@ jobs:
             # Step D: Deploy frontend files
             sudo rm -rf /var/www/teamsphere
             sudo mkdir -p /var/www/teamsphere
-            FRONTEND_SRC="$DEPLOY_DIR/frontend/org-chart"
-            if [ -d "$FRONTEND_SRC" ]; then
-              sudo cp -r "$FRONTEND_SRC"/. /var/www/teamsphere/
-              echo "Frontend deployed successfully."
+
+            # Robustly find the frontend build output
+            FRONTEND_SRC=""
+            if [ -d "$DEPLOY_DIR/frontend/org-chart" ]; then
+              FRONTEND_SRC="$DEPLOY_DIR/frontend/org-chart"
+            elif [ -f "$DEPLOY_DIR/frontend/index.html" ]; then
+              FRONTEND_SRC="$DEPLOY_DIR/frontend"
             else
-              echo "ERROR: Frontend dist not found at $FRONTEND_SRC"
-              echo "Available contents in $DEPLOY_DIR/frontend/:"
-              ls -la "$DEPLOY_DIR/frontend/" || true
+              FRONTEND_SRC=$(find "$DEPLOY_DIR/frontend" -name "index.html" -maxdepth 3 2>/dev/null | head -1 | xargs dirname || true)
+            fi
+
+            if [ -n "$FRONTEND_SRC" ] && [ -d "$FRONTEND_SRC" ]; then
+              sudo cp -r "$FRONTEND_SRC"/. /var/www/teamsphere/
+              echo "Frontend deployed from: $FRONTEND_SRC"
+            else
+              echo "ERROR: Could not locate frontend build output."
+              echo "Contents of $DEPLOY_DIR/frontend/:"
+              find "$DEPLOY_DIR/frontend/" -maxdepth 3 || true
               exit 1
             fi
 
-            # Step E: Restart Spring Boot backend
+            # Step E: Stop existing backend
             pkill -f 'java -jar' || true
             sleep 3
+
+            # Step F: Start Spring Boot backend — fully detached from SSH session
             JAR_FILE=$(ls "$DEPLOY_DIR/backend/"*.jar 2>/dev/null | head -1)
             if [ -n "$JAR_FILE" ]; then
-              nohup java -jar "$JAR_FILE" \
+              LOG_FILE="/home/$DEPLOY_USER/backend.log"
+              setsid nohup java -jar "$JAR_FILE" \
                 --app.base-url=https://$APP_DOMAIN \
                 --server.port=8080 \
-                > /home/$DEPLOY_USER/backend.log 2>&1 &
-              echo "Backend started: $JAR_FILE"
+                > "$LOG_FILE" 2>&1 &
+              disown $!
+              sleep 5
+              if pgrep -f 'java -jar' > /dev/null; then
+                echo "Backend started successfully: $JAR_FILE"
+              else
+                echo "ERROR: Backend failed to start. Last 20 lines of log:"
+                tail -20 "$LOG_FILE" || true
+                exit 1
+              fi
             else
               echo "ERROR: No JAR file found in $DEPLOY_DIR/backend/"
               ls -la "$DEPLOY_DIR/backend/" || true
@@ -206,7 +230,10 @@ jobs:
           username: ${{ secrets.GCE_USERNAME }}
           key: ${{ secrets.GCE_SSH_KEY }}
           envs: TESTING_DOMAIN,PRODUCTION_DOMAIN,TARGET_BRANCH,CERTBOT_EMAIL
+          request_pty: false
           script: |
+            set -e
+
             if [ "$TARGET_BRANCH" == "main" ]; then
               APP_DOMAIN=$PRODUCTION_DOMAIN
             else
