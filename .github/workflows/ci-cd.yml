@@ -130,6 +130,7 @@ jobs:
             echo "Deploying to: https://$APP_DOMAIN"
 
             DEPLOY_DIR="/home/$DEPLOY_USER/teamsphere-deploy/artifacts"
+            CREDENTIALS_DIR="/home/$DEPLOY_USER/credentials"
 
             # Step B: Install Java if not present
             if ! command -v java &>/dev/null; then
@@ -202,7 +203,10 @@ jobs:
             [Service]
             Type=simple
             User=$DEPLOY_USER
-            ExecStart=/usr/bin/java -jar $JAR_FILE --app.base-url=https://$APP_DOMAIN --server.port=8080
+            ExecStart=/usr/bin/java -jar $JAR_FILE \
+              --app.base-url=https://$APP_DOMAIN \
+              --server.port=8080 \
+              --google.sheets.credentials=file:$CREDENTIALS_DIR/ops-excellence-a969197613f8.json
             Restart=on-failure
             RestartSec=10
             StandardOutput=append:/home/$DEPLOY_USER/backend.log
