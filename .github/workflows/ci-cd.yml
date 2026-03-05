@@ -121,7 +121,7 @@ jobs:
           script: |
             set -e
 
-            # Step A: Determine domain
+            # Step A: Determine domain based on branch
             if [ "$TARGET_BRANCH" == "main" ]; then
               APP_DOMAIN=$PRODUCTION_DOMAIN
             else
@@ -132,6 +132,11 @@ jobs:
             DEPLOY_DIR="/home/$DEPLOY_USER/teamsphere-deploy/artifacts"
             CREDENTIALS_DIR="/home/$DEPLOY_USER/credentials"
 
+            # ── FIX 1: Create required log directories ──
+            # Bina in folders ke Spring Boot crash ho jaata tha log likhne ki koshish mein
+            mkdir -p /home/$DEPLOY_USER/logs
+            mkdir -p /home/$DEPLOY_USER/TeamSphereDebugLogs
+
             # Step B: Install Java if not present
             if ! command -v java &>/dev/null; then
               sudo apt-get update -qq
@@ -139,6 +144,9 @@ jobs:
             fi
 
             # Step C: Write Nginx config
+            # ── FIX 2: proxy_pass mein /api/ prefix ab sahi rahega ──
+            # Pehle: proxy_pass http://localhost:8080/   → /api/ strip ho jaata tha
+            # Ab:    proxy_pass http://localhost:8080/api/ → Spring Boot ko sahi path milta hai
             NGINX_CONF="/etc/nginx/sites-available/teamsphere"
             {
               echo "server {"
@@ -150,7 +158,7 @@ jobs:
               echo "        try_files \$uri \$uri/ /index.html;"
               echo "    }"
               echo "    location /api/ {"
-              echo "        proxy_pass http://localhost:8080/;"
+              echo "        proxy_pass http://localhost:8080/api/;"
               echo "        proxy_set_header Host \$host;"
               echo "        proxy_set_header X-Real-IP \$remote_addr;"
               echo "        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;"
@@ -195,6 +203,9 @@ jobs:
             fi
 
             # Step F: Create systemd service for backend
+            # ── FIX 3: WorkingDirectory add kiya ──
+            # Bina iske Java app relative paths (credentials, logs) dhundh nahi paata
+            # Jaise pehle folder mein jaao, phir kaam karo
             sudo tee /etc/systemd/system/teamsphere.service > /dev/null << EOF
             [Unit]
             Description=Teamsphere Spring Boot Backend
@@ -203,14 +214,16 @@ jobs:
             [Service]
             Type=simple
             User=$DEPLOY_USER
+            WorkingDirectory=/home/$DEPLOY_USER
             ExecStart=/usr/bin/java -jar $JAR_FILE \
               --app.base-url=https://$APP_DOMAIN \
               --server.port=8080 \
               --google.sheets.credentials=file:$CREDENTIALS_DIR/ops-excellence-a969197613f8.json
             Restart=on-failure
             RestartSec=10
-            StandardOutput=append:/home/$DEPLOY_USER/backend.log
-            StandardError=append:/home/$DEPLOY_USER/backend.log
+            SuccessExitStatus=143
+            StandardOutput=append:/home/$DEPLOY_USER/logs/teamsphere.log
+            StandardError=append:/home/$DEPLOY_USER/logs/teamsphere-error.log
 
             [Install]
             WantedBy=multi-user.target
@@ -223,7 +236,7 @@ jobs:
             sudo systemctl start teamsphere
             sleep 5
 
-            # Step H: Verify
+            # Step H: Verify backend is running
             if sudo systemctl is-active --quiet teamsphere; then
               echo "Backend started successfully via systemd"
             else
@@ -262,10 +275,13 @@ jobs:
               sudo apt-get install -y certbot python3-certbot-nginx
             fi
 
-            # Issue new certificate or renew existing
-            CERT_EXISTS=$(sudo certbot certificates 2>/dev/null | grep -c "Domains:.*$APP_DOMAIN" || true)
+            # ── FIX 4: || true hataya — ab real errors dikhenge ──
+            # Pehle || true ki wajah se certbot fail hota tha silently
+            # Ab agar certbot fail hoga toh CI/CD red ho jaayega — sach pata chalega
+            CERT_EXISTS=$(sudo certbot certificates 2>/dev/null | grep -c "Domains:.*$APP_DOMAIN" || echo "0")
 
             if [ "$CERT_EXISTS" -eq "0" ]; then
+              echo "No certificate found — requesting new one for $APP_DOMAIN"
               sudo certbot --nginx \
                 --non-interactive \
                 --agree-tos \
@@ -274,6 +290,7 @@ jobs:
                 -d "$APP_DOMAIN"
               echo "SSL certificate issued for $APP_DOMAIN"
             else
+              echo "Certificate exists — renewing if needed"
               sudo certbot renew --quiet --nginx
               echo "SSL renewal checked for $APP_DOMAIN"
             fi
