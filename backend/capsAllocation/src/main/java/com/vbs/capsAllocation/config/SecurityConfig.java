@@ -54,8 +54,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                // Enable CSRF protection but exclude authentication and password reset
-                // endpoints
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers(
                                 "/auth/login",
@@ -66,7 +64,6 @@ public class SecurityConfig {
                                 "/auth/forgot-password",
                                 "/auth/verify-otp",
                                 "/auth/reset-password-with-otp",
-                                // "/admin/register", // REMOVED: explicit public access removed
                                 "/admin/reset-password-postman",
                                 "/api/time-entries/**",
                                 "/api/timesheets/**",
@@ -92,9 +89,7 @@ public class SecurityConfig {
                 .requestMatchers("/auth/verify-otp").permitAll()
                 .requestMatchers("/auth/reset-password-with-otp").permitAll()
                 .requestMatchers("/auth/signup").permitAll()
-                // .requestMatchers("/admin/register").permitAll() // REMOVED: explicit public
-                // access removed
-                .requestMatchers("/admin/register").hasAnyRole("ADMIN_OPS_MANAGER", "MANAGER") // Secured
+                .requestMatchers("/admin/register").hasAnyRole("ADMIN_OPS_MANAGER", "MANAGER")
                 .requestMatchers("/auth/check-password-status").authenticated()
                 .requestMatchers("/auth/reset-password").authenticated()
                 .requestMatchers("/superadmin/only").hasRole("ACCOUNT_MANAGER")
@@ -102,12 +97,9 @@ public class SecurityConfig {
                 .requestMatchers("/user/only").hasAnyRole("USER", "MANAGER", "ACCOUNT_MANAGER")
                 .requestMatchers("/api/employees/**", "/api/timesheet/**")
                 .hasAnyRole("USER", "LEAD", "MANAGER", "ACCOUNT_MANAGER", "ADMIN_OPS_MANAGER")
-                // Secure admin endpoints with proper role checks
                 .requestMatchers("/admin/reset-password-postman/**").hasAnyRole("ADMIN_OPS_MANAGER", "LEAD", "MANAGER")
                 .requestMatchers("/api/employees/change-role").hasRole("ADMIN_OPS_MANAGER")
                 .requestMatchers("/api/database/**").hasRole("ADMIN_OPS_MANAGER")
-                // Dropdown configuration endpoints - active endpoints for all authenticated
-                // users, management for admins only
                 .requestMatchers("/api/dropdown-configurations/active/**").authenticated()
                 .requestMatchers("/api/dropdown-configurations/**").hasRole("ADMIN_OPS_MANAGER")
                 .requestMatchers("/uploads/**").permitAll()
@@ -116,11 +108,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/ping").permitAll()
                 .requestMatchers("/api/issues/**").authenticated()
                 .requestMatchers("/api/atom/**").hasAnyRole("USER", "LEAD", "MANAGER", "ADMIN_OPS_MANAGER")
-                // Release management - version is public, others need auth (LDAP check in
-                // controller)
                 .requestMatchers("/api/releases/version").permitAll()
                 .requestMatchers("/api/releases/**").authenticated()
-                // FAQ - GET active FAQs is public, management requires auth
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/faqs").permitAll()
                 .requestMatchers("/api/faqs/**").authenticated()
                 .requestMatchers("/api/exports/**").authenticated()
@@ -141,6 +130,7 @@ public class SecurityConfig {
             allowedOrigins.add("https://teamsphere.in");
             allowedOrigins.add("https://www.teamsphere.in");
             allowedOrigins.add("https://api.teamsphere.in");
+            allowedOrigins.add("https://teamsphere.34-47-188-211.sslip.io"); // ✅ ADDED
         } else {
             // Dev/Stage/Test permissive origins
             allowedOrigins.add("http://localhost");
@@ -155,13 +145,12 @@ public class SecurityConfig {
             allowedOrigins.add("http://127.0.0.1:8080");
             allowedOrigins.add("http://127.0.0.1:8081");
             allowedOrigins.add("http://127.0.0.1:8082");
-            allowedOrigins.add("https://teamsphere.in"); // Also allow prod generic
+            allowedOrigins.add("https://teamsphere.in");
+            allowedOrigins.add("https://teamsphere.34-47-188-211.sslip.io"); // ✅ ADDED
         }
 
-        // Add dynamic IP detection for dev environments only
         if (!"prod".equalsIgnoreCase(environment)) {
             try {
-                // Get all network interfaces
                 Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
                 while (interfaces.hasMoreElements()) {
                     NetworkInterface networkInterface = interfaces.nextElement();
