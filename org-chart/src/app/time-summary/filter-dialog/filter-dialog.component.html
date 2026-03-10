@@ -1,0 +1,83 @@
+<h2 mat-dialog-title>Filter Time Summary</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="filterForm" class="filter-form">
+    <div class="filter-grid">
+      <!-- User Filter -->
+      <div class="filter-section">
+        <h3>User</h3>
+        <mat-form-field appearance="outline">
+          <mat-label>Search User</mat-label>
+          <input
+            type="text"
+            matInput
+            [formControl]="userSearchControl"
+            [matAutocomplete]="autoUser"
+            placeholder="Search by LDAP or Username"
+          >
+          <mat-autocomplete #autoUser="matAutocomplete" 
+                          [displayWith]="getUserDisplayName" 
+                          (optionSelected)="onUserSelected($event)">
+            <mat-option *ngFor="let user of filteredUsers" [value]="user">
+              {{getUserDisplayName(user)}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+
+      <!-- Project Filter -->
+      <div class="filter-section">
+        <h3>Project</h3>
+        <mat-form-field appearance="outline">
+          <mat-label>Search Project</mat-label>
+          <input
+            type="text"
+            matInput
+            [formControl]="projectSearchControl"
+            [matAutocomplete]="autoProject"
+            placeholder="Search by Project Name or Code"
+          >
+          <mat-autocomplete #autoProject="matAutocomplete" 
+                          [displayWith]="getProjectDisplayName" 
+                          (optionSelected)="onProjectSelected($event)">
+            <mat-option *ngFor="let project of filteredProjects" [value]="project">
+              {{getProjectDisplayName(project)}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+
+      <!-- Date Range -->
+      <div class="filter-section date-range">
+        <h3>Date Range</h3>
+        <div class="date-inputs">
+          <mat-form-field appearance="outline">
+            <mat-label>Start Date</mat-label>
+            <input matInput [matDatepicker]="startPicker" formControlName="startDate">
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>End Date</mat-label>
+            <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onReset()">
+    <mat-icon>clear</mat-icon>
+    Reset
+  </button>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onApply()">
+    <mat-icon>filter_list</mat-icon>
+    Apply Filters
+  </button>
+</mat-dialog-actions> 

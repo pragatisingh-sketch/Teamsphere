@@ -1,0 +1,58 @@
+.project-form-container {
+  padding: 16px;
+  min-width: 500px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+mat-dialog-actions {
+  margin-top: 16px;
+  padding: 8px 0;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+mat-hint {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* Style for the dialog title */
+h2.mat-dialog-title {
+  margin-top: 0;
+  color: #333;
+  font-weight: 500;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+/* Style for the submit button */
+button[type="submit"] {
+  background-color: #fff !important;
+  color: #005cbf !important;
+}
+
+button[type="submit"]:hover:not([disabled]) {
+  background-color: #005cbf !important;
+  color: #fff !important;
+}
+
+button[type="submit"]:disabled {
+  background-color: #f5f5f5 !important;
+  color: #bdbdbd !important;
+}
+
+/* Style for the cancel button */
+button[type="button"] {
+  color: #757575;
+}
+
+button[type="button"]:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}

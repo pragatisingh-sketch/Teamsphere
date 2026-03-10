@@ -1,0 +1,720 @@
+<div class="form-container">
+  <app-page-header title="Attendance and Leave/Work from Home Application"
+    subtitle="Apply for leave and work from home">
+  </app-page-header>
+
+  <!-- Tabs Section -->
+  <div class="tabs">
+
+    <div class="tab" [class.active]="activeTab === 'attendance'" (click)="setActiveTab('attendance')">
+      Attendance
+    </div>
+
+    <div class="tab" [class.active]="activeTab === 'new'" (click)="setActiveTab('new')">
+      New Request
+    </div>
+
+    <div class="tab" [class.active]="activeTab === 'balance'" (click)="setActiveTab('balance')">
+      Balance
+    </div>
+
+    <div class="tab" [class.active]="activeTab === 'history'" (click)="setActiveTab('history')">
+      History
+    </div>
+
+    <div class="tab" [class.active]="activeTab === 'requests'" (click)="setActiveTab('requests')"
+      *ngIf="isRoleAllowed()">
+      Requests
+    </div>
+
+    <div class="tab" [class.active]="activeTab === 'holidays'" (click)="setActiveTab('holidays')">
+      <img src="assets/google-tile.svg" alt="Google"
+        style="width: 20px; height: 20px; margin-right: 8px; vertical-align: middle;">
+      Google Holidays
+    </div>
+    <!-- *ngIf="isUploadAllowed()" -->
+  </div>
+
+  <app-attendance [hidden]="activeTab !== 'attendance'"></app-attendance>
+
+  <app-balance *ngIf="activeTab === 'balance'" [leaveBalance]="leaveBalance" [canUpload]="isRoleAllowed()"
+    [userRole]="userRole">
+  </app-balance>
+
+  <app-history *ngIf="activeTab === 'history'" [userRole]="userRole" [ldap]="leaveForm.get('ldap')?.value">
+  </app-history>
+
+  <app-requests *ngIf="activeTab === 'requests'"></app-requests>
+
+  <!-- Holiday Management Tab Content -->
+  <div *ngIf="activeTab === 'holidays'" class="tab-content">
+    <!-- Holiday Management Section -->
+    <h2 style="display: flex; align-items: center; gap: 8px; font-size: 36px; font-weight: 500;">
+      <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google"
+        style="height: 1em;">
+      Holidays
+    </h2>
+
+
+    <!-- Holiday CSV Upload Section (Admin Only) -->
+    <div *ngIf="canUploadHolidays" class="holiday-upload-section">
+      <h3>Upload Holiday CSV</h3>
+      <div class="upload-container">
+        <input #holidayFileInput type="file" id="holidayFileInput" style="display: none" accept=".csv"
+          (change)="onHolidayFileSelected($event)" />
+        <button mat-raised-button color="primary" class="action-button" (click)="triggerHolidayFileInput()">
+          <mat-icon>upload</mat-icon> Choose Holiday CSV
+        </button>
+
+        <button *ngIf="selectedHolidayFile" mat-raised-button color="accent" class="action-button"
+          (click)="uploadHolidayCSV()" [disabled]="isUploadingHolidays">
+          <mat-icon>cloud_upload</mat-icon>
+          {{ isUploadingHolidays ? 'Uploading...' : 'Upload Holidays' }}
+        </button>
+
+        <button mat-raised-button color="warn" class="action-button" (click)="downloadSampleHolidayCSV()">
+          <mat-icon>download</mat-icon> Download Sample CSV
+        </button>
+
+        <div *ngIf="selectedHolidayFile" class="filename">
+          Selected File: {{ selectedHolidayFile.name }}
+        </div>
+      </div>
+
+      <div class="csv-format-info">
+        <p><strong>CSV Format:</strong> Date,Holiday,Description</p>
+        <p><strong>Date Format:</strong> M/d/yyyy (e.g., 1/1/2025, 12/25/2025)</p>
+        <p><strong>Note:</strong> Uploading a new CSV will replace all existing Google holidays.</p>
+      </div>
+      <div class="divider"></div>
+    </div>
+
+    <!-- Holiday List Section -->
+    <div class="holiday-list-section">
+      <div class="search-container">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search Holidays</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput (keyup)="applyHolidayFilter($event)" placeholder="Search holidays">
+        </mat-form-field>
+      </div>
+
+      <div class="table-responsive">
+        <mat-table [dataSource]="holidayDataSource" matSort class="mat-elevation-z8">
+          <!-- Holiday Date Column -->
+          <ng-container matColumnDef="holidayDate">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Date</mat-header-cell>
+            <mat-cell *matCellDef="let holiday">{{ holiday.holidayDate | date: 'MMM dd, yyyy' }}</mat-cell>
+          </ng-container>
+
+          <!-- Holiday Name Column -->
+          <ng-container matColumnDef="holidayName">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Holiday Name</mat-header-cell>
+            <mat-cell *matCellDef="let holiday">{{ holiday.holidayName }}</mat-cell>
+          </ng-container>
+
+          <!-- Description Column -->
+          <ng-container matColumnDef="description">
+            <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
+            <mat-cell *matCellDef="let holiday">{{ holiday.description || 'No description' }}</mat-cell>
+          </ng-container>
+
+          <!-- Holiday Type Column -->
+          <ng-container matColumnDef="holidayType">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
+            <mat-cell *matCellDef="let holiday">
+              <span *ngIf="holiday.holidayType === 'GOOGLE'" class="holiday-type-google">
+                <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png"
+                  alt="Google" style="width: 60px; height: 18px; vertical-align: middle;">
+              </span>
+              <span *ngIf="holiday.holidayType === 'CUSTOM'" class="holiday-type-custom">
+                {{ holiday.holidayType }}
+              </span>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Uploaded By Column -->
+          <ng-container matColumnDef="uploadedBy">
+            <mat-header-cell *matHeaderCellDef>Uploaded By</mat-header-cell>
+            <mat-cell *matCellDef="let holiday">{{ holiday.uploadedBy || 'System' }}</mat-cell>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+            <mat-cell *matCellDef="let holiday">
+              <button mat-icon-button color="warn" *ngIf="canUploadHolidays && holiday.holidayType === 'CUSTOM'"
+                (click)="deleteHoliday(holiday)" matTooltip="Delete Holiday">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <span *ngIf="!canUploadHolidays || holiday.holidayType === 'GOOGLE'" class="no-actions">-</span>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="holidayDisplayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: holidayDisplayedColumns;"></mat-row>
+        </mat-table>
+
+        <mat-paginator #holidayPaginator [length]="holidayDataSource.data.length" [pageSize]="10"
+          [pageSizeOptions]="[5, 10, 25, 50]" showFirstLastButtons>
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Request Tab Content -->
+  <form [formGroup]="leaveForm" (ngSubmit)="onSubmit()" *ngIf="activeTab === 'new'"
+    class="tab-content leave-form-redesign">
+
+    <!-- Page Header -->
+    <div class="page-header-new">
+      <h1 class="page-title-new">Apply for Leave/WFH</h1>
+      <p class="page-subtitle-new">Submit your leave request with automatic time entry generation</p>
+    </div>
+
+    <!-- Section 1: Basic Information Card -->
+    <mat-card class="form-card-new">
+      <mat-card-header class="card-header-new">
+        <mat-icon class="section-icon-new">person</mat-icon>
+        <mat-card-title class="card-title-new">Basic Information</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <!-- Row 1: 4-column grid -->
+        <div class="grid-4-col-new">
+          <!-- LDAP -->
+          <mat-form-field appearance="outline">
+            <mat-label>LDAP *</mat-label>
+            <input matInput formControlName="ldap" readonly>
+          </mat-form-field>
+
+          <!-- Approving Lead/Manager -->
+          <mat-form-field appearance="outline">
+            <mat-label>Approving Lead/Manager *</mat-label>
+            <input matInput formControlName="approver" readonly>
+            <mat-icon matSuffix class="check-icon-new" *ngIf="leaveForm.get('approver')?.value"
+              color="primary">check_circle</mat-icon>
+          </mat-form-field>
+
+          <!-- Request Type -->
+          <mat-form-field appearance="outline">
+            <mat-label>Request Type *</mat-label>
+            <mat-select formControlName="requestType" (selectionChange)="onRequestTypeChange()">
+              <mat-option value="Leave">Leave</mat-option>
+              <mat-option value="Work From Home">Work From Home</mat-option>
+              <mat-option value="CompOff">CompOff</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Shift -->
+          <mat-form-field appearance="outline">
+            <mat-label>Shift *</mat-label>
+            <mat-select formControlName="shift">
+              <mat-option value="S1">S1</mat-option>
+              <mat-option value="S2">S2</mat-option>
+              <mat-option value="S3">S3</mat-option>
+              <mat-option value="MS1">MS1</mat-option>
+              <mat-option value="MS2">MS2</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Row 2: Total Days -->
+        <div class="total-days-row-new">
+          <mat-form-field appearance="outline" class="total-days-field-new">
+            <mat-label>Total Days</mat-label>
+            <input matInput [value]="calculateTotalDays() + ' days requested'" readonly>
+          </mat-form-field>
+        </div>
+
+        <!-- Available Balance Chips -->
+        <div class="balance-chips-section-new">
+          <label class="balance-label-new">Available Balance</label>
+          <div class="balance-chips-new">
+            <span class="balance-chip-new sick-new" [class.low-new]="(leaveBalance?.sick || 0) < 3">
+              Sick Leave: <strong>{{ leaveBalance?.sick || 0 }}</strong>
+            </span>
+            <span class="balance-chip-new casual-new" [class.low-new]="(leaveBalance?.casual || 0) < 3">
+              Casual Leave: <strong>{{ leaveBalance?.casual || 0 }}</strong>
+            </span>
+            <span class="balance-chip-new earned-new" [class.low-new]="(leaveBalance?.earned || 0) < 3">
+              Earned Leave: <strong>{{ leaveBalance?.earned || 0 }}</strong>
+            </span>
+            <span class="balance-chip-new wfh-new" [class.low-new]="(leaveBalance?.qtrwfh || 0) < 5">
+              Work From Home: <strong>{{ leaveBalance?.qtrwfh || 0 }}</strong>
+            </span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Section 2: Date Range Card -->
+    <mat-card class="form-card-new">
+      <mat-card-header class="card-header-new">
+        <div class="card-header-content-new">
+          <mat-icon class="section-icon-new">calendar_today</mat-icon>
+          <mat-card-title class="card-title-new">Date Range</mat-card-title>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="grid-2-col-new">
+          <!-- Start Date -->
+          <mat-form-field appearance="outline">
+            <mat-label>Start Date *</mat-label>
+            <input matInput [matDatepicker]="startPickerNew" formControlName="startDate" readonly>
+            <mat-datepicker-toggle matSuffix [for]="startPickerNew"></mat-datepicker-toggle>
+            <mat-datepicker #startPickerNew></mat-datepicker>
+          </mat-form-field>
+
+          <!-- End Date -->
+          <mat-form-field appearance="outline">
+            <mat-label>End Date</mat-label>
+            <input matInput [matDatepicker]="endPickerNew" formControlName="endDate" readonly>
+            <mat-datepicker-toggle matSuffix [for]="endPickerNew"></mat-datepicker-toggle>
+            <mat-datepicker #endPickerNew></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <!-- Working Days Info Banner -->
+        <div class="info-banner-compact-new" *ngIf="showDayConfiguration">
+          <mat-icon class="info-icon-compact-new">info</mat-icon>
+          <span class="info-text-compact-new">
+            <strong>{{ calculateTotalDays() }} working day(s)</strong> selected (excluding weekends and Google holidays)
+          </span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Section 3: Leave/WFH/CompOff Configuration Card -->
+    <mat-card class="form-card-new" *ngIf="showDayConfiguration">
+      <mat-card-header class="card-header-new">
+        <div class="card-header-content-new">
+          <mat-icon class="section-icon-new">people</mat-icon>
+          <mat-card-title class="card-title-new">{{ getConfigurationTitle() }}</mat-card-title>
+        </div>
+        <div class="view-toggle-new" *ngIf="leaveForm.get('requestType')?.value === 'Leave'">
+          <button type="button" mat-button [class.active]="configView === 'bulk'" (click)="configView = 'bulk'">Single
+            Leave Type
+            Req.</button>
+          <button type="button" mat-button [class.active]="configView === 'compact'"
+            (click)="configView = 'compact'">Mixed Leave Type
+            Req.</button>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <!-- Bulk View for Leave -->
+        <div *ngIf="configView === 'bulk' && leaveForm.get('requestType')?.value === 'Leave'" class="bulk-view-new">
+          <!-- Leave Type for All Days -->
+          <!-- Heading on its own line -->
+          <div class="bulk-heading-new">
+            <h3 class="bulk-title-new">Leave Type for All Days</h3>
+          </div>
+
+          <!-- Select dropdown and badges on next line -->
+          <div class="bulk-select-row-new">
+            <mat-form-field appearance="outline" class="bulk-leave-select-new">
+              <mat-label>Select leave type</mat-label>
+              <mat-select [(value)]="bulkLeaveType" (selectionChange)="onBulkLeaveTypeChange()">
+                <mat-option *ngFor="let leaveType of getAvailableLeaveTypes()" [value]="leaveType.value"
+                  [disabled]="leaveType.disabled">
+                  <span [class.disabled-option]="leaveType.disabled">
+                    {{ leaveType.label }}
+                  </span>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <!-- Show normal badge only when no warning -->
+            <span *ngIf="!getBulkLeaveTypeWarningBadge()" class="total-days-badge-new">{{ calculateTotalDays() }} / {{
+              dayConfigurations.length }} days</span>
+
+            <!-- Warning Badge for Insufficient Balance -->
+            <span *ngIf="getBulkLeaveTypeWarningBadge()" class="balance-warning-badge-new">
+              ⚠ {{ getBulkLeaveTypeWarningBadge()!.requested }} / {{ getBulkLeaveTypeWarningBadge()!.available }}
+              days
+            </span>
+          </div>
+
+          <!-- Error Message Section -->
+          <div *ngIf="hasBalanceErrors" class="balance-error-section-new">
+            <div class="balance-error-header-new">
+              <mat-icon class="error-icon-new">error</mat-icon>
+              <span class="error-title-new">Please fix the following issues:</span>
+            </div>
+            <ul class="error-list-new">
+              <li *ngFor="let error of balanceErrorMessages" class="error-item-new">• {{ error }}</li>
+            </ul>
+          </div>
+
+          <!-- Half Day Checkboxes with Dropdowns (Side-by-Side Layout) -->
+          <div class="half-day-container">
+            <!-- First Day Half Column -->
+            <div class="half-day-column">
+              <mat-checkbox [(ngModel)]="firstDayHalf" [ngModelOptions]="{standalone: true}"
+                (change)="onFirstDayHalfChange()" class="half-day-checkbox-compact">
+                First day is half day <span class="checkbox-date-compact">({{ dayConfigurations[0]?.date | date:'EEE,
+                  MMM dd'
+                  }})</span>
+              </mat-checkbox>
+
+              <mat-form-field *ngIf="firstDayHalf" appearance="outline" class="half-day-dropdown">
+                <mat-select [(ngModel)]="firstDayHalfType" [ngModelOptions]="{standalone: true}"
+                  (selectionChange)="onFirstDayHalfTypeChange()">
+                  <mat-option value="FIRST">First Half</mat-option>
+                  <mat-option value="SECOND">Second Half</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <!-- Last Day Half Column -->
+            <div class="half-day-column">
+              <mat-checkbox [(ngModel)]="lastDayHalf" [ngModelOptions]="{standalone: true}"
+                (change)="onLastDayHalfChange()" class="half-day-checkbox-compact">
+                Last day is half day <span class="checkbox-date-compact">({{ dayConfigurations[dayConfigurations.length
+                  -
+                  1]?.date | date:'EEE, MMM dd' }})</span>
+              </mat-checkbox>
+
+              <mat-form-field *ngIf="lastDayHalf" appearance="outline" class="half-day-dropdown">
+                <mat-select [(ngModel)]="lastDayHalfType" [ngModelOptions]="{standalone: true}"
+                  (selectionChange)="onLastDayHalfTypeChange()">
+                  <mat-option value="FIRST">First Half</mat-option>
+                  <mat-option value="SECOND">Second Half</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Applying Dates Display -->
+          <div class="applying-dates-new" *ngIf="bulkLeaveType">
+            <span class="applying-label-new">Applying <strong>{{ bulkLeaveType }}</strong> for:</span>
+            <div class="date-pills-new">
+              <span class="date-pill-new" *ngFor="let day of dayConfigurations">
+                {{ day.date | date:'MMM dd' }}
+              </span>
+            </div>
+            <span class="total-badge-new">{{ calculateTotalDays() }} days</span>
+          </div>
+        </div>
+
+        <!-- WFH/CompOff View - Half Day Checkboxes with Dropdowns -->
+        <div
+          *ngIf="leaveForm.get('requestType')?.value === 'Work From Home' || leaveForm.get('requestType')?.value === 'CompOff'"
+          class="bulk-view-new">
+          <!-- Half Day Checkboxes with Dropdowns (Side-by-Side Layout) -->
+          <div class="half-day-container">
+            <!-- First Day Half Column -->
+            <div class="half-day-column">
+              <mat-checkbox [(ngModel)]="isFirstDayHalf" [ngModelOptions]="{standalone: true}"
+                (change)="onFirstDayHalfChangeWFH()" class="half-day-checkbox-compact">
+                First day is half day <span class="checkbox-date-compact">({{ leaveForm.get('startDate')?.value |
+                  date:'EEE,
+                  MMM dd' }})</span>
+              </mat-checkbox>
+
+              <mat-form-field *ngIf="isFirstDayHalf" appearance="outline" class="half-day-dropdown">
+                <mat-select [(ngModel)]="firstDayHalfTypeWFH" [ngModelOptions]="{standalone: true}"
+                  (selectionChange)="onFirstDayHalfTypeChangeWFH()">
+                  <mat-option value="FIRST">First Half</mat-option>
+                  <mat-option value="SECOND">Second Half</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <!-- Last Day Half Column -->
+            <div class="half-day-column">
+              <mat-checkbox [(ngModel)]="isLastDayHalf" [ngModelOptions]="{standalone: true}"
+                (change)="onLastDayHalfChangeWFH()" class="half-day-checkbox-compact">
+                Last day is half day <span class="checkbox-date-compact">({{ leaveForm.get('endDate')?.value |
+                  date:'EEE, MMM
+                  dd' }})</span>
+              </mat-checkbox>
+
+              <mat-form-field *ngIf="isLastDayHalf" appearance="outline" class="half-day-dropdown">
+                <mat-select [(ngModel)]="lastDayHalfTypeWFH" [ngModelOptions]="{standalone: true}"
+                  (selectionChange)="onLastDayHalfTypeChangeWFH()">
+                  <mat-option value="FIRST">First Half</mat-option>
+                  <mat-option value="SECOND">Second Half</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Total Days Display -->
+          <div class="applying-dates-new">
+            <span class="total-badge-new">Total: {{ calculateTotalDaysForWFHCompOff() }} days</span>
+          </div>
+        </div>
+
+        <!-- Compact View (existing table) -->
+        <div *ngIf="configView === 'compact'">
+          <!-- Day Configuration Table -->
+          <div class="day-config-table-wrapper-new">
+            <table class="day-config-table-new">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Leave Type</th>
+                  <th>Duration</th>
+                  <th>Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let day of dayConfigurations; let i = index">
+                  <!-- Date Column with Purple Badge and Holiday Indicator -->
+                  <td>
+                    <div class="date-badge-new">
+                      <span class="date-number-new">{{ day.date | date:'dd' }}</span>
+                      <span class="date-weekday-new">{{ day.date | date:'EEE' }}</span>
+                    </div>
+                    <div *ngIf="day.isHoliday" class="holiday-badge-new">
+                      {{ day.holidayName }}
+                    </div>
+                  </td>
+
+                  <!-- Leave Type Column -->
+                  <td>
+                    <mat-select [value]="day.leaveType" (selectionChange)="updateDayLeaveType(i, $event.value)"
+                      class="compact-leave-select-new">
+                      <mat-option *ngFor="let leaveType of getAvailableLeaveTypes()" [value]="leaveType.value"
+                        [disabled]="leaveType.disabled">
+                        <span [class.disabled-option]="leaveType.disabled">
+                          {{ leaveType.label }}
+                        </span>
+                      </mat-option>
+                    </mat-select>
+                  </td>
+
+                  <!-- Duration Column -->
+                  <td>
+                    <div class="duration-selector-new">
+                      <span class="fraction-indicator-new">½+½</span>
+                      <mat-select [value]="day.durationValue || 'FULL'"
+                        (selectionChange)="updateDayDuration(i, $event.value)" class="duration-select-new">
+                        <mat-option value="FIRST_HALF">First Half</mat-option>
+                        <mat-option value="SECOND_HALF">Second Half</mat-option>
+                        <mat-option value="FULL">Full Day</mat-option>
+                      </mat-select>
+                    </div>
+                  </td>
+
+                  <!-- Balance Column -->
+                  <td>
+                    <span class="balance-pill-new" [class.negative-new]="day.balance <= 0">
+                      <ng-container *ngIf="day.leaveType !== 'LWP'">
+                        {{ day.balance | number:'1.1-1' }} left
+                      </ng-container>
+                      <ng-container *ngIf="day.leaveType === 'LWP'">
+                        LWP
+                      </ng-container>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Total Requested Summary -->
+          <div class="total-requested-summary-new" *ngIf="dayConfigurations.length > 0">
+            <span class="summary-label-new">Total requested:</span>
+            <span class="summary-chip-new sick-summary" *ngIf="getTotalByLeaveType('Sick Leave') > 0">
+              Sick Leave: {{ getTotalByLeaveType('Sick Leave') }}
+            </span>
+            <span class="summary-chip-new casual-summary" *ngIf="getTotalByLeaveType('Casual Leave') > 0">
+              Casual Leave: {{ getTotalByLeaveType('Casual Leave') }}
+            </span>
+            <span class="summary-chip-new earned-summary" *ngIf="getTotalByLeaveType('Earned Leave') > 0">
+              Earned Leave: {{ getTotalByLeaveType('Earned Leave') }}
+            </span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- SECTION 4: SUPPORTING DOCUMENTS -->
+    <mat-card class="form-card-new" *ngIf="leaveForm.get('requestType')?.value">
+      <mat-card-header class="card-header-new">
+        <div class="card-header-content-new">
+          <mat-icon class="section-icon-new">attach_file</mat-icon>
+          <mat-card-title class="card-title-new">Supporting Documents</mat-card-title>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- For Leave Requests -->
+        <div class="grid-2-col-new" *ngIf="leaveForm.get('requestType')?.value === 'Leave'">
+          <!-- OOO Screenshot Link -->
+          <mat-form-field appearance="outline">
+            <mat-label>OOO Screenshot Link (Optional)</mat-label>
+            <input matInput formControlName="oooProof" placeholder="https://...">
+            <mat-icon matPrefix>link</mat-icon>
+          </mat-form-field>
+
+          <!-- Backup Info -->
+          <mat-form-field appearance="outline">
+            <mat-label>Backup Info *</mat-label>
+            <input matInput formControlName="backupInfo" placeholder="Enter backup person details">
+            <mat-icon matPrefix>person</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- For CompOff Requests -->
+        <div class="grid-2-col-new" *ngIf="leaveForm.get('requestType')?.value === 'CompOff'">
+          <!-- OOO Screenshot Link -->
+          <mat-form-field appearance="outline">
+            <mat-label>OOO Screenshot Link (Optional)</mat-label>
+            <input matInput formControlName="oooProof" placeholder="https://...">
+            <mat-icon matPrefix>link</mat-icon>
+          </mat-form-field>
+
+          <!-- Backup Info -->
+          <mat-form-field appearance="outline">
+            <mat-label>Backup Info *</mat-label>
+            <input matInput formControlName="backupInfo" placeholder="Enter backup person details">
+            <mat-icon matPrefix>person</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- For Work From Home Requests -->
+        <div class="grid-2-col-new" *ngIf="leaveForm.get('requestType')?.value === 'Work From Home'">
+          <!-- Attach Document - Drag and Drop Box -->
+          <div class="file-upload-container">
+            <input #wfhFileInput type="file" style="display: none" accept=".pdf,.png,.jpg,.jpeg"
+              (change)="onFileSelected($event)">
+
+            <div class="file-upload-box" (click)="wfhFileInput.click()" (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)" (drop)="onFileDrop($event)" [class.has-file]="selectedFile"
+              [class.drag-over]="isDragOver">
+
+              <div *ngIf="!selectedFile" class="upload-prompt">
+                <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                <p class="upload-text">Click or drag files to upload</p>
+                <p class="upload-hint">PDF, PNG, JPEG up to 10MB • 1 file</p>
+              </div>
+
+              <div *ngIf="selectedFile" class="file-selected">
+                <mat-icon class="file-icon">description</mat-icon>
+                <span class="selected-file-name">{{ selectedFile.name }}</span>
+                <button type="button" mat-icon-button (click)="removeFile(); $event.stopPropagation()"
+                  class="remove-file-icon">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reason for WFH -->
+          <mat-form-field appearance="outline">
+            <mat-label>Reason for Work From Home *</mat-label>
+            <textarea matInput formControlName="reason" rows="3" placeholder="Provide reason for WFH..."></textarea>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- SECTION 5: TIME ENTRY PREVIEW -->
+    <mat-card class="form-card-new time-entry-card-sleek"
+      *ngIf="timeEntryPreview && timeEntryPreview.length > 0 && leaveForm.get('requestType')?.value === 'Leave'">
+      <mat-card-header class="card-header-new">
+        <div class="card-header-content-new">
+          <mat-icon class="section-icon-new">description</mat-icon>
+          <mat-card-title class="card-title-new">Auto Generated Time Entry Preview</mat-card-title>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="time-entry-subheading-sleek">
+          <!-- Subheading removed as requested -->
+          <p class="time-entry-description-sleek">
+            Time entries are created automatically when you apply for leave. They are locked and can only be updated by
+            your Lead or Manager.
+          </p>
+        </div>
+
+        <!-- Time Entry Table -->
+        <div class="time-entry-table-wrapper-sleek">
+          <table class="time-entry-table-sleek">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Project</th>
+                <th>Process</th>
+                <th>Activity</th>
+                <th>Time</th>
+                <th>Attendance</th>
+                <th>Comment</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entry of timeEntryPreview">
+                <td class="date-cell">
+                  <mat-icon class="lock-icon-small">lock</mat-icon>
+                  <span>{{ entry.date | date:'MMM dd, yyyy' }}</span>
+                </td>
+                <td>{{ entry.project || 'LEAVE' }}</td>
+                <td>{{ entry.process || 'Absenteeism' }}</td>
+                <td class="activity-cell">{{ entry.activity || 'LEAVE' }}</td>
+                <td class="time-cell">
+                  <mat-icon class="time-icon">schedule</mat-icon>
+                  <span>{{ entry.time || '480' }}</span>
+                </td>
+                <td class="attendance-cell">
+                  <span class="attendance-badge">{{ entry.attendance || 'S1/Leave' }}</span>
+                </td>
+                <td class="comment-cell">{{ entry.comment || 'Auto-generated: casual (1 day)' }}</td>
+                <td>
+                  <span class="status-badge-pending-sleek">PENDING</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Lock Info Notice -->
+        <div class="lock-info-notice-sleek">
+          <mat-icon class="lock-icon-notice">lock</mat-icon>
+          <span>Time entries follow the leave request status,approved when the request is approved, and deleting time
+            entries if the
+            request is rejected.</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Balance Error Messages (Above Submit/Cancel) -->
+    <div *ngIf="hasBalanceErrors" class="balance-error-section-new" style="margin-bottom: 20px;">
+      <div class="balance-error-header-new">
+        <mat-icon class="error-icon-new">error</mat-icon>
+        <span class="error-title-new">Please fix the following issues:</span>
+      </div>
+      <ul class="error-list-new">
+        <li *ngFor="let error of balanceErrorMessages" class="error-item-new">• {{ error }}</li>
+      </ul>
+    </div>
+
+    <!-- Overlapping Request Warning (Above Submit/Cancel) -->
+    <div *ngIf="hasOverlappingRequests" class="balance-error-section-new" style="margin-bottom: 20px;">
+      <div class="balance-error-header-new">
+        <mat-icon class="error-icon-new">warning</mat-icon>
+        <span class="error-title-new">Cannot Submit Request</span>
+      </div>
+      <div style="padding: 12px; white-space: pre-line;">
+        {{ dateOverlapWarningMessage }}
+      </div>
+    </div>
+
+    <!-- SECTION 6: FORM ACTIONS -->
+    <div class="form-actions-new">
+      <button mat-raised-button type="button" (click)="resetForm()" class="cancel-button-new">
+        <mat-icon>close</mat-icon>
+        Cancel
+      </button>
+      <button mat-raised-button type="submit" class="submit-button-new"
+        [disabled]="hasBalanceErrors || hasOverlappingRequests || !leaveForm.valid || isSubmitting">
+        <mat-icon>send</mat-icon>
+        {{ isSubmitting ? 'Submitting...' : 'Submit Request' }}
+      </button>
+    </div>
+
+  </form>
+</div>

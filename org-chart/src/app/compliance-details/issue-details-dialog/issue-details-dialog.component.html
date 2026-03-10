@@ -1,0 +1,33 @@
+<div class="issue-details-dialog">
+    <div class="dialog-header">
+        <h2>{{ getIssueTypeLabel() }}</h2>
+        <span class="employee-info">{{ data.employeeName }}</span>
+        <button mat-icon-button class="close-btn" (click)="close()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <div class="dialog-content">
+        <div *ngIf="loading" class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading issues...</p>
+        </div>
+
+        <div *ngIf="!loading && issues.length === 0" class="empty-state">
+            <mat-icon>info</mat-icon>
+            <p>No issues found for the selected date range.</p>
+        </div>
+
+        <app-reusable-table *ngIf="!loading && issues.length > 0" [data]="issues" [config]="tableConfig"
+            [tableId]="'issue-details-table-' + data.issueType">
+        </app-reusable-table>
+    </div>
+
+    <div class="dialog-footer">
+        <span class="date-range">
+            <mat-icon>date_range</mat-icon>
+            {{ data.startDate }} - {{ data.endDate }}
+        </span>
+        <span class="issue-count">{{ issues.length }} issue(s) found</span>
+    </div>
+</div>

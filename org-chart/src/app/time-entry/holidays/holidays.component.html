@@ -1,0 +1,133 @@
+<div class="holidays-container">
+  <div class="header-section">
+    <h2>Holiday Management</h2>
+    <p class="subtitle">Manage Google holidays for time entry validation</p>
+  </div>
+
+  <!-- CSV Upload Section - Only for Admin Ops Manager -->
+  <div *ngIf="isAdminOpsManager()" class="upload-section">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Upload Holidays from CSV</mat-card-title>
+        <mat-card-subtitle>Replace existing Google holidays with new data from CSV file</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="upload-controls">
+          <input
+            type="file"
+            id="csvFileInput"
+            accept=".csv"
+            (change)="onFileSelected($event)"
+            style="display: none;">
+          
+          <button mat-stroked-button (click)="triggerFileInput()">
+            <mat-icon>attach_file</mat-icon>
+            Choose CSV File
+          </button>
+          
+          <span *ngIf="selectedFile" class="file-name">{{ selectedFile.name }}</span>
+          
+          <button 
+            mat-raised-button 
+            color="primary" 
+            [disabled]="!selectedFile || isUploading"
+            (click)="uploadCSV()">
+            <mat-icon *ngIf="!isUploading">cloud_upload</mat-icon>
+            <mat-spinner *ngIf="isUploading" diameter="20"></mat-spinner>
+            {{ isUploading ? 'Uploading...' : 'Upload CSV' }}
+          </button>
+          
+          <button mat-button (click)="downloadSampleCSV()">
+            <mat-icon>download</mat-icon>
+            Download Sample CSV
+          </button>
+        </div>
+        
+        <div class="csv-format-info">
+          <p><strong>CSV Format:</strong> Date,Holiday,Description</p>
+          <p><strong>Date Format:</strong> M/d/yyyy (e.g., 1/1/2025, 12/25/2025)</p>
+          <p><strong>Note:</strong> Uploading a new CSV will replace all existing Google holidays.</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Holidays Table -->
+  <div class="table-section">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Current Holidays</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Search Filter -->
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search holidays</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Search by name, date, or type">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <!-- Holidays Table -->
+        <div class="table-container">
+          <table mat-table [dataSource]="dataSource" matSort class="holidays-table">
+            <!-- Date Column -->
+            <ng-container matColumnDef="holidayDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+              <td mat-cell *matCellDef="let holiday">{{ holiday.holidayDate | date:'mediumDate' }}</td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="holidayName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Holiday Name</th>
+              <td mat-cell *matCellDef="let holiday">{{ holiday.holidayName }}</td>
+            </ng-container>
+
+            <!-- Description Column -->
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef>Description</th>
+              <td mat-cell *matCellDef="let holiday">{{ holiday.description || '-' }}</td>
+            </ng-container>
+
+            <!-- Type Column -->
+            <ng-container matColumnDef="holidayType">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+              <td mat-cell *matCellDef="let holiday">
+                <mat-chip [color]="holiday.holidayType === 'GOOGLE' ? 'primary' : 'accent'" selected>
+                  {{ holiday.holidayType }}
+                </mat-chip>
+              </td>
+            </ng-container>
+
+            <!-- Uploaded By Column -->
+            <ng-container matColumnDef="uploadedBy">
+              <th mat-header-cell *matHeaderCellDef>Uploaded By</th>
+              <td mat-cell *matCellDef="let holiday">{{ holiday.uploadedBy || '-' }}</td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let holiday">
+                <button 
+                  *ngIf="isAdminOpsManager()"
+                  mat-icon-button 
+                  color="warn" 
+                  (click)="deleteHoliday(holiday)"
+                  matTooltip="Delete Holiday">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+
+          <mat-paginator 
+            [pageSizeOptions]="[10, 25, 50, 100]" 
+            showFirstLastButtons>
+          </mat-paginator>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<div class="container">
+    <app-page-header style="width: 98%" title="Issue Tracker" subtitle="Manage and track reported issues">
+    </app-page-header>
+    <div *ngIf="isLoading" class="loading-shade">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <app-reusable-table tableId="issue-tracker-table" [data]="issues" [config]="tableConfig"
+        (tableEvent)="onTableEvent($event)">
+    </app-reusable-table>
+</div>

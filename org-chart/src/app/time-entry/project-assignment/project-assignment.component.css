@@ -1,0 +1,171 @@
+.project-assignment-dashboard {
+  padding: 20px;
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 20px;
+  background: white;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+}
+
+/* Button styles */
+.action-button {
+  background-color: #673ab7 !important;
+  color: white !important;
+  height: 36px;
+  padding: 0 16px !important;
+  font-weight: 500;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-button:hover {
+  background-color: #5e35b1 !important;
+}
+
+.action-button mat-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+}
+
+.filter-toggle {
+  margin: 0;
+}
+
+.search-field {
+  width: 300px;
+  margin: 0 !important;
+}
+
+/* Table Container */
+.table-container {
+  margin: 20px;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  overflow: auto;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+}
+
+th.mat-header-cell,
+td.mat-cell {
+  padding: 12px 16px !important;
+  font-size: 14px;
+}
+
+th.mat-header-cell {
+  background-color: #f5f5f5;
+  color: rgba(0, 0, 0, 0.87);
+  font-weight: 500;
+}
+
+/* Column Widths */
+.mat-column-userName {
+  min-width: 150px;
+}
+
+.mat-column-projectName {
+  min-width: 180px;
+}
+
+.mat-column-assignedDate {
+  min-width: 120px;
+}
+
+.mat-column-status {
+  min-width: 120px;
+}
+
+.mat-column-actions {
+  min-width: 100px;
+  text-align: right;
+}
+
+/* Header Cell Content */
+.header-cell-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Column Filters */
+.column-filter {
+  width: 100%;
+  font-size: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin-top: 4px;
+}
+
+/* Status filter styles */
+.status-filter {
+  width: 200px !important;
+  margin: 0 !important;
+}
+
+.status-filter .mat-mdc-form-field-infix {
+  padding: 8px 0 !important;
+  min-height: unset !important;
+}
+
+.status-filter .mat-mdc-text-field-wrapper {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+/* Status Styles */
+.status-active {
+  color: #2e7d32;
+  background-color: #e8f5e9;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-completed {
+  color: #1565c0;
+  background-color: #e3f2fd;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-on-hold {
+  color: #e65100;
+  background-color: #fff3e0;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Row Styles */
+tr.mat-row:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+tr.mat-row:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Paginator */
+.mat-paginator {
+  background-color: transparent;
+  border-top: 1px solid #e0e0e0;
+}

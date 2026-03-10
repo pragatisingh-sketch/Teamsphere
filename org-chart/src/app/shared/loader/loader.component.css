@@ -1,0 +1,12 @@
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999; /* Ensure it's above other content */
+}
+
+mat-progress-bar {
+  height: 4px; /* Slimmer progress bar */
+  background-color: #f3f3f3; /* Optional background color */
+}

@@ -1,0 +1,299 @@
+name: CI/CD - Build, Test, Deploy to GCE
+
+on:
+  push:
+    branches:
+      - main      # Triggers production deployment
+      - testing   # Triggers testing deployment
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 1: Build & Test
+  # ─────────────────────────────────────────────────────────────────
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── Authenticate to Google Cloud ──
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      # ── Backend: Build & Test ──
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'corretto'
+          cache: 'maven'
+
+      - name: Run Backend Tests
+        working-directory: ./backend/capsAllocation
+        run: mvn test --batch-mode
+        continue-on-error: true
+
+      - name: Build Spring Boot Backend (JAR)
+        working-directory: ./backend/capsAllocation
+        run: mvn clean package -DskipTests --batch-mode
+
+      # ── Frontend: Build ──
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.19.0'
+          cache: 'npm'
+          cache-dependency-path: ./org-chart/package-lock.json
+
+      - name: Install Frontend Dependencies
+        working-directory: ./org-chart
+        run: npm ci
+
+      - name: Build Frontend (Production)
+        working-directory: ./org-chart
+        run: |
+          npm install -g @angular/cli@16
+          ng build --configuration production
+
+      # ── Upload Build Artifacts for Deploy Job ──
+      - name: Upload Backend JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: backend/capsAllocation/target/*.jar
+          retention-days: 1
+
+      - name: Upload Frontend Dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: org-chart/dist/
+          retention-days: 1
+
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 2: Deploy to GCE VM
+  # ─────────────────────────────────────────────────────────────────
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+
+    steps:
+      # ── Download Artifacts from Build Job ──
+      - name: Download Backend JAR
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-jar
+          path: artifacts/backend/
+
+      - name: Download Frontend Dist
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: artifacts/frontend/
+
+      # ── Transfer Build Artifacts to VM via SCP ──
+      - name: Copy Artifacts to VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.GCE_HOST_IP }}
+          username: ${{ secrets.GCE_USERNAME }}
+          key: ${{ secrets.GCE_SSH_KEY }}
+          source: "artifacts/"
+          target: "/home/${{ secrets.GCE_USERNAME }}/teamsphere-deploy"
+
+      # ── Deploy Application on VM ──
+      - name: Deploy Application on VM
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          TESTING_DOMAIN: ${{ secrets.TESTING_DOMAIN }}
+          PRODUCTION_DOMAIN: ${{ secrets.PRODUCTION_DOMAIN }}
+          TARGET_BRANCH: ${{ github.ref_name }}
+          DEPLOY_USER: ${{ secrets.GCE_USERNAME }}
+        with:
+          host: ${{ secrets.GCE_HOST_IP }}
+          username: ${{ secrets.GCE_USERNAME }}
+          key: ${{ secrets.GCE_SSH_KEY }}
+          envs: TESTING_DOMAIN,PRODUCTION_DOMAIN,TARGET_BRANCH,DEPLOY_USER
+          request_pty: false
+          script: |
+            set -e
+
+            # Step A: Determine domain based on branch
+            if [ "$TARGET_BRANCH" == "main" ]; then
+              APP_DOMAIN=$PRODUCTION_DOMAIN
+            else
+              APP_DOMAIN=$TESTING_DOMAIN
+            fi
+            echo "Deploying to: https://$APP_DOMAIN"
+
+            DEPLOY_DIR="/home/$DEPLOY_USER/teamsphere-deploy/artifacts"
+            CREDENTIALS_DIR="/home/$DEPLOY_USER/credentials"
+
+            # ── FIX 1: Create required log directories ──
+            # Bina in folders ke Spring Boot crash ho jaata tha log likhne ki koshish mein
+            mkdir -p /home/$DEPLOY_USER/logs
+            mkdir -p /home/$DEPLOY_USER/TeamSphereDebugLogs
+
+            # Step B: Install Java if not present
+            if ! command -v java &>/dev/null; then
+              sudo apt-get update -qq
+              sudo apt-get install -y openjdk-21-jre-headless
+            fi
+
+            # Step C: Write Nginx config
+            # ── FIX 2: proxy_pass mein /api/ prefix ab sahi rahega ──
+            # Pehle: proxy_pass http://localhost:8080/   → /api/ strip ho jaata tha
+            # Ab:    proxy_pass http://localhost:8080/api/ → Spring Boot ko sahi path milta hai
+            NGINX_CONF="/etc/nginx/sites-available/teamsphere"
+            {
+              echo "server {"
+              echo "    listen 80;"
+              echo "    server_name $APP_DOMAIN;"
+              echo "    root /var/www/teamsphere;"
+              echo "    index index.html;"
+              echo "    location / {"
+              echo "        try_files \$uri \$uri/ /index.html;"
+              echo "    }"
+              echo "    location /api/ {"
+              echo "        proxy_pass http://localhost:8080/api/;"
+              echo "        proxy_set_header Host \$host;"
+              echo "        proxy_set_header X-Real-IP \$remote_addr;"
+              echo "        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;"
+              echo "        proxy_set_header X-Forwarded-Proto \$scheme;"
+              echo "    }"
+              echo "}"
+            } | sudo tee "$NGINX_CONF" > /dev/null
+
+            sudo ln -sf "$NGINX_CONF" /etc/nginx/sites-enabled/teamsphere
+            sudo rm -f /etc/nginx/sites-enabled/default
+            sudo nginx -t && sudo systemctl reload nginx
+            echo "Nginx configured for $APP_DOMAIN"
+
+            # Step D: Deploy frontend
+            sudo rm -rf /var/www/teamsphere
+            sudo mkdir -p /var/www/teamsphere
+
+            FRONTEND_SRC=""
+            if [ -d "$DEPLOY_DIR/frontend/org-chart" ]; then
+              FRONTEND_SRC="$DEPLOY_DIR/frontend/org-chart"
+            elif [ -f "$DEPLOY_DIR/frontend/index.html" ]; then
+              FRONTEND_SRC="$DEPLOY_DIR/frontend"
+            else
+              FRONTEND_SRC=$(find "$DEPLOY_DIR/frontend" -name "index.html" -maxdepth 3 2>/dev/null | head -1 | xargs dirname || true)
+            fi
+
+            if [ -n "$FRONTEND_SRC" ] && [ -d "$FRONTEND_SRC" ]; then
+              sudo cp -r "$FRONTEND_SRC"/. /var/www/teamsphere/
+              echo "Frontend deployed from: $FRONTEND_SRC"
+            else
+              echo "ERROR: Frontend not found"
+              find "$DEPLOY_DIR/frontend/" -maxdepth 3 || true
+              exit 1
+            fi
+
+            # Step E: Find JAR
+            JAR_FILE=$(ls "$DEPLOY_DIR/backend/"*.jar 2>/dev/null | head -1)
+            if [ -z "$JAR_FILE" ]; then
+              echo "ERROR: No JAR file found"
+              ls -la "$DEPLOY_DIR/backend/" || true
+              exit 1
+            fi
+
+            # Step F: Create systemd service for backend
+            # ── FIX 3: WorkingDirectory add kiya ──
+            # Bina iske Java app relative paths (credentials, logs) dhundh nahi paata
+            # Jaise pehle folder mein jaao, phir kaam karo
+            sudo tee /etc/systemd/system/teamsphere.service > /dev/null << EOF
+            [Unit]
+            Description=Teamsphere Spring Boot Backend
+            After=network.target
+
+            [Service]
+            Type=simple
+            User=$DEPLOY_USER
+            WorkingDirectory=/home/$DEPLOY_USER
+            ExecStart=/usr/bin/java -jar $JAR_FILE \
+              --app.base-url=https://$APP_DOMAIN \
+              --server.port=8080 \
+              --google.sheets.credentials=file:$CREDENTIALS_DIR/ops-excellence-a969197613f8.json
+            Restart=on-failure
+            RestartSec=10
+            SuccessExitStatus=143
+            StandardOutput=append:/home/$DEPLOY_USER/logs/teamsphere.log
+            StandardError=append:/home/$DEPLOY_USER/logs/teamsphere-error.log
+
+            [Install]
+            WantedBy=multi-user.target
+            EOF
+
+            # Step G: Start the service
+            sudo systemctl daemon-reload
+            sudo systemctl stop teamsphere || true
+            sudo systemctl enable teamsphere
+            sudo systemctl start teamsphere
+            sleep 5
+
+            # Step H: Verify backend is running
+            if sudo systemctl is-active --quiet teamsphere; then
+              echo "Backend started successfully via systemd"
+            else
+              echo "ERROR: Backend failed to start"
+              sudo journalctl -u teamsphere -n 30 --no-pager || true
+              exit 1
+            fi
+
+      # ── SSL Certificate via Certbot ──
+      - name: Provision or Renew SSL Certificate
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          TESTING_DOMAIN: ${{ secrets.TESTING_DOMAIN }}
+          PRODUCTION_DOMAIN: ${{ secrets.PRODUCTION_DOMAIN }}
+          TARGET_BRANCH: ${{ github.ref_name }}
+          CERTBOT_EMAIL: ${{ secrets.CERTBOT_EMAIL }}
+        with:
+          host: ${{ secrets.GCE_HOST_IP }}
+          username: ${{ secrets.GCE_USERNAME }}
+          key: ${{ secrets.GCE_SSH_KEY }}
+          envs: TESTING_DOMAIN,PRODUCTION_DOMAIN,TARGET_BRANCH,CERTBOT_EMAIL
+          request_pty: false
+          script: |
+            set -e
+
+            if [ "$TARGET_BRANCH" == "main" ]; then
+              APP_DOMAIN=$PRODUCTION_DOMAIN
+            else
+              APP_DOMAIN=$TESTING_DOMAIN
+            fi
+            echo "SSL check for: $APP_DOMAIN"
+
+            # Install Certbot if not present
+            if ! command -v certbot &>/dev/null; then
+              sudo apt-get update -qq
+              sudo apt-get install -y certbot python3-certbot-nginx
+            fi
+
+            # ── FIX 4: || true hataya — ab real errors dikhenge ──
+            # Pehle || true ki wajah se certbot fail hota tha silently
+            # Ab agar certbot fail hoga toh CI/CD red ho jaayega — sach pata chalega
+            CERT_EXISTS=$(sudo certbot certificates 2>/dev/null | grep -c "Domains:.*$APP_DOMAIN" || echo "0")
+
+            if [ "$CERT_EXISTS" -eq "0" ]; then
+              echo "No certificate found — requesting new one for $APP_DOMAIN"
+              sudo certbot --nginx \
+                --non-interactive \
+                --agree-tos \
+                --redirect \
+                --email "$CERTBOT_EMAIL" \
+                -d "$APP_DOMAIN"
+              echo "SSL certificate issued for $APP_DOMAIN"
+            else
+              echo "Certificate exists — renewing if needed"
+              sudo certbot renew --quiet --nginx
+              echo "SSL renewal checked for $APP_DOMAIN"
+            fi
+
+            sudo systemctl reload nginx
+            echo "Live at: https://$APP_DOMAIN"

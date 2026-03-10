@@ -1,0 +1,84 @@
+:host {
+  display: inline-block;
+  margin: 8px 0;
+
+  ::ng-deep .mat-slide-toggle-bar {
+    border-radius: 20px;
+  }
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.toggle-container:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-color: #1976d2;
+}
+
+.toggle-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.team-toggle {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.team-toggle .mat-slide-toggle-label {
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .actions-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-group {
+    justify-content: center;
+  }
+
+  .toggle-container {
+    justify-content: center;
+  }
+}
+
+.date-range-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.date-range-field {
+  width: 245px;
+}
+
+.filter-toggle {
+  margin-right: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .actions-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .date-range-group {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 80%;
+  }
+}

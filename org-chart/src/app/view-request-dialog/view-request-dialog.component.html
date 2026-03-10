@@ -1,0 +1,46 @@
+<h2 mat-dialog-title>Employee Details</h2>
+<mat-dialog-content class="mat-typography">
+  <div *ngIf="isEditRequest && changedColumns.length > 0" class="changes-summary">
+    <h3>Changes Summary</h3>
+    <table class="changes-table">
+      <tr>
+        <th>Field</th>
+        <th>Original Value</th>
+        <th>New Value</th>
+      </tr>
+      <tr *ngFor="let change of changedColumns">
+        <td>{{ change.column | titlecase }}</td>
+        <td>{{ change.oldValue || 'N/A' }}</td>
+        <td class="new-value">{{ change.newValue || 'N/A' }}</td>
+      </tr>
+    </table>
+  </div>
+
+  <h3>Complete Employee Data</h3>
+  <table class="employee-details-table">
+    <tr>
+      <th *ngFor="let column of displayedColumns">{{ column | titlecase }}</th>
+    </tr>
+    <tr *ngFor="let employee of employeeData">
+      <td *ngFor="let column of displayedColumns" [ngClass]="{'changed-field': isEditRequest && isColumnChanged(column)}">
+        <!-- Show image for profilePic field -->
+        <img *ngIf="column === 'profilePic' && employee[column]" [src]="'data:image/png;base64,' + employee[column]"
+             alt="Profile Picture" class="profile-pic" />
+
+        <!-- Show text for other fields -->
+        <div *ngIf="column !== 'profilePic'" class="field-value">
+          <span>{{ employee[column] }}</span>
+
+          <!-- Show original value tooltip for changed fields -->
+          <div *ngIf="isEditRequest && isColumnChanged(column)" class="original-value">
+            Original: {{ getOriginalValue(column) || 'N/A' }}
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

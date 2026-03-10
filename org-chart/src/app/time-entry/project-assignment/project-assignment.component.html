@@ -1,0 +1,123 @@
+<div class="project-assignment-dashboard">
+  <app-page-header style="width: 1400px"
+  title="Project Assignment"
+  subtitle="Manage user assignments to projects">
+</app-page-header>
+  <div class="actions">
+    <button mat-raised-button class="action-button" (click)="openAddAssignmentForm()" *ngIf="isLeadOrManager()">
+      <mat-icon>person_add</mat-icon>
+      Assign Project
+    </button>
+
+    <button mat-raised-button class="action-button" routerLink="/time-entry">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Time Entries
+    </button>
+
+    <mat-form-field appearance="outline" class="status-filter">
+      <mat-label>Filter by Status</mat-label>
+      <mat-select (selectionChange)="applyFilter($event, 'status')">
+        <mat-option value="">All</mat-option>
+        <mat-option *ngFor="let status of assignmentStatuses" [value]="status">{{ status }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-checkbox [(ngModel)]="showFilters" class="filter-toggle">
+      Show Filters
+    </mat-checkbox>
+
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput (keyup)="applyGlobalFilter($event)" placeholder="Search assignments">
+    </mat-form-field>
+  </div>
+
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <!-- User Name Column -->
+      <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-cell-content">
+            <span>User</span>
+            <input *ngIf="showFilters" matInput (keyup)="applyFilter($event, 'userName')" 
+                   placeholder="Filter User" class="column-filter">
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let assignment">
+          {{ assignment.userName || assignment.username || assignment.ldap }}
+        </td>
+      </ng-container>
+
+      <!-- Project Name Column -->
+      <ng-container matColumnDef="projectName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-cell-content">
+            <span>Project</span>
+            <input *ngIf="showFilters" matInput (keyup)="applyFilter($event, 'projectName')" 
+                   placeholder="Filter Project" class="column-filter">
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let assignment">{{ assignment.projectName }}</td>
+      </ng-container>
+
+      <!-- Assigned Date Column -->
+      <ng-container matColumnDef="assignedDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-cell-content">
+            <span>Assigned Date</span>
+            <input *ngIf="showFilters" matInput (keyup)="applyFilter($event, 'assignedDate')" 
+                   placeholder="Filter Date" class="column-filter">
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let assignment">{{ assignment.assignedDate | date:'yyyy-MM-dd' }}</td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-cell-content">
+            <span>Status</span>
+            <mat-form-field *ngIf="showFilters" appearance="outline" class="status-filter">
+              <mat-select (selectionChange)="applyFilter($event, 'status')" placeholder="Filter Status">
+                <mat-option value="">All</mat-option>
+                <mat-option *ngFor="let status of assignmentStatuses" [value]="status">
+                  {{ status }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let assignment">
+          <span [class]="'status-' + assignment.status?.toLowerCase()">
+            {{ assignment.status }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let assignment">
+          <button mat-icon-button color="primary" (click)="editAssignment(assignment)" 
+                  matTooltip="Edit Assignment" *ngIf="isLeadOrManager()">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="removeAssignment(assignment)" 
+                  matTooltip="Remove Assignment" *ngIf="isLeadOrManager()">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [length]="totalRecords"
+                   [pageSize]="10"
+                   [pageSizeOptions]="[5, 10, 25, 50]"
+                   showFirstLastButtons>
+    </mat-paginator>
+  </div>
+</div>

@@ -1,0 +1,69 @@
+.filter-container {
+  margin-bottom: 20px;
+}
+
+.filter-container mat-form-field {
+  width: 100%;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
+
+.loading-container p {
+  margin-top: 15px;
+  color: #666;
+}
+
+.table-container {
+  max-height: 400px;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-column-fieldName {
+  width: 15%;
+  font-weight: 500;
+}
+
+.mat-column-oldValue,
+.mat-column-newValue {
+  width: 25%;
+  word-break: break-word;
+}
+
+.mat-column-changedBy {
+  width: 15%;
+}
+
+.mat-column-changedAt {
+  width: 20%;
+}
+
+.no-data-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: #666;
+}
+
+.no-data-message mat-icon {
+  margin-right: 8px;
+  color: #999;
+}
+
+tr.mat-row:hover {
+  background-color: #f5f5f5;
+}
+
+mat-paginator {
+  margin-top: 20px;
+}

@@ -1,0 +1,119 @@
+<div class="dialog-header">
+    <h2 mat-dialog-title>Report an Issue</h2>
+    <button mat-stroked-button color="primary" (click)="viewReportedIssues()">View Reported Issues</button>
+</div>
+
+<mat-dialog-content class="dialog-content">
+    <div class="tab-content">
+        <form [formGroup]="issueForm" class="issue-form">
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Title</mat-label>
+                <input matInput formControlName="title" placeholder="Brief summary of the issue">
+                <mat-error *ngIf="issueForm.get('title')?.hasError('required')">Title is required</mat-error>
+            </mat-form-field>
+
+            <div class="row">
+                <mat-form-field appearance="outline" class="half-width">
+                    <mat-label>Type</mat-label>
+                    <mat-select formControlName="type">
+                        <mat-option value="Bug">Bug</mat-option>
+                        <mat-option value="Suggestion">Suggestion</mat-option>
+                        <mat-option value="Enhancement">Enhancement</mat-option>
+                        <mat-option value="Feedback">Feedback</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half-width">
+                    <mat-label>Priority</mat-label>
+                    <mat-select formControlName="priority">
+                        <mat-option value="P1">P1 (High)</mat-option>
+                        <mat-option value="P2">P2 (Medium)</mat-option>
+                        <mat-option value="P3">P3 (Low)</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="row">
+                <mat-form-field appearance="outline" class="half-width">
+                    <mat-label>Severity</mat-label>
+                    <mat-select formControlName="severity">
+                        <mat-option value="Critical">Critical</mat-option>
+                        <mat-option value="Major">Major</mat-option>
+                        <mat-option value="Minor">Minor</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half-width">
+                    <mat-label>Feedback Type</mat-label>
+                    <mat-select formControlName="feedbackType">
+                        <mat-option value="UI">UI</mat-option>
+                        <mat-option value="Backend">Backend</mat-option>
+                        <mat-option value="Performance">Performance</mat-option>
+                        <mat-option value="Other">Other</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Target Feature</mat-label>
+                <input matInput formControlName="feature" placeholder="e.g. Org Chart, Search, Login">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Date of Occurrence</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="occurrenceDate">
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Description</mat-label>
+                <textarea matInput formControlName="description" rows="3"
+                    placeholder="Detailed description..."></textarea>
+                <mat-error *ngIf="issueForm.get('description')?.hasError('required')">Description is
+                    required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Steps to Reproduce</mat-label>
+                <textarea matInput formControlName="stepsToReproduce" rows="3"
+                    placeholder="1. Go to page...&#10;2. Click button..."></textarea>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Attachments (URLs)</mat-label>
+                <input matInput formControlName="attachments" placeholder="Paste image links here (comma separated)">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>CC Emails</mat-label>
+                <mat-chip-grid #chipGrid aria-label="CC Email selection">
+                    <mat-chip-row *ngFor="let email of ccEmails" (removed)="remove(email)">
+                        {{email}}
+                        <button matChipRemove [attr.aria-label]="'remove ' + email">
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                    </mat-chip-row>
+                </mat-chip-grid>
+                <input placeholder="New email..." #emailInput [formControl]="emailCtrl" [matChipInputFor]="chipGrid"
+                    [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="add($event)">
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                    <mat-option *ngFor="let email of filteredEmails | async" [value]="email">
+                        {{email}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-hint>Enter email and press Enter (or Tab/Comma)</mat-hint>
+            </mat-form-field>
+
+        </form>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="issueForm.invalid">
+        Submit
+    </button>
+</mat-dialog-actions>

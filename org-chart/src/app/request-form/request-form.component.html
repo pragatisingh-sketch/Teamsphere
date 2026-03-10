@@ -1,0 +1,84 @@
+<div class="request-form-container">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>Request Form</mat-card-title>
+      <mat-card-subtitle>Submit your request details below</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content style="margin-top: 20px;">
+      <form #requestForm="ngForm" (ngSubmit)="onSubmit(requestForm)">
+        <!-- Name Input Field -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Full Name</mat-label>
+          <input 
+            matInput 
+            [(ngModel)]="request.name" 
+            name="name" 
+            required 
+            placeholder="Enter your full name" 
+          />
+          <mat-error *ngIf="requestForm.submitted && !requestForm.controls['name']?.valid">
+            Name is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Email Input Field -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Email</mat-label>
+          <input 
+            matInput 
+            [(ngModel)]="request.email" 
+            name="email" 
+            type="email" 
+            required 
+            placeholder="Enter your email" 
+          />
+          <mat-error *ngIf="requestForm.submitted && !requestForm.controls['email']?.valid">
+            Please enter a valid email
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Request Type Dropdown -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Request Type</mat-label>
+          <mat-select 
+            [(ngModel)]="request.requestType" 
+            name="requestType" 
+            required
+          >
+            <mat-option value="new-member">New Team Member Addition</mat-option>
+            <mat-option value="mark-inactive">Mark Team Member Existing and Inactive</mat-option>
+          </mat-select>
+          <mat-error *ngIf="requestForm.submitted && !requestForm.controls['requestType']?.valid">
+            Please select a request type
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Request Details Textarea -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Request Details</mat-label>
+          <textarea 
+            matInput 
+            [(ngModel)]="request.details" 
+            name="details" 
+            required 
+            placeholder="Describe your request" 
+            rows="4"
+          ></textarea>
+        </mat-form-field>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit" 
+            [disabled]="!requestForm.valid"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

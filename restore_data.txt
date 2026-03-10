@@ -1,0 +1,12 @@
+DUMP_FILE="/tmp/vbs_allocation_caps_20250928_010000.sql"
+
+
+
+
+
+cp /home/piyushm/Documents/teamsphere/vbs_allocation_caps_20250928_010000.sql /tmp/
+
+
+
+
+sudo -u postgres ./restore_data.sh

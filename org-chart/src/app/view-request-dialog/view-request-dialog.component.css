@@ -1,0 +1,68 @@
+.employee-details-table, .changes-table {
+  width: 100%;
+  min-width: 800px; /* Adjust this as needed */
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.employee-details-table th,
+.employee-details-table td,
+.changes-table th,
+.changes-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+  white-space: nowrap; /* Prevents text from wrapping */
+}
+
+.profile-pic {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.changed-field {
+  background-color: #fff8e1; /* Light yellow background */
+  position: relative;
+}
+
+.field-value {
+  position: relative;
+}
+
+.original-value {
+  font-size: 12px;
+  color: #757575;
+  font-style: italic;
+  margin-top: 4px;
+  padding: 2px 4px;
+  background-color: #f5f5f5;
+  border-radius: 2px;
+}
+
+.changes-summary {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  border-left: 4px solid #ff9800;
+}
+
+.changes-summary h3 {
+  margin-top: 0;
+  color: #ff9800;
+}
+
+.changes-table th {
+  background-color: #f5f5f5;
+}
+
+.changes-table .new-value {
+  font-weight: bold;
+  color: #4caf50;
+}
+
+h3 {
+  margin: 15px 0;
+  color: #333;
+}

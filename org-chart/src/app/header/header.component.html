@@ -1,0 +1,75 @@
+<header class="header">
+  <div class="header-content">
+    <div class="logo-section">
+      <!-- Hamburger menu icon for mobile -->
+      <button mat-icon-button class="menu-toggle">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <!-- Logo -->
+      <div class="logo">
+        <img src="assets/highspring-logo.png" alt="Highspring Logo" class="logo-image">
+      </div>
+
+      <!-- Dashboard Title -->
+      <div class="dashboard-title">
+        <h1>Dashboard</h1>
+        <p>Overview of time allocation and project distribution</p>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="nav-items">
+        <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+          <mat-icon>dashboard</mat-icon>
+          <span>Dashboard</span>
+        </a>
+        <a routerLink="/org-chart" routerLinkActive="active" class="nav-link">
+          <mat-icon>account_tree</mat-icon>
+          <span>Org-Chart</span>
+        </a>
+        <a *ngIf="isAdmin()" routerLink="admin/dashboard" routerLinkActive="active" class="nav-link">
+          <mat-icon>admin_panel_settings</mat-icon>
+          <span>Admin Panel</span>
+        </a>
+        <a routerLink="/time-entry" routerLinkActive="active" class="nav-link">
+          <mat-icon>schedule</mat-icon>
+          <span>Time Entries</span>
+        </a>
+        <a *ngIf="isAdmin()" routerLink="/time-summary" routerLinkActive="active" class="nav-link">
+          <mat-icon>summarize</mat-icon>
+          <span>Time Summary</span>
+        </a>
+        <a routerLink="/vunno" routerLinkActive="active" class="nav-link">
+          <mat-icon>event_available</mat-icon>
+          <span>Leaves/WFH</span>
+        </a>
+        <a *ngIf="isAdmin()" routerLink="/approve" routerLinkActive="active" class="nav-link">
+          <mat-icon>approval</mat-icon>
+          <span>Requests</span>
+        </a>
+        <a routerLink="/example-table" routerLinkActive="active" class="nav-link">
+          <mat-icon>table_chart</mat-icon>
+          <span>Example Table</span>
+        </a>
+        <a routerLink="/issues" routerLinkActive="active" class="nav-link">
+          <mat-icon>bug_report</mat-icon>
+          <span>Issues</span>
+        </a>
+      </div>
+
+      <div class="user-actions">
+        <button mat-button class="help-btn" (click)="openReportIssueDialog()">
+          <mat-icon>bug_report</mat-icon>
+          <span>Report Issue</span>
+        </button>
+        <button mat-button class="logout-btn" (click)="logout()" routerLink="/login">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+  <!-- Overlay removed -->
+</header>

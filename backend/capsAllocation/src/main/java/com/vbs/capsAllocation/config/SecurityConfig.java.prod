@@ -1,0 +1,104 @@
+package com.vbs.capsAllocation.config;
+
+import com.vbs.capsAllocation.util.JwtFilter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.Collections;
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
+public class SecurityConfig {
+
+    private final JwtFilter jwtFilter;
+
+    public SecurityConfig(JwtFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder encoder, UserDetailsService userDetailsService) throws Exception {
+        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        builder.userDetailsService(userDetailsService).passwordEncoder(encoder);
+        return builder.build();
+    }
+
+    @SuppressWarnings({ "deprecation", "removal" })
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers(
+                    "/auth/login", "/auth/signup", "/auth/logout",
+                    "/auth/check-password-status", "/auth/reset-password",
+                    "/auth/forgot-password", "/auth/verify-otp",
+                    "/auth/reset-password-with-otp", "/admin/register",
+                    "/admin/reset-password-postman",
+                    "/api/time-entries/**", "/api/timesheets/**",
+                    "/api/projects/**", "/api/employees/**",
+                    "/api/database/**"
+                )
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            )
+            .authorizeRequests()
+                .requestMatchers(
+                    "/auth/login", "/auth/forgot-password", "/auth/verify-otp",
+                    "/auth/reset-password-with-otp", "/auth/signup", "/admin/register"
+                ).permitAll()
+                .requestMatchers("/auth/check-password-status", "/auth/reset-password").authenticated()
+                .requestMatchers("/api/vunno/currentUserLdap/**").authenticated()
+                .requestMatchers("/superadmin/only").hasRole("ACCOUNT_MANAGER")
+                .requestMatchers("/admin/only").hasRole("MANAGER")
+                .requestMatchers("/user/only").hasAnyRole("USER", "MANAGER", "ACCOUNT_MANAGER")
+                .requestMatchers("/api/employees/**", "/api/timesheet/**").hasAnyRole("USER", "LEAD", "MANAGER", "ACCOUNT_MANAGER", "ADMIN_OPS_MANAGER")
+                .requestMatchers("/admin/reset-password-postman/**").hasAnyRole("ADMIN_OPS_MANAGER", "LEAD", "MANAGER")
+                .requestMatchers("/api/employees/change-role", "/api/database/**").hasRole("ADMIN_OPS_MANAGER")
+                .anyRequest().authenticated()
+            .and()
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(Arrays.asList(
+            "https://teamsphere.in",
+            "https://www.teamsphere.in"
+        ));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "X-XSRF-TOKEN"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
+

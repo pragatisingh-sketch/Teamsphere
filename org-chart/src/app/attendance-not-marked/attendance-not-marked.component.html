@@ -1,0 +1,27 @@
+<div class="attendance-defaulters-container">
+    <app-page-header title="Attendance Not Marked"
+        subtitle="Track and send reminders to employees who haven't marked attendance">
+    </app-page-header>
+
+    <div class="actions-area">
+        <button mat-icon-button routerLink="/reports" class="back-button" matTooltip="Back to Reports">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <mat-form-field appearance="outline" class="date-picker">
+            <mat-label>Select Date</mat-label>
+            <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate"
+                (dateChange)="onDateChange($event.value)">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="refreshData()" class="refresh-button">
+            <mat-icon>refresh</mat-icon>
+            Refresh
+        </button>
+    </div>
+
+    <div class="table-container">
+        <app-reusable-table [data]="filteredDefaulters" [config]="tableConfig">
+        </app-reusable-table>
+    </div>
+</div>

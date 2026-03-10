@@ -1,0 +1,132 @@
+<div class="assignment-form-container">
+  <h2 mat-dialog-title>{{ isEditMode ? 'Edit Project Assignment' : 'Assign Project to User' }}</h2>
+  
+  <form [formGroup]="assignmentForm" (ngSubmit)="onSubmit()">
+    <div mat-dialog-content>
+      <!-- Assignment Type Selection -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Assignment Type</mat-label>
+        <mat-select [(ngModel)]="assignmentType" [ngModelOptions]="{standalone: true}" (selectionChange)="updateFormValidation(assignmentType)">
+          <mat-option value="user-to-projects">Assign Projects to User</mat-option>
+          <mat-option value="project-to-users">Assign Users to Project</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- User Selection (for user-to-projects) -->
+      <mat-form-field appearance="outline" class="full-width" *ngIf="assignmentType === 'user-to-projects'">
+        <mat-label>User</mat-label>
+        <mat-select formControlName="userId" required [disabled]="isEditMode">
+          <mat-option *ngFor="let user of users" [value]="user.id">
+            {{ user.firstName }} {{ user.lastName }} ({{ user.ldap }})
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="assignmentForm.get('userId')?.hasError('required')">
+          User is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Project Selection (for project-to-users) -->
+      <mat-form-field appearance="outline" class="full-width" *ngIf="assignmentType === 'project-to-users'">
+        <mat-label>Project</mat-label>
+        <mat-select formControlName="projectId" required [disabled]="isEditMode">
+          <mat-option *ngFor="let project of projects" [value]="project.id">
+            
+            {{ project.projectName }} ({{ project.projectCode }})
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="assignmentForm.get('projectId')?.hasError('required')">
+          Project is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Multiple Projects Selection (for user-to-projects) -->
+      <mat-form-field appearance="outline" class="full-width" *ngIf="assignmentType === 'user-to-projects'">
+        <mat-label>Projects</mat-label>
+        <mat-select formControlName="projectIds" multiple required>
+          <mat-select-trigger>
+            {{ assignmentForm.get('projectIds')?.value?.length || 0 }} projects selected
+          </mat-select-trigger>
+          <div class="search-box">
+            <mat-form-field appearance="outline" class="search-field">
+              <input matInput [formControl]="projectSearchControl" placeholder="Search projects...">
+            </mat-form-field>
+          </div>
+          <div class="select-all-container">
+            <button mat-button type="button" (click)="selectAllProjects()" class="select-all-button">
+              <mat-icon>checklist</mat-icon>
+              {{ (assignmentForm.get('projectIds')?.value?.length || 0) === projects.length ? 'Deselect All Projects' : 'Select All Projects' }}
+            </button>
+          </div>
+          <mat-divider></mat-divider>
+          <ng-container *ngIf="filteredProjects | async as filteredProjectsList">
+            <mat-option *ngFor="let project of filteredProjectsList" [value]="project.id">
+              {{ project.projectName }} ({{ project.projectCode }})
+            </mat-option>
+          </ng-container>
+        </mat-select>
+        <mat-error *ngIf="assignmentForm.get('projectIds')?.hasError('required')">
+          At least one project is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Multiple Users Selection (for project-to-users) -->
+      <mat-form-field appearance="outline" class="full-width" *ngIf="assignmentType === 'project-to-users'">
+        <mat-label>Users</mat-label>
+        <mat-select formControlName="userIds" multiple required>
+          <mat-select-trigger>
+            {{ assignmentForm.get('userIds')?.value?.length || 0 }} users selected
+          </mat-select-trigger>
+          <div class="search-box">
+            <mat-form-field appearance="outline" class="search-field">
+              <input matInput [formControl]="userSearchControl" placeholder="Search users...">
+            </mat-form-field>
+          </div>
+          <div class="select-all-container">
+            <button mat-button type="button" (click)="selectAllUsers()" class="select-all-button">
+              <mat-icon>group</mat-icon>
+              {{ (assignmentForm.get('userIds')?.value?.length || 0) === users.length ? 'Deselect All Users' : 'Select All Users' }}
+            </button>
+          </div>
+          <mat-divider></mat-divider>
+          <mat-option *ngFor="let user of filteredUsers | async" [value]="user.id">
+            {{ user.firstName }} {{ user.lastName }} ({{ user.ldap }})
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="assignmentForm.get('userIds')?.hasError('required')">
+          At least one user is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Assigned Date -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Assigned Date</mat-label>
+        <input matInput [matDatepicker]="datePicker" formControlName="assignedDate" required>
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker></mat-datepicker>
+        <mat-error *ngIf="assignmentForm.get('assignedDate')?.hasError('required')">
+          Assigned date is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Status -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status" required>
+          <mat-option *ngFor="let status of statusOptions" [value]="status">
+            {{ status }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="assignmentForm.get('status')?.hasError('required')">
+          Status is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div mat-dialog-actions align="end">
+      <button mat-button type="button" (click)="onCancel()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="assignmentForm.invalid">
+        {{ isEditMode ? 'Update' : 'Assign' }}
+      </button>
+    </div>
+  </form>
+</div>

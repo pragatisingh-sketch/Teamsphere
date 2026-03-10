@@ -1,0 +1,116 @@
+
+<div class="approval-table-container">
+  <app-page-header
+  title="Approval Table"
+  subtitle="Manage and approve requests across the organization">
+</app-page-header>
+  <!-- Advanced Filters -->
+  <div class="advanced-filters">
+    <div class="filter-row">
+      <!-- Status Filter -->
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilters()">
+          <mat-option [value]="">All</mat-option>
+          <mat-option value="PENDING">Pending</mat-option>
+          <mat-option value="APPROVED">Approved</mat-option>
+          <mat-option value="REJECTED">Rejected</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Date Range -->
+      <div class="date-range-container">
+        <mat-form-field appearance="outline">
+          <mat-label>Date Range</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate placeholder="Start date" [(ngModel)]="startDate">
+            <input matEndDate placeholder="End date" [(ngModel)]="endDate">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="applyFilters()" class="apply-filter-btn">
+          <mat-icon>filter_list</mat-icon> Apply
+        </button>
+        <button mat-raised-button color="warn" (click)="resetFilters()" class="reset-filter-btn">
+          <mat-icon>clear</mat-icon> Reset
+        </button>
+      </div>
+      <mat-form-field class="global-search">
+        <mat-label>Search Requests</mat-label>
+        <input matInput (keyup)="applyGlobalFilter($event)" placeholder="Type to search...">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+    
+  </div>
+
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+    <!-- Name/Requested By Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <div class="header-container">
+          <span>Requested By</span>
+          <div *ngIf="showFilters" class="filter-container">
+            <input matInput (keyup)="applyFilter($event, 'name')" placeholder="Filter Requested By">
+          </div>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let request">{{ request.name }}</td>
+    </ng-container>
+
+    <!-- Request Type Column -->
+    <ng-container matColumnDef="requestType">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Request Type</th>
+      <td mat-cell *matCellDef="let request">{{ request.requestType }}</td>
+    </ng-container>
+
+    <!-- LDAP Column -->
+    <ng-container matColumnDef="ldap">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>LDAP</th>
+      <td mat-cell *matCellDef="let request">{{ request.ldap }}</td>
+    </ng-container>
+
+    <!-- Created At Column -->
+    <ng-container matColumnDef="createdAt">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Requested At</th>
+      <td mat-cell *matCellDef="let request">{{ request.createdAt }}</td>
+    </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+      <td mat-cell *matCellDef="let request">{{ request.status }}</td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let request">
+        <button mat-icon-button color="primary" (click)="viewRequest(request)" [disabled]="isLoadingEmployeeData">
+          <mat-icon *ngIf="!isLoadingEmployeeData">visibility</mat-icon>
+          <mat-spinner *ngIf="isLoadingEmployeeData" diameter="20"></mat-spinner>
+        </button>
+        <ng-container *ngIf="request.status === 'PENDING' && role === 'ADMIN_OPS_MANAGER'">
+          <button mat-icon-button color="accent" (click)="approveRequest(request)">
+            <mat-icon>check</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="rejectRequest(request)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </ng-container>
+      </td>
+    </ng-container>
+
+    <!-- Header Row -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+    <!-- Data Rows -->
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <!-- Pagination -->
+  <mat-paginator [pageSizeOptions]="[20, 50, 100]" showFirstLastButtons></mat-paginator>
+
+</div>

@@ -1,0 +1,128 @@
+<div class="long-weekend-container">
+    <app-page-header title="Long Weekend Leave Patterns"
+        subtitle="Analyze leave patterns around weekends and holidays to identify trends">
+    </app-page-header>
+
+    <div class="actions-area">
+        <button mat-icon-button routerLink="/reports" class="back-button" matTooltip="Back to Reports">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <mat-form-field appearance="outline" class="date-picker">
+            <mat-label>Start Date</mat-label>
+            <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" (dateChange)="onDateRangeChange()">
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="date-picker">
+            <mat-label>End Date</mat-label>
+            <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" (dateChange)="onDateRangeChange()">
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="refreshData()" class="refresh-button">
+            <mat-icon>refresh</mat-icon>
+            Refresh
+        </button>
+    </div>
+
+    <div class="table-container">
+        <table mat-table [dataSource]="filteredPatterns" class="patterns-table">
+            <!-- Employee Name Column -->
+            <ng-container matColumnDef="employeeName">
+                <th mat-header-cell *matHeaderCellDef>Employee Name</th>
+                <td mat-cell *matCellDef="let pattern">{{ pattern.employeeName }}</td>
+            </ng-container>
+
+            <!-- LDAP Column -->
+            <ng-container matColumnDef="ldap">
+                <th mat-header-cell *matHeaderCellDef>LDAP</th>
+                <td mat-cell *matCellDef="let pattern">{{ pattern.ldap }}</td>
+            </ng-container>
+
+            <!-- Department Column -->
+            <ng-container matColumnDef="department">
+                <th mat-header-cell *matHeaderCellDef>Department</th>
+                <td mat-cell *matCellDef="let pattern">{{ pattern.department || 'N/A' }}</td>
+            </ng-container>
+
+            <!-- Manager Column -->
+            <ng-container matColumnDef="manager">
+                <th mat-header-cell *matHeaderCellDef>Manager</th>
+                <td mat-cell *matCellDef="let pattern">{{ pattern.manager || 'N/A' }}</td>
+            </ng-container>
+
+            <!-- Occurrences Column -->
+            <ng-container matColumnDef="occurrenceCount">
+                <th mat-header-cell *matHeaderCellDef>Occurrences</th>
+                <td mat-cell *matCellDef="let pattern">
+                    <span class="occurrence-badge" [class.high]="pattern.occurrenceCount >= 3">
+                        {{ pattern.occurrenceCount }}
+                    </span>
+                </td>
+            </ng-container>
+
+            <!-- Expand Column -->
+            <ng-container matColumnDef="expand">
+                <th mat-header-cell *matHeaderCellDef>Details</th>
+                <td mat-cell *matCellDef="let pattern">
+                    <button mat-icon-button (click)="toggleRow(pattern)">
+                        <mat-icon>{{ isExpanded(pattern) ? 'expand_less' : 'expand_more' }}</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <!-- Expanded Content Column -->
+            <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let pattern" [attr.colspan]="6">
+                    <div class="pattern-detail" [@detailExpand]="isExpanded(pattern) ? 'expanded' : 'collapsed'">
+                        <div class="detail-content" *ngIf="isExpanded(pattern)">
+                            <h4>Pattern Instances:</h4>
+                            <div class="instances-list">
+                                <div class="instance-card" *ngFor="let instance of pattern.instances; let i = index">
+                                    <div class="instance-header">
+                                        <mat-icon>event</mat-icon>
+                                        <span class="instance-number">Instance #{{ i + 1 }}</span>
+                                    </div>
+                                    <div class="instance-details">
+                                        <div class="detail-row">
+                                            <strong>Date Range:</strong>
+                                            <span>{{ instance.startDate | date }} - {{ instance.endDate | date }}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <strong>Pattern:</strong>
+                                            <span class="pattern-text">{{ instance.pattern }}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <strong>Total Days:</strong>
+                                            <span>{{ instance.totalDays }} days</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <strong>Leave Type:</strong>
+                                            <span>{{ instance.leaveType }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row
+                *matHeaderRowDef="['employeeName', 'ldap', 'department', 'manager', 'occurrenceCount', 'expand']"></tr>
+            <tr mat-row
+                *matRowDef="let pattern; columns: ['employeeName', 'ldap', 'department', 'manager', 'occurrenceCount', 'expand'];"
+                [class.expanded-row]="isExpanded(pattern)"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']; when: isExpanded" class="detail-row"></tr>
+        </table>
+
+        <div *ngIf="filteredPatterns.length === 0 && !loading" class="no-data">
+            <mat-icon>check_circle</mat-icon>
+            <p>No long weekend leave patterns detected in the selected date range.</p>
+        </div>
+
+        <div *ngIf="loading" class="loading-spinner">
+            <mat-spinner diameter="50"></mat-spinner>
+        </div>
+    </div>
+</div>

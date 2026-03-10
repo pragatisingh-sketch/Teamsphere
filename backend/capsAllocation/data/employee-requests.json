@@ -1,0 +1,13 @@
+{
+  "emp_1758082608097_997544ed" : {
+    "created" : 1758082608109,
+    "employeeData" : "{\"id\":null,\"firstName\":\"Test\",\"lastName\":\"\",\"ldap\":\"ldap\",\"startDate\":\"2025-09-16\",\"team\":\"CG Data\",\"newLevel\":\"Analyst EN I\",\"lead\":\"shaiqjeelani\",\"programManager\":\"panchalmohit\",\"vendor\":\"VBS\",\"email\":\"ldap@email.com\",\"status\":\"Active\",\"lwdMlStartDate\":\"\",\"process\":\"HUME\",\"resignationDate\":\"\",\"roleChangeEffectiveDate\":\"\",\"levelBeforeChange\":\"\",\"levelAfterChange\":\"\",\"lastBillingDate\":\"\",\"backfillLdap\":\"\",\"billingStartDate\":\"\",\"language\":\"\",\"tenureTillDate\":\"\",\"profilePic\":\"\",\"parent\":null,\"level\":\"Analyst EN I\",\"inactiveReason\":\"\",\"pnseProgram\":\"Content Growth\",\"location\":\"\",\"shift\":\"S1\",\"employeeRelations\":[]}",
+    "timestamp" : "2025-09-17T09:46:48.10952457"
+  },
+  "emp_1767848784320_84526806" : {
+    "created" : 1767848784322,
+    "employeeData" : "{\"id\":4461,\"firstName\":\"Deepak\",\"lastName\":\"Sheoran\",\"ldap\":\"dsheoran\",\"startDate\":\"2024-10-04\",\"team\":\"VO&E\",\"newLevel\":\"Program Manager II\",\"lead\":\"sanjeevkumar\",\"programManager\":\"sanjeevkumar\",\"vendor\":\"VBS\",\"email\":\"dsheoran@google.com\",\"status\":\"Active\",\"lwdMlStartDate\":\"\",\"process\":\"KG_VF\",\"resignationDate\":\"\",\"roleChangeEffectiveDate\":\"\",\"levelBeforeChange\":\"\",\"levelAfterChange\":\"\",\"lastBillingDate\":\"\",\"backfillLdap\":\"\",\"billingStartDate\":\"\",\"language\":\"English\",\"tenureTillDate\":\"2001-01-01\",\"profilePic\":null,\"parent\":4461,\"level\":\"Program Manager II\",\"inactiveReason\":\"\",\"pnseProgram\":\"Vendor Operations & Excellance\",\"location\":\"GOVO, Gurugram, India\",\"shift\":\"S1\",\"employeeRelations\":[]}",
+    "originalData" : "{\"id\":4461,\"firstName\":\"Deepak\",\"lastName\":\"Sheoran\",\"ldap\":\"dsheoran\",\"startDate\":\"2024-10-04\",\"team\":\"VO&E\",\"newLevel\":\"Program Manager II\",\"lead\":\"dsheoran\",\"programManager\":\"dsheoran\",\"vendor\":\"VBS\",\"email\":\"dsheoran@google.com\",\"status\":\"Active\",\"lwdMlStartDate\":null,\"process\":\"KG_VF\",\"resignationDate\":\"\",\"roleChangeEffectiveDate\":null,\"levelBeforeChange\":\"\",\"levelAfterChange\":\"\",\"lastBillingDate\":null,\"backfillLdap\":\"\",\"billingStartDate\":null,\"language\":\"English\",\"tenureTillDate\":\"1\",\"level\":\"Program Manager II\",\"inactiveReason\":\"\",\"parent\":4461,\"isDeleted\":false,\"pnseProgram\":\"Vendor Operations & Excellance\",\"location\":\"GOVO, Gurugram, India\",\"shift\":\"S1\",\"inactive\":false}",
+    "timestamp" : "2026-01-08T10:36:24.322583101"
+  }
+}

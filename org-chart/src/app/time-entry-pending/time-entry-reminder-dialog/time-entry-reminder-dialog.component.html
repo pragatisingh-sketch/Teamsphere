@@ -1,0 +1,114 @@
+<h2 mat-dialog-title>
+    <mat-icon>mail</mat-icon>
+    {{ data.isBulk ? 'Send Bulk Reminder' : 'Send Reminder to ' + recipientName }}
+</h2>
+
+<mat-dialog-content>
+    <!-- Recipients Preview for Bulk -->
+    <div class="recipients-preview" *ngIf="data.isBulk">
+        <p class="preview-label">
+            <mat-icon>people</mat-icon>
+            Sending to {{recipientCount}} team member{{recipientCount > 1 ? 's' : ''}}:
+        </p>
+        <mat-chip-set class="recipients-chips">
+            <mat-chip *ngFor="let recipient of displayedRecipients" class="recipient-chip">
+                {{recipient.employeeName}}
+            </mat-chip>
+            <mat-chip *ngIf="remainingRecipientsCount > 0" class="remaining-chip">
+                +{{remainingRecipientsCount}} more
+            </mat-chip>
+        </mat-chip-set>
+    </div>
+
+    <!-- Single Recipient Info -->
+    <div class="single-recipient" *ngIf="!data.isBulk">
+        <div class="recipient-info">
+            <mat-icon>person</mat-icon>
+            <div class="recipient-details">
+                <span class="name">{{data.recipients[0].employeeName}}</span>
+                <span class="email">{{data.recipients[0].email}}</span>
+            </div>
+        </div>
+        <div class="missing-weeks-info">
+            <mat-icon color="warn">warning</mat-icon>
+            <span>{{data.recipients[0].missingWeeksCount}} week{{data.recipients[0].missingWeeksCount > 1 ? 's' : ''}}
+                pending</span>
+        </div>
+    </div>
+
+    <!-- Specific Week Info -->
+    <div class="specific-week-info" *ngIf="data.specificWeek">
+        <div class="week-header">
+            <mat-icon>date_range</mat-icon>
+            <span>Reminder for: <strong>{{data.specificWeek.weekLabel}}</strong></span>
+        </div>
+
+        <div class="status-row">
+            <span class="label">Status:</span>
+            <span class="value status" [class.whole-week]="data.specificWeek.wholeWeekMissing">
+                {{data.specificWeek.wholeWeekMissing ? 'Whole Week Missing' : (data.specificWeek.missingDays.length
+                || 0) + ' day(s) missing'}}
+            </span>
+        </div>
+
+        <div class="missing-days-container"
+            *ngIf="!data.specificWeek.wholeWeekMissing && data.specificWeek.missingDays && data.specificWeek.missingDays.length > 0">
+            <span class="days-label">Missing Dates:</span>
+            <div class="day-chips">
+                <span *ngFor="let day of data.specificWeek.missingDays" class="day-chip">
+                    {{formatMissingDay(day)}}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <mat-divider class="section-divider"></mat-divider>
+
+    <!-- Message Type Selection -->
+    <div class="message-type-section">
+        <p class="section-label">Email Message:</p>
+        <mat-radio-group [(ngModel)]="messageType" class="message-type-group">
+            <mat-radio-button value="default">
+                <span class="radio-label">Use Default Message</span>
+            </mat-radio-button>
+            <mat-radio-button value="custom">
+                <span class="radio-label">Custom Message</span>
+            </mat-radio-button>
+        </mat-radio-group>
+    </div>
+
+    <!-- Default Message Preview -->
+    <div class="message-preview" *ngIf="messageType === 'default'">
+        <p class="preview-label">
+            <mat-icon>visibility</mat-icon>
+            Preview:
+        </p>
+        <div class="preview-content">
+            <pre>{{defaultMessage}}</pre>
+        </div>
+        <p class="placeholder-hint">
+            <mat-icon>info</mat-icon>
+            <span><code>{{'{'}}name{{'}'}}</code> and <code>{{'{'}}periods{{'}'}}</code> will be replaced
+                automatically.</span>
+        </p>
+    </div>
+
+    <!-- Custom Message Input -->
+    <div class="custom-message-section" *ngIf="messageType === 'custom'">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Custom Message</mat-label>
+            <textarea matInput rows="8" [(ngModel)]="customMessage"
+                placeholder="Enter your custom reminder message..."></textarea>
+            <mat-hint>Use <code>{{'{'}}name{{'}'}}</code> for recipient name and <code>{{'{'}}periods{{'}'}}</code> for
+                missing periods</mat-hint>
+        </mat-form-field>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="sendReminder()" [disabled]="sending">
+        <mat-icon>send</mat-icon>
+        Send Reminder{{data.isBulk ? 's' : ''}}
+    </button>
+</mat-dialog-actions>

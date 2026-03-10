@@ -1,0 +1,51 @@
+<div class="reminder-dialog">
+    <h2 mat-dialog-title>Send Attendance Reminder</h2>
+
+    <mat-dialog-content>
+        <div class="summary-section">
+            <div class="summary-item">
+                <mat-icon color="primary">people</mat-icon>
+                <span><strong>{{ totalRecipients }}</strong> recipient(s)</span>
+            </div>
+            <div class="summary-item">
+                <mat-icon color="primary">event</mat-icon>
+                <span><strong>{{ data.date | date:'mediumDate' }}</strong></span>
+            </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="recipients-section">
+            <h3>Recipients:</h3>
+            <p class="recipients-list">{{ recipientNames }}</p>
+        </div>
+
+        <form [formGroup]="reminderForm">
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Custom Message (Optional)</mat-label>
+                <textarea matInput formControlName="customMessage"
+                    placeholder="Add a personalized message to include in the reminder email..." rows="4"
+                    maxlength="500">
+        </textarea>
+                <mat-hint align="end">{{ reminderForm.get('customMessage')?.value?.length || 0 }}/500</mat-hint>
+            </mat-form-field>
+        </form>
+
+        <div class="info-note">
+            <mat-icon color="accent">info</mat-icon>
+            <p>A standard reminder email will be sent to the selected employees asking them to mark their attendance.
+            </p>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button (click)="onCancel()" [disabled]="sending">
+            Cancel
+        </button>
+        <button mat-raised-button color="primary" (click)="onSend()" [disabled]="sending || reminderForm.invalid">
+            <mat-icon *ngIf="!sending">send</mat-icon>
+            <mat-spinner *ngIf="sending" diameter="20" class="inline-spinner"></mat-spinner>
+            {{ sending ? 'Sending...' : 'Send Reminder' }}
+        </button>
+    </mat-dialog-actions>
+</div>

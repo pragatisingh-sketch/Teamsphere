@@ -1,0 +1,54 @@
+.dialog-content {
+    min-width: 500px;
+    min-height: 300px;
+    padding-top: 10px;
+}
+
+.tab-content {
+    padding: 20px 0;
+}
+
+.info-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #e8f0fe;
+    color: #1967d2;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.info-box mat-icon {
+    font-size: 24px;
+}
+
+.action-btn {
+    padding: 0 20px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.row {
+    display: flex;
+    gap: 15px;
+}
+
+.dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 24px;
+}
+
+.half-width {
+    flex: 1;
+}
+
+.issue-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

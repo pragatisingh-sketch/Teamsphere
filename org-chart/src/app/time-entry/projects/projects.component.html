@@ -1,0 +1,177 @@
+<div class="projects-dashboard">
+  <app-page-header style="width: 1400px"
+  title="Projects"
+  subtitle="Manage projects and their details">
+</app-page-header>
+  <div class="actions">
+
+
+    <button mat-raised-button color="primary" class="action-button" routerLink="/time-entry">
+      <mat-icon>arrow_back</mat-icon>Back to Time Entries
+    </button>
+
+    <button mat-raised-button color="primary" class="action-button add-button" (click)="openAddProjectForm()"
+            *ngIf="isAdminOpsManager()" matTooltip="Only Admin Ops Manager can add projects"
+            [matTooltipDisabled]="isAdminOpsManager()">
+      <mat-icon>add</mat-icon>Add Project
+    </button>
+
+    <!-- <mat-checkbox [(ngModel)]="showFilters">Show Filters</mat-checkbox> -->
+
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput (keyup)="applyGlobalFilter($event)" placeholder="Search projects">
+    </mat-form-field>
+  </div>
+
+  <div class="table-responsive">
+    <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Name</span>
+            <input *ngIf="showFilters" matInput class="filter-input" (keyup)="applyFilter($event, 'name')" placeholder="Filter Name">
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let project">{{ project.name || project.projectName }}</mat-cell>
+      </ng-container>
+
+      <!-- Code Column -->
+      <ng-container matColumnDef="code">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Code</span>
+            <input *ngIf="showFilters" matInput class="filter-input" (keyup)="applyFilter($event, 'code')" placeholder="Filter Code">
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let project">{{ project.code || project.projectCode }}</mat-cell>
+      </ng-container>
+
+      <!-- Description Column -->
+      <ng-container matColumnDef="description">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Description</span>
+            <input *ngIf="showFilters" matInput class="filter-input" (keyup)="applyFilter($event, 'description')" placeholder="Filter Description">
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let project">{{ project.description || 'No description available' }}</mat-cell>
+      </ng-container>
+
+      <!-- Start Date Column -->
+      <ng-container matColumnDef="startDate">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Start Date</span>
+            <input *ngIf="showFilters" matInput class="filter-input" (keyup)="applyFilter($event, 'startDate')" placeholder="Filter Start Date">
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let project">{{ project.startDate | date: 'yyyy-MM-dd' }}</mat-cell>
+      </ng-container>
+
+      <!-- End Date Column -->
+      <ng-container matColumnDef="endDate">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">End Date</span>
+            <input *ngIf="showFilters" matInput class="filter-input" (keyup)="applyFilter($event, 'endDate')" placeholder="Filter End Date">
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let project">{{ project.endDate | date: 'yyyy-MM-dd' }}</mat-cell>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Status</span>
+            <input *ngIf="showFilters" matInput class="filter-input" (keyup)="applyFilter($event, 'status')" placeholder="Filter Status">
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let project">
+          <span [ngClass]="{
+            'status-active': project.status === 'ACTIVE',
+            'status-completed': project.status === 'COMPLETED',
+            'status-on-hold': project.status === 'ON_HOLD'
+          }">
+            {{ project.status || 'ACTIVE' }}
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Overtime Eligible Column -->
+      <!-- <ng-container matColumnDef="overtimeEligible">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Overtime Eligible</span>
+            <input *ngIf="showFilters" matInput class="filter-input" (keyup)="applyFilter($event, 'overtimeEligible')" placeholder="Filter Overtime">
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let project">
+          <mat-chip-set>
+            <mat-chip [ngClass]="{
+              'overtime-eligible': project.isOvertimeEligible === true,
+              'overtime-not-eligible': project.isOvertimeEligible === false
+            }">
+              {{ project.isOvertimeEligible ? 'Yes' : 'No' }}
+            </mat-chip>
+          </mat-chip-set>
+        </mat-cell>
+      </ng-container> -->
+
+      <!-- Overtime Eligible Column -->
+      <ng-container matColumnDef="overtimeEligible">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Overtime Eligible</span>
+            <input *ngIf="showFilters" matInput class="filter-input" 
+                  (keyup)="applyFilter($event, 'overtimeEligible')" 
+                  placeholder="Filter Overtime">
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let project">
+          <div [ngClass]="{ 
+                'overtime-yes': project.isOvertimeEligible === true, 
+                'overtime-no': project.isOvertimeEligible === false 
+              }" 
+              class="overtime-status">
+            <span class="status-text">{{ project.isOvertimeEligible ? 'YES' : 'NO' }}</span>
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+        <mat-cell *matCellDef="let project">
+            <button mat-icon-button color="primary"
+                  [disabled]="!isAdminOpsManager()"
+                  (click)="editProject(project)"
+                  matTooltip="{{isAdminOpsManager() ? 'Edit Project' : 'Only Admin Ops Manager can edit projects'}}"
+                  [matTooltipDisabled]="isAdminOpsManager()">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn"
+                  [disabled]="!isAdminOpsManager()"
+                  (click)="deleteProject(project)"
+                  matTooltip="{{isAdminOpsManager() ? 'Delete Project' : 'Only Admin Ops Manager can delete projects'}}"
+                  [matTooltipDisabled]="isAdminOpsManager()">
+              <mat-icon>delete</mat-icon>
+            </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator
+      [length]="dataSource.data.length"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      showFirstLastButtons>
+    </mat-paginator>
+  </div>
+</div>

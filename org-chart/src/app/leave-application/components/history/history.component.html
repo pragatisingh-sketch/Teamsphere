@@ -1,0 +1,200 @@
+<!-- history.component.html -->
+<div class="history-dashboard">
+    <!-- Actions Toolbar (matching Requests tab) -->
+    <div class="actions-toolbar">
+        <!-- Download CSV -->
+        <div class="action-group">
+            <button mat-raised-button color="primary" (click)="downloadCSV()">
+                <mat-icon>download</mat-icon> Download CSV
+            </button>
+        </div>
+
+        <!-- Toggle Columns -->
+        <div class="action-group">
+            <button mat-raised-button color="primary" (click)="showColumnToggle = !showColumnToggle"
+                matTooltip="Toggle columns">
+                <mat-icon>view_column</mat-icon> Toggle Columns
+            </button>
+        </div>
+
+        <!-- Show Filters -->
+        <div class="action-group">
+            <button mat-raised-button color="primary" (click)="showColumnFilters = !showColumnFilters"
+                [attr.aria-pressed]="showColumnFilters" matTooltip="Show/hide column filters">
+                <mat-icon>filter_alt</mat-icon> Columns
+            </button>
+        </div>
+
+        <!-- Date Range -->
+        <div class="action-group date-range-group">
+            <mat-form-field appearance="outline" class="date-range-field">
+                <mat-label>Date Range</mat-label>
+                <mat-date-range-input [formGroup]="dateRange" [rangePicker]="picker">
+                    <input matStartDate formControlName="start" placeholder="Start date">
+                    <input matEndDate formControlName="end" placeholder="End date">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+            <button mat-raised-button color="primary" (click)="applyDateFilter()" class="apply-filter-btn">
+                <mat-icon>filter_list</mat-icon> Apply
+            </button>
+        </div>
+    </div>
+
+    <!-- Column Toggle Overlay -->
+    <div *ngIf="showColumnToggle" class="column-toggle-overlay" (click)="showColumnToggle = false"></div>
+
+    <!-- Column Toggle Dialog -->
+    <div *ngIf="showColumnToggle" class="column-toggle-dialog">
+        <div class="column-toggle-header">
+            <h3>Toggle Columns</h3>
+            <mat-form-field appearance="outline" class="column-search">
+                <mat-label>Search columns</mat-label>
+                <input matInput [(ngModel)]="columnSearchText" placeholder="Search columns...">
+            </mat-form-field>
+        </div>
+
+        <div class="column-toggle-content">
+            <mat-checkbox [checked]="allColumnsSelected" (change)="toggleAllColumns($event.checked)">
+                Select All ({{ getFilteredColumns().length }} columns)
+            </mat-checkbox>
+
+            <div class="column-list">
+                <mat-checkbox *ngFor="let column of getFilteredColumns()" [checked]="isColumnDisplayed(column)"
+                    (change)="toggleColumn(column)" [disabled]="column === 'actions'">
+                    {{ columnDisplayNames[column] }}
+                </mat-checkbox>
+            </div>
+        </div>
+
+        <div class="column-toggle-footer">
+            <button mat-button (click)="showColumnToggle = false">Close</button>
+        </div>
+    </div>
+
+    <!-- Info Banner -->
+    <div style="
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-weight: 500;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+    ">
+        <mat-icon style="margin-right: 8px;">info</mat-icon>
+        Requests cannot be edited once submitted. Contact lead/manager to reject/revoke the pending request and then
+        raise a new one.
+    </div>
+
+    <!-- Table -->
+    <div class="table-responsive">
+        <div>
+            <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+                <!-- Dynamic columns with filter support -->
+                <ng-container *ngFor="let col of displayedColumns" [matColumnDef]="col">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <div class="header-container">
+                            <span>{{ columnDisplayNames[col] }}</span>
+                            <button mat-icon-button *ngIf="showColumnFilters && col !== 'actions'"
+                                [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu(col, $event)"
+                                [color]="isFilterActive(col) ? 'accent' : ''" (click)="$event.stopPropagation()">
+                                <mat-icon>filter_list</mat-icon>
+                            </button>
+                        </div>
+                    </mat-header-cell>
+
+                    <mat-cell *matCellDef="let row">
+                        <ng-container [ngSwitch]="col">
+                            <span *ngSwitchCase="'timestamp'">{{ row.timestamp }}</span>
+                            <span *ngSwitchCase="'ldap'">{{ row.ldap }}</span>
+                            <span *ngSwitchCase="'applicationType'">{{ row.applicationType }}</span>
+                            <span *ngSwitchCase="'leaveType'">{{ row.leaveType }}</span>
+                            <span *ngSwitchCase="'leaveDetails'">{{ row.leaveDetails }}</span>
+                            <span *ngSwitchCase="'leaveCategory'" [ngClass]="{
+                                'status-approved': row.leaveCategory === 'PLANNED',
+                                'status-rejected': row.leaveCategory === 'UNPLANNED'
+                            }">{{ row.leaveCategory }}</span>
+                            <span *ngSwitchCase="'duration'">{{ row.duration }}</span>
+                            <span *ngSwitchCase="'startDate'">{{ row.startDate | date:'MMM d, y' }}</span>
+                            <span *ngSwitchCase="'endDate'">{{ row.endDate | date:'MMM d, y' }}</span>
+                            <span *ngSwitchCase="'shiftCodeAtRequestTime'">{{ row.shiftCodeAtRequestTime }}</span>
+                            <span *ngSwitchCase="'oooProof'">{{ row.oooProof }}</span>
+                            <span *ngSwitchCase="'backupInfo'"
+                                [class.empty-cell]="!row.backupInfo || row.backupInfo === 'NA' || row.backupInfo === 'N/A'">{{
+                                row.backupInfo }}</span>
+                            <span *ngSwitchCase="'reason'"
+                                [class.empty-cell]="!row.reason || row.reason === 'NA' || row.reason === 'N/A'">{{
+                                row.reason }}</span>
+
+                            <span *ngSwitchCase="'documentPath'">
+                                <ng-container *ngIf="row.documentPath && row.documentPath !== 'NA'; else noDoc">
+                                    <button mat-icon-button (click)="openPreviewDialog(row)">
+                                        <mat-icon>visibility</mat-icon>
+                                    </button>
+                                </ng-container>
+                                <ng-template #noDoc>
+                                    <span>N/A</span>
+                                </ng-template>
+                            </span>
+
+                            <span *ngSwitchCase="'status'" [ngClass]="{
+                                'status-pending': row.status === 'PENDING',
+                                'status-approved': row.status === 'APPROVED',
+                                'status-rejected': row.status === 'DELETED' || row.status === 'REJECTED',
+                                'status-revoked' : row.status === 'REVOKED'
+                            }">{{ row.status }}</span>
+
+                            <span *ngSwitchCase="'actions'">
+                                <button mat-icon-button color="primary" (click)="viewAuditHistory(row)"
+                                    matTooltip="View History" class="action-button">
+                                    <mat-icon>visibility</mat-icon>
+                                </button>
+                            </span>
+                        </ng-container>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
+        <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25, 50]" showFirstLastButtons>
+        </mat-paginator>
+    </div>
+</div>
+
+<!-- Shared Filter Menu -->
+<mat-menu #filterMenu="matMenu" class="filter-menu">
+    <div class="filter-menu-content" (click)="$event.stopPropagation()">
+        <ng-container *ngIf="currentFilterMenuState.columnKey">
+            <mat-form-field appearance="outline" class="filter-search">
+                <mat-label>Search</mat-label>
+                <input matInput [(ngModel)]="currentFilterMenuState.searchText" placeholder="Search options">
+            </mat-form-field>
+
+            <mat-checkbox [checked]="isAllTempSelected()" [indeterminate]="isSomeTempSelected()"
+                (change)="toggleSelectAllTemp($event.checked)">
+                Select All ({{ getUniqueColumnValues(currentFilterMenuState.columnKey).length }} items)
+            </mat-checkbox>
+            <hr>
+
+            <div style="max-height: 200px; overflow-y: auto;">
+                <mat-checkbox *ngFor="let value of filteredMenuOptions" [checked]="isTempSelected(value)"
+                    (change)="toggleTempSelection(value, $event.checked)">
+                    {{ value }}
+                </mat-checkbox>
+            </div>
+            <hr>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                <button mat-button (click)="onFilterApplied()">Apply</button>
+                <button mat-button (click)="clearColumnFilter()">Clear</button>
+            </div>
+        </ng-container>
+    </div>
+</mat-menu>

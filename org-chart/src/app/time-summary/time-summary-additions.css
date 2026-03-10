@@ -1,0 +1,34 @@
+/* Add CSS for row highlighting and actions */
+.under-threshold {
+    background-color: #ffebee !important;
+}
+
+.under-threshold:hover {
+    background-color: #ffcdd2 !important;
+}
+
+.bulk-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin: 12px 0;
+    padding: 12px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+.bulk-actions-label {
+    font-weight: 500;
+    color: #666;
+}
+
+.clickable-count {
+    cursor: pointer;
+    color: #1976d2;
+    text-decoration: underline;
+}
+
+.clickable-count:hover {
+    color: #0d47a1;
+    font-weight: 500;
+}

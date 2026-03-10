@@ -1,0 +1,214 @@
+Name,First Name,Last Name,Start Date,LDap,Tenure, Manager,Lead,Team,PSE Program,New Effective Date,Vendor,Email Address,Status,LWD,Process,Resignation,Role Change Effective Date,Level (Before Change),Level (After Change),Last Billing Date,Backfill Ldap,Billing Start Date,Language,Level,Location
+Rahul Dilikar,Rahul,Dilikar,22-Jan-2026,rahul.dilikar,NA,Ankit Patel,Ankit Patel,Central ,NA,NA,Highspring,rahul.dilikar@highspring.in,Active,NA,Central ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Hyderabad
+Sanjeev Dangi,Sanjeev,Dangi,22-Jan-2026,sanjeev.dangi,NA,Ankit Patel,Ankit Patel,Central ,NA,NA,Highspring,sanjeev.dangi@highspring.in,Active,NA,Central ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Rakhi Aswal,Rakhi,Aswal,22-Jan-2026,rakhi.aswal,NA,Ankit Patel,Ankit Patel,Central ,NA,NA,Highspring,rakhi.aswal@highspring.in,Active,NA,Central ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Prince Christian,Prince,Christian,22-Jan-2026,christian.prince,NA,Sharad Chandra,Devang Pravinchandra Trivedi,Admin,NA,NA,Highspring,christian.prince@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Ahmedabad
+Vivek Rajendra Sonawane,Vivek,Sonawane,22-Jan-2026,vivek.sonawane,NA,Amit Ahuja,Amit Ahuja,Training,NA,NA,Highspring,vivek.sonawane@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Pune
+Pooja R,Pooja,R,22-Jan-2026,pooja.r,NA,Sanjeev Kumar Dangi,Sanjeev Kumar Dangi,Supply Chain,NA,NA,Highspring,pooja.r@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Chennai
+Amit Ahuja,Amit,Ahuja,22-Jan-2026,amit.ahuja,NA,Sharad Chandra,Sharad Chandra,Central ,NA,NA,Highspring,amit.ahuja@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Santosh Yadav,Santosh,Yadav,22-Jan-2026,santosh.yadav,NA,Ankit Patel,Ankit Patel,Central ,NA,NA,Highspring,santosh.yadav@highspring.in,Active,NA,Central ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Sharad Chandra,Sharad,Chandra,22-Jan-2026,sharad.chandra,NA,Ankit Patel,Ankit Patel,Central ,NA,NA,Highspring,sharad.chandra@highspring.in,Active,NA,Central ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Hitesh Pupreja,Hitesh,Pupreja,22-Jan-2026,hitesh.pupreja,NA,Sanjeev Kumar Dangi,Sanjeev Kumar Dangi,Supply Chain,NA,NA,Highspring,hitesh.pupreja@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Sudhir Kumar Singh,Sudhir,Singh,22-Jan-2026,sudhir.singh,NA,Santosh Yadav,Santosh Yadav,Central ,NA,NA,Highspring,sudhir.singh@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Raghvendra Mishra,Raghvendra,Mishra,22-Jan-2026,raghvendra.mishra,NA,Ankit Patel,Ankit Patel,Central ,NA,NA,Highspring,raghvendra.mishra@highspring.in,Active,NA,Central ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Ganesh Murthy,Ganesh,Murthy,22-Jan-2026,ganesh.murthy,NA,Amit Ahuja,Amit Ahuja,Training,NA,NA,Highspring,ganesh.murthy@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Chennai
+Dinesh Gn,Dinesh,Gn,22-Jan-2026,dinesh.narayan,NA,Amit Ahuja,Amit Ahuja,Training,NA,NA,Highspring,dinesh.narayan@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Bangalore
+Arshi Neha,Arshi,Neha,22-Jan-2026,arshi.neha,NA,Sanjeev Kumar Dangi,Sanjeev Kumar Dangi,Supply Chain,NA,NA,Highspring,arshi.neha@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Saksham Gupta,Saksham,Gupta,22-Jan-2026,saksham.gupta,NA,Arvind Kumar Sahu,Arvind Kumar Sahu,BI,NA,NA,Highspring,saksham.gupta@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Manoj Ramchandra Sonawane,Manoj,Sonawane,22-Jan-2026,manoj.sonawane,NA,Sharad Chandra,Amol Dahitkar,Admin,NA,NA,Highspring,manoj.sonawane@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Pune
+Sai Pavan Annam,Sai,Annam,22-Jan-2026,sai.annam,NA,Rahul Dilikar,Rahul Dilikar,FAR,NA,NA,Highspring,sai.annam@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Hyderabad
+Vikas Tomer,Vikas,Tomer,22-Jan-2026,vikas.tomer,NA,Santosh Yadav,Santosh Yadav,Central ,NA,NA,Highspring,vikas.tomer@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Akram,Akram,Akram,22-Jan-2026,akram,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Highspring,akram@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Vaishali Sharma,Vaishali,Sharma,22-Jan-2026,vaishali.sharma,NA,Rahul Dilikar,Rahul Dilikar,HR,NA,NA,Highspring,vaishali.sharma@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Ankit Sheth,Ankit,Sheth,22-Jan-2026,ankit.sheth,NA,Amit Bakshi,Amit Bakshi,MEC Backend,NA,NA,Highspring,ankit.sheth@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Sakshi Singhal,Sakshi,Singhal,22-Jan-2026,sakshi.singhal,NA,Arvind Kumar Sahu,Arvind Kumar Sahu,BI,NA,NA,Highspring,sakshi.singhal@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Prachi Ghag,Prachi,Ghag,22-Jan-2026,prachi.ghag,NA,Amit Ahuja,Amit Ahuja,Training,NA,NA,Highspring,prachi.ghag@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Pune
+Kanchan,Kanchan,Kanchan,22-Jan-2026,kanchan,NA,Shan Mohammad,Aastha .,Creative,NA,NA,Highspring,kanchan@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Soumyajit Sahu,Soumyajit,Sahu,22-Jan-2026,soumyajit.sahu,NA,Raghvendra Mishra,Raghvendra Mishra,DI,NA,NA,Highspring,soumyajit.sahu@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Gardass Hariprasad,Gardass,Hariprasad,22-Jan-2026,gardass.hariprasad,NA,Rahul Dilikar,Rahul Dilikar,FAR,NA,NA,Highspring,gardass.hariprasad@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Hyderabad
+Prassan Chhetri,Prassan,Chhetri,22-Jan-2026,prassan.chhetri,NA,Amit Bakshi,Ankit Sheth,MEC Backend,NA,NA,Highspring,prassan.chhetri@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Karimmohd,Karimmohd,Karimmohd,22-Jan-2026,​karimmohd,NA,Amit Ahuja,Amit Ahuja,Training,NA,NA,Highspring,​karimmohd@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Hyderabad
+Raqib Aqeel,Raqib,Aqeel,22-Jan-2026,raqib.aqeel,NA,Rahul Dilikar,Rahul Dilikar,FAR,NA,NA,Highspring,raqib.aqeel@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Hyderabad
+Anees Ahmed,Anees,Ahmed,22-Jan-2026,anees.ahmed,NA,Amit Ahuja,Amit Ahuja,Training,NA,NA,Highspring,anees.ahmed@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Mumbai
+Maneesh Jangid,Maneesh,Jangid,22-Jan-2026,maneesh.jangid,NA,Subodh Doharey,Subodh Doharey,Performance Marketing,NA,NA,Highspring,maneesh.jangid@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Anmol Saxena,Anmol,Saxena,22-Jan-2026,anmol.saxena,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Highspring,anmol.saxena@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Ritik Vashistha,Ritik,Vashistha,22-Jan-2026,ritik.vashistha,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Highspring,ritik.vashistha@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Akarsh Mishra,Akarsh,Mishra,22-Jan-2026,akarsh.mishra,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Highspring,akarsh.mishra@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Akshat Sharma,Akshat,Sharma,22-Jan-2026,akshat.sharma,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Highspring,akshat.sharma@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Aayush Verma,Aayush,Verma,22-Jan-2026,aayush.verma,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Highspring,aayush.verma@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Ashutosh Singh,Ashutosh,Singh,22-Jan-2026,ashutosh.singh,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Highspring,ashutosh.singh@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Firoz,Firoz,Firoz,22-Jan-2026,firoz.hashmi,NA,Subodh Doharey,Subodh Doharey,Performance Marketing,NA,NA,Highspring,firoz.hashmi@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Himanshi Sharma,Himanshi,Sharma,22-Jan-2026,himanshi.sharma,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Highspring,himanshi.sharma@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Anshul Sharma,Anshul,Sharma,22-Jan-2026,anshul.sharma,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Highspring,anshul.sharma@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Arpit Mohan,Arpit,Mohan,22-Jan-2026,arpit.mohan,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Highspring,arpit.mohan@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Dilu Kumar,Dilu,Kumar,22-Jan-2026,dilu.kumar,NA,Vikas Tomer,Akram .,Seller Program,NA,NA,Highspring,dilu.kumar@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Ashutosh Kumar,Ashutosh,Kumar,22-Jan-2026,ashutosh.kumar,NA,Santosh Yadav,Santosh Yadav,Central ,NA,NA,Highspring,ashutosh.kumar@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram/Indore
+Virender Yadav,Virender,Yadav,22-Jan-2026,virender.yadav,NA,Santosh Yadav,Santosh Yadav,Central ,NA,NA,Highspring,virender.yadav@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Aastha,Aastha,Aastha,22-Jan-2026,aastha,NA,Shan Mohammad,Shan Mohammad,Central ,NA,NA,Highspring,aastha@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Ritu Goel,Ritu,Goel,22-Jan-2026,ritu.goel,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Highspring,ritu.goel@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Shivam Rana,Shivam,Rana,22-Jan-2026,shivam.rana,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Highspring,shivam.rana@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+prince,prince,prince,22-Jan-2026,prince,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Highspring,prince@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+ankur sharma,ankur,sharma,22-Jan-2026,ankur.sharma,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Highspring,ankur.sharma@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+arsh khan,arsh,khan,22-Jan-2026,arsh.khan,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Highspring,arsh.khan@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Nilesh Sharma,Nilesh,Sharma,22-Jan-2026,nilesh.sharma,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Highspring,nilesh.sharma@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Priya Mittal,Priya,Mittal,22-Jan-2026,priya.mittal,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Highspring,priya.mittal@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Ravi Gupta,Ravi,Gupta,22-Jan-2026,ravi.gupta,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Highspring,ravi.gupta@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Subodh Doharey,Subodh,Doharey,22-Jan-2026,subodh.doharey,NA,Amit Bakshi,Amit Bakshi,MEC Backend,NA,NA,Highspring,subodh.doharey@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Varsha Prakash,Varsha,Prakash,22-Jan-2026,varsha.prakash,NA,Amit Bakshi,Ankit Sheth,MEC Backend,NA,NA,Highspring,varsha.prakash@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Rajpal Bana,Rajpal,Bana,22-Jan-2026,rajpal.bana,NA,Ankit Patel,Ankit Patel,Central ,NA,NA,Highspring,rajpal.bana@highspring.in,Active,NA,Central ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Kuldeep Yadav,Kuldeep,Yadav,22-Jan-2026,kuldeep.yadav,NA,Arvind Kumar Sahu,Sakshi Singhal,BI,NA,NA,Highspring,kuldeep.yadav@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Sahil Kathat,Sahil,Kathat,22-Jan-2026,sahil.karhat,NA,Subodh Doharey,Subodh Doharey,Performance Marketing,NA,NA,Highspring,sahil.karhat@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Pooja Sidhi,Pooja,Sidhi,22-Jan-2026,pooja.sidhi,NA,Amit Bakshi,Ankit Sheth,MEC Backend,NA,NA,Highspring,pooja.sidhi@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Shan Mohammad,Shan,Mohammad,22-Jan-2026,shan.mohammad,NA,Ankit Patel,Ankit Patel,Central ,NA,NA,Highspring,shan.mohammad@highspring.in,Active,NA,Central ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Renu,Renu,Renu,22-Jan-2026,renu2,NA,B. Mahesh,B. Mahesh,Scaled Recruitment,NA,NA,Highspring,renu2@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Khumani,Khumani,Khumani,22-Jan-2026,khumani,NA,B. Mahesh,B. Mahesh,Scaled Recruitment,NA,NA,Highspring,khumani@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Varun Chikara,Varun,Chikara,22-Jan-2026,varun.chikara,NA,B. Mahesh,B. Mahesh,Scaled Recruitment,NA,NA,Highspring,varun.chikara@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Madhav Khurana,Madhav,Khurana,22-Jan-2026,madhav.khurana,NA,Subodh Doharey,Subodh Doharey,Performance Marketing,NA,NA,Highspring,madhav.khurana@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Priya,Priya,Priya,22-Jan-2026,priya3,NA,B. Mahesh,B. Mahesh,Scaled Recruitment,NA,NA,Highspring,priya3@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Remote
+Arvind Kumar Sahu,Arvind,Sahu,22-Jan-2026,arvind.sahu,NA,Ankit Patel,Ankit Patel,Central ,NA,NA,Highspring,arvind.sahu@highspring.in,Active,NA,Central ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Saleena Hussain,Saleena,Hussain,22-Jan-2026,saleena.hussain,NA,B. Mahesh,B. Mahesh,Scaled Recruitment,NA,NA,Highspring,saleena.hussain@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Remote
+Kirti Rautela,Kirti,Rautela,22-Jan-2026,kirti.rautela,NA,B. Mahesh,B. Mahesh,Scaled Recruitment,NA,NA,Highspring,kirti.rautela@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Remote
+Akanshi Rathi,Akanshi,Rathi,22-Jan-2026,akanshi.rathi,NA,B. Mahesh,B. Mahesh,Scaled Recruitment,NA,NA,Highspring,akanshi.rathi@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Remote
+Prince Sharma,Prince,Sharma,22-Jan-2026,prince.sharma,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Highspring,prince.sharma@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Neha Gupta,Neha,Gupta,22-Jan-2026,neha.gupta,NA,B. Mahesh,B. Mahesh,Scaled Recruitment,NA,NA,Highspring,neha.gupta@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Remote
+Akash Kathait,Akash,Kathait,22-Jan-2026,akash.kathait,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Highspring,akash.kathait@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Sonali Sarkar ,Sonali,,22-Jan-2026,sonali.Sarkar,NA,Amit Ahuja,Amit Ahuja,Training,NA,NA,Highspring,sonali.Sarkar@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Kolkata
+B. Mahesh,B.,Mahesh,22-Jan-2026,mahesh.balasundar,NA,Santosh Yadav,Santosh Yadav,Central ,NA,NA,Highspring,mahesh.balasundar@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Aman Dalal,Aman,Dalal,22-Jan-2026,aman.dalal,NA,Rakhi Aswal,Rakhi Aswal,HR,NA,NA,Highspring,aman.dalal@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Khushi,Khushi,Khushi,22-Jan-2026,khushi,NA,Rakhi Aswal,Rakhi Aswal,HR,NA,NA,Highspring,khushi@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Anish Malik,Anish,Malik,22-Jan-2026,anish.malik,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Highspring,anish.malik@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Sanjeet Kumar ,Sanjeet,,22-Jan-2026,sanjeet.kumar,NA,Arvind Kumar Sahu,Arvind Kumar Sahu,BI,NA,NA,Highspring,sanjeet.kumar@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Varsha Kushwaha,Varsha,Kushwaha,22-Jan-2026,varsha.kushwaha,NA,Kanika Sharma,Kanika Sharma,HR,NA,NA,Highspring,varsha.kushwaha@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Jyotsna Gautam,Jyotsna,Gautam,22-Jan-2026,jyotsna.gautam,NA,B. Mahesh,B. Mahesh,Scaled Recruitment,NA,NA,Highspring,jyotsna.gautam@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Paras Gambhir,Paras,Gambhir,22-Jan-2026,paras.gambhir,NA,Sharad Chandra,Sharad Chandra,Central ,NA,NA,Highspring,paras.gambhir@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Astha,Astha,Astha,22-Jan-2026,astha,NA,B. Mahesh,B. Mahesh,Scaled Recruitment,NA,NA,Highspring,astha@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Anushika Patel,Anushika,Patel,22-Jan-2026,anushika.patel,NA,B. Mahesh,B. Mahesh,Scaled Recruitment,NA,NA,Highspring,anushika.patel@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Anjali Sharma,Anjali,Sharma,22-Jan-2026,anjalis,NA,B. Mahesh,B. Mahesh,Scaled Recruitment,NA,NA,Highspring,anjalis@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Julie Gupta,Julie,Gupta,22-Jan-2026,julie.gupta,NA,Vaishali Sharma,Vaishali Sharma,HR,NA,NA,Highspring,julie.gupta@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Sonali,Sonali,Sonali,22-Jan-2026,sonali,NA,B. Mahesh,B. Mahesh,Scaled Recruitment,NA,NA,Highspring,sonali@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Neelam Rathore,Neelam,Rathore,22-Jan-2026,neelam.rathore,NA,Amit Ahuja,Amit Ahuja,Training,NA,NA,Highspring,neelam.rathore@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Shimran Parida,Shimran,Parida,22-Jan-2026,shimran.parida,NA,B. Mahesh,B. Mahesh,Scaled Recruitment,NA,NA,Highspring,shimran.parida@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Aashlesha Parde,Aashlesha,Parde,22-Jan-2026,aashlesha.bajirao,NA,Sharad Chandra,Ajay Singh,Care Team,NA,NA,Off Role,aashlesha.bajirao@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Mumbai
+Ajay Singh,Ajay,Singh,22-Jan-2026,ajay.singh,NA,Sharad Chandra,Sharad Chandra,Care Team,NA,NA,Off Role,ajay.singh@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Ashish Samant,Ashish,Samant,22-Jan-2026,ashish.samant,NA,Amit Bakshi,Ankit Sheth,MEC Backend,NA,NA,Off Role,ashish.samant@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Chandangiri Latha,Chandangiri,Latha,22-Jan-2026,chandangiri.latha,NA,Sharad Chandra,Ajay Singh,Care Team,NA,NA,Off Role,chandangiri.latha@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Hyderabad
+Deepak Kumar,Deepak,Kumar,22-Jan-2026,dkumar,NA,Sharad Chandra,Ajay Singh,Care Team,NA,NA,Off Role,dkumar@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Gur Pyari,Gur,Pyari,22-Jan-2026,gur.pyari,NA,Rakhi Aswal,Rakhi Aswal,HR,NA,NA,Off Role,gur.pyari@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Jeevitha .,Jeevitha,.,22-Jan-2026,jeevitha,NA,Amit Bakshi,Ankit Sheth,MEC Backend,NA,NA,Off Role,jeevitha@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Karan Yadav,Karan,Yadav,22-Jan-2026,karan.yadav,NA,Sharad Chandra,Ajay Singh,Care Team,NA,NA,Off Role,karan.yadav@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Maheshraj .,Maheshraj,.,22-Jan-2026,maheshraj,NA,Sharad Chandra,Ajay Singh,Care Team,NA,NA,Off Role,maheshraj@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Manju Verma,Manju,Verma,22-Jan-2026,manju.verma,NA,Rajpal Bana,Rajpal Bana,Quality ,NA,NA,Off Role,manju.verma@highspring.in,Active,NA,Quality ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Mohammed Saitu,Mohammed,Saitu,22-Jan-2026,mohammed.saitu,NA,Sharad Chandra,Srikanth Kumar Ghodke,Admin,NA,NA,Off Role,mohammed.saitu@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Bangalore
+Nikkita Patel,Nikkita,Patel,22-Jan-2026,nikkita,NA,Rajpal Bana,Rajpal Bana,Quality ,NA,NA,Off Role,nikkita@highspring.in,Active,NA,Quality ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Nishant Patel,Nishant,Patel,22-Jan-2026,nishant.patel,NA,Rajpal Bana,Rajpal Bana,Quality ,NA,NA,Off Role,nishant.patel@highspring.in,Active,NA,Quality ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Rashmi Kumari,Rashmi,Kumari,22-Jan-2026,rashmi.kumari,NA,Amit Bakshi,Ankit Sheth,MEC Backend,NA,NA,Off Role,rashmi.kumari@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Rukkaiya Parvin,Rukkaiya,Parvin,22-Jan-2026,rukkaiya.parvin,NA,Sharad Chandra,Ajay Singh,Admin,NA,NA,Off Role,rukkaiya.parvin@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Rupendra Singh,Rupendra,Singh,22-Jan-2026,rupendra.singh,NA,Sharad Chandra,Ajay Singh,Admin,NA,NA,Off Role,rupendra.singh@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Delhi
+Shaik Rabbani,Shaik,Rabbani,22-Jan-2026,shaik.rabbani,NA,Sharad Chandra,K Narendra Babu,Admin,NA,NA,Off Role,shaik.rabbani@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Hyderabad
+Sunny Kumar,Sunny,Kumar,22-Jan-2026,sunny.kumar,NA,Arvind Kumar Sahu,Sakshi Singhal,BI,NA,NA,Off Role,sunny.kumar@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Swati Reddy,Swati,Reddy,22-Jan-2026,swati,NA,Rajpal Bana,Rajpal Bana,Quality ,NA,NA,Off Role,swati@highspring.in,Active,NA,Quality ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Hyderabad
+Balbir Singh Malhotra,Balbir,Malhotra,22-Jan-2026,balbir.malhotra,NA,Vikas Tomer,Akash Kathait,Seller Program,NA,NA,Off Role,balbir.malhotra@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Ilma Naeem,Ilma,Naeem,22-Jan-2026,ilma.naeem,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,ilma.naeem@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Anuj Arora,Anuj,Arora,22-Jan-2026,anuj.arora,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,anuj.arora@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Aparna Rani,Aparna,Rani,22-Jan-2026,aparna.rani,NA,Shan Mohammad,Aastha .,Creative,NA,NA,Off Role,aparna.rani@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Sunil Jawahar Nishad,Sunil,Nishad,22-Jan-2026,sunil.nishad,NA,Sharad Chandra,Anubhav Agarwal,Admin,NA,NA,Off Role,sunil.nishad@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Mumbai
+Pooja Rajpal,Pooja,Rajpal,22-Jan-2026,pooja.rajpal,NA,Amit Bakshi,Ankit Sheth,MEC Backend,NA,NA,Off Role,pooja.rajpal@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Keshav Kumar,Keshav,Kumar,22-Jan-2026,keshavkumar,NA,Amit Bakshi,Varsha Prakash,MEC Backend,NA,NA,Off Role,keshavkumar@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Ayan UI Islam,Ayan,Islam,22-Jan-2026,ayan.islam,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,ayan.islam@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Ayesha Rizvi,Ayesha,Rizvi,22-Jan-2026,ayesha.rizvi,NA,Vikas Tomer,Akash Kathait,Seller Program,NA,NA,Off Role,ayesha.rizvi@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Km Neetika,Km,Neetika,22-Jan-2026,km.neetika,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,km.neetika@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Shubham Tiwari,Shubham,Tiwari,22-Jan-2026,shubham.tiwari,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,shubham.tiwari@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Vaishali .,Vaishali,.,22-Jan-2026,vaishali,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,vaishali@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Mohd Yawar Faruqi,Mohd,Faruqi,22-Jan-2026,mohdyawar.faruqi,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,mohdyawar.faruqi@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Sujeet .,Sujeet,.,22-Jan-2026,sujeet,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,sujeet@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Priyanka yadav,Priyanka,yadav,22-Jan-2026,priyanka.yadav,NA,Vikas Tomer,Dilu kumar,Seller Program,NA,NA,Off Role,priyanka.yadav@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Priyanshi Goel,Priyanshi,Goel,22-Jan-2026,priyanshi.goel,NA,Vikas Tomer,Akram .,Seller Program,NA,NA,Off Role,priyanshi.goel@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Ritu Pal,Ritu,Pal,22-Jan-2026,ritu.pal,NA,Vikas Tomer,Dilu kumar,Seller Program,NA,NA,Off Role,ritu.pal@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Shubham Choudhary,Shubham,Choudhary,22-Jan-2026,shubham.choudhary,NA,Vikas Tomer,Akram .,Seller Program,NA,NA,Off Role,shubham.choudhary@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Niladri Shome,Niladri,Shome,22-Jan-2026,niladri.shome,NA,Sharad Chandra,Mir Intekhab Alam,Admin,NA,NA,Off Role,niladri.shome@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Kolkata
+Vidhansh Agarwal,Vidhansh,Agarwal,22-Jan-2026,vidhansh.agarwal,NA,Vikas Tomer,Dilu kumar,Seller Program,NA,NA,Off Role,vidhansh.agarwal@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Manish Kumar,Manish,Kumar,22-Jan-2026,manish.kumar,NA,Amit Bakshi,Varsha Prakash,MEC Backend,NA,NA,Off Role,manish.kumar@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Ayushi Gupta,Ayushi,Gupta,22-Jan-2026,ayushi.gupta,NA,Vikas Tomer,Dilu kumar,Seller Program,NA,NA,Off Role,ayushi.gupta@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Yash Verma,Yash,Verma,22-Jan-2026,yash.verma,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,yash.verma@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Anshika .,Anshika,.,22-Jan-2026,anshika2,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,anshika2@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Pankaj .,Pankaj,.,22-Jan-2026,pankaj,NA,Subodh Doharey,Subodh Doharey,Performance Marketing,NA,NA,Off Role,pankaj@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Shivam Jassar,Shivam,Jassar,22-Jan-2026,shivam.jassar,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,shivam.jassar@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Krishna Bhatt,Krishna,Bhatt,22-Jan-2026,krishna.bhatt,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,krishna.bhatt@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Varsha .,Varsha,.,22-Jan-2026,varsha3,NA,Vikas Tomer,Niranjan Singh,Seller Program,NA,NA,Off Role,varsha3@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Archana .,Archana,.,22-Jan-2026,archana,NA,Subodh Doharey,Subodh Doharey,Performance Marketing,NA,NA,Off Role,archana@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Aayush Shrivastava,Aayush,Shrivastava,22-Jan-2026,aayush.shrivastava,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,aayush.shrivastava@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Ayush Lodhi,Ayush,Lodhi,22-Jan-2026,ayush.lodhi,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,ayush.lodhi@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Khushi Agarwal,Khushi,Agarwal,22-Jan-2026,khushi.agarwal,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,khushi.agarwal@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Aniket Bansal,Aniket,Bansal,22-Jan-2026,aniket.bansal,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,aniket.bansal@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Aman Thakur,Aman,Thakur,22-Jan-2026,aman.thakur,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,aman.thakur@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Payal Singh,Payal,Singh,22-Jan-2026,payal.singh,NA,Vikas Tomer,Akash Kathait,Seller Program,NA,NA,Off Role,payal.singh@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Mukul Saini,Mukul,Saini,22-Jan-2026,mukul.saini,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,mukul.saini@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Zoya Khan,Zoya,Khan,22-Jan-2026,zoya.khan,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,zoya.khan@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Tanu Saharawat,Tanu,Saharawat,22-Jan-2026,tanu.saharawat,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,tanu.saharawat@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Aman Singh,Aman,Singh,22-Jan-2026,saman,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,saman@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Harsh Chaudhary,Harsh,Chaudhary,22-Jan-2026,chaudhary.harsh,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,chaudhary.harsh@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Suny Kori,Suny,Kori,22-Jan-2026,suny.kori,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,suny.kori@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Divyanshu Sagar,Divyanshu,Sagar,22-Jan-2026,divyanshu.sagar,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,divyanshu.sagar@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Suhail Khan,Suhail,Khan,22-Jan-2026,suhail.khan,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,suhail.khan@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Harsh Tyagi,Harsh,Tyagi,22-Jan-2026,htyagi,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,htyagi@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Naeem Saifi,Naeem,Saifi,22-Jan-2026,naeem.saifi,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,naeem.saifi@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Suhani Lodhi,Suhani,Lodhi,22-Jan-2026,suhani.lodhi,NA,Rajpal Bana,Rajpal Bana,Quality ,NA,NA,Off Role,suhani.lodhi@highspring.in,Active,NA,Quality ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Rajat Choudhary,Rajat,Choudhary,22-Jan-2026,rajat.choudhary,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,rajat.choudhary@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Sharik Saifi,Sharik,Saifi,22-Jan-2026,sharik.saifi,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,sharik.saifi@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Prashant Kumar,Prashant,Kumar,22-Jan-2026,prashant.kumar,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,prashant.kumar@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Om .,Om,.,22-Jan-2026,om,NA,Rajpal Bana,Rajpal Bana,Quality ,NA,NA,Off Role,om@highspring.in,Active,NA,Quality ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Tanya Jain,Tanya,Jain,22-Jan-2026,tanya.jain,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,tanya.jain@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Kartik Nain,Kartik,Nain,22-Jan-2026,kartik.nain,NA,Vikas Tomer,Prince Sharma,Seller Program,NA,NA,Off Role,kartik.nain@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Shubham Damodhar Alhat,Shubham,Alhat,22-Jan-2026,shubham.alhat,NA,Sharad Chandra,Amol Dahitkar,Admin,NA,NA,Off Role,shubham.alhat@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Pune
+Khushi Sharma,Khushi,Sharma,22-Jan-2026,khushi.sharma,NA,Amit Bakshi,Varsha Prakash,MEC Backend,NA,NA,Off Role,khushi.sharma@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Samiya .,Samiya,.,22-Jan-2026,samiya,NA,Amit Bakshi,Varsha Prakash,MEC Backend,NA,NA,Off Role,samiya@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Hamza Nabeel,Hamza,Nabeel,22-Jan-2026,hamza.nabeel,NA,Rajpal Bana,Rajpal Bana,Quality ,NA,NA,Off Role,hamza.nabeel@highspring.in,Active,NA,Quality ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Sanidhya Kashyap,Sanidhya,Kashyap,22-Jan-2026,sanidhya.kashyap,NA,Rajpal Bana,Rajpal Bana,Quality ,NA,NA,Off Role,sanidhya.kashyap@highspring.in,Active,NA,Quality ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Aahwaan,Aahwaan,Aahwaan,22-Jan-2026,aahwaan,NA,Rajpal Bana,Rajpal Bana,Quality ,NA,NA,Off Role,aahwaan@highspring.in,Active,NA,Quality ,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Muzammil Khan,Muzammil,Khan,22-Jan-2026,muzammil.khan,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,muzammil.khan@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Atif Husain,Atif,Husain,22-Jan-2026,atif.husain,NA,Amit Bakshi,Pooja Sidhi,MEC Backend,NA,NA,Off Role,atif.husain@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Usman,Usman,Usman,22-Jan-2026,usman,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,usman@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Vandana Rawat,Vandana,Rawat,22-Jan-2026,vandana.rawat,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,vandana.rawat@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Bhuvnesh Singh,Bhuvnesh,Singh,22-Jan-2026,bhuvnesh.singh,NA,B. Mahesh,B. Mahesh,Scaled Recruitment,NA,NA,Off Role,bhuvnesh.singh@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Abhishek Verma,Abhishek,Verma,22-Jan-2026,abhishek.verma,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,abhishek.verma@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Rohit Sharma,Rohit,Sharma,22-Jan-2026,rohit.sharma2,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,rohit.sharma2@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Tanya Sharma,Tanya,Sharma,22-Jan-2026,tanya.sharma,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,tanya.sharma@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Sakshi Raj,Sakshi,Raj,22-Jan-2026,sakshi.raj,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,sakshi.raj@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Vijit Jindal,Vijit,Jindal,22-Jan-2026,vijit.jindal,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,vijit.jindal@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Aditi Aneja,Aditi,Aneja,22-Jan-2026,aditi.aneja,NA,Amit Bakshi,Pooja Sidhi,MEC Backend,NA,NA,Off Role,aditi.aneja@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Sangam Kumari,Sangam,Kumari,22-Jan-2026,sangam.kumari,NA,Amit Bakshi,Pooja Sidhi,MEC Backend,NA,NA,Off Role,sangam.kumari@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Chanchal Rani,Chanchal,Rani,22-Jan-2026,chanchal.rani,NA,Amit Bakshi,Pooja Sidhi,MEC Backend,NA,NA,Off Role,chanchal.rani@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Kunal Kumar,Kunal,Kumar,22-Jan-2026,kunal.kumar,NA,Amit Bakshi,Pooja Sidhi,MEC Backend,NA,NA,Off Role,kunal.kumar@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Abhishek Chaudhary,Abhishek,Chaudhary,22-Jan-2026,abhishek.chaudhary2,NA,Amit Bakshi,Pooja Sidhi,MEC Backend,NA,NA,Off Role,abhishek.chaudhary2@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Pintu Kumar,Pintu,Kumar,22-Jan-2026,pintu.kumar,NA,Amit Bakshi,Pooja Sidhi,MEC Backend,NA,NA,Off Role,pintu.kumar@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Vaishnavi Tiwari,Vaishnavi,Tiwari,22-Jan-2026,vaishnavi.tiwari2,NA,Amit Bakshi,Pooja Sidhi,MEC Backend,NA,NA,Off Role,vaishnavi.tiwari2@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Madhvi Pandey,Madhvi,Pandey,22-Jan-2026,madhvi.pandey,NA,Amit Bakshi,Pooja Sidhi,MEC Backend,NA,NA,Off Role,madhvi.pandey@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Danish Ali,Danish,Ali,22-Jan-2026,danish.ali,NA,Amit Bakshi,Pooja Sidhi,MEC Backend,NA,NA,Off Role,danish.ali@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Mridusmita Das,Mridusmita,Das,22-Jan-2026,mridusmita.das,NA,Amit Bakshi,Pooja Sidhi,MEC Backend,NA,NA,Off Role,mridusmita.das@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Chestha .,Chestha,.,22-Jan-2026,chestha,NA,Amit Bakshi,Pooja Sidhi,MEC Backend,NA,NA,Off Role,chestha@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Aman Verma,Aman,Verma,22-Jan-2026,aman.verma,NA,Amit Bakshi,Pooja Sidhi,MEC Backend,NA,NA,Off Role,aman.verma@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Aarvi Prajapati,Aarvi,Prajapati,22-Jan-2026,aarvi.prajapati,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,aarvi.prajapati@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Anshika Gupta,Anshika,Gupta,22-Jan-2026,anshika.gupta,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,anshika.gupta@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Akanksha Chauhan,Akanksha,Chauhan,22-Jan-2026,akanksha.chauhan,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,akanksha.chauhan@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Khushi Srivastava,Khushi,Srivastava,22-Jan-2026,khushi.srivastava,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,khushi.srivastava@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Khushi Mishra,Khushi,Mishra,22-Jan-2026,khushi.mishra,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,khushi.mishra@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Sakshi Gupta,Sakshi,Gupta,22-Jan-2026,sakshi.gupta,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,sakshi.gupta@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Madhav Raj,Madhav,Raj,22-Jan-2026,madhav.raj,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,madhav.raj@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Adarsh Dixit,Adarsh,Dixit,22-Jan-2026,adarsh.dixit,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,adarsh.dixit@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Bhavya Bajpai,Bhavya,Bajpai,22-Jan-2026,bhavya.bajpai,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,bhavya.bajpai@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Ayushi Pandey,Ayushi,Pandey,22-Jan-2026,ayushi.pandey,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,ayushi.pandey@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Rishabh Mishra,Rishabh,Mishra,22-Jan-2026,rishabh2.mishra,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,rishabh2.mishra@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Anshul Omar,Anshul,Omar,22-Jan-2026,anshul.omar,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,anshul.omar@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Om Ji,Om,Ji,22-Jan-2026,omji,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,omji@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Harshita Sahu,Harshita,Sahu,22-Jan-2026,harshita.sahu,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,harshita.sahu@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Arpit Patel,Arpit,Patel,22-Jan-2026,arpit.patel,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,arpit.patel@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Rishabh Singh,Rishabh,Singh,22-Jan-2026,rishabh.singh,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,rishabh.singh@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Divyanshu Tiwari,Divyanshu,Tiwari,22-Jan-2026,divyanshu.tiwari,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,divyanshu.tiwari@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Suyash Trivedi,Suyash,Trivedi,22-Jan-2026,suyash.trivedi,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,suyash.trivedi@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Dev Mani Yadav,Dev,Yadav,22-Jan-2026,dev.yadav,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,dev.yadav@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Avantika Tiwari,Avantika,Tiwari,22-Jan-2026,avantika.tiwari,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,avantika.tiwari@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Shakshi Dhiman,Shakshi,Dhiman,22-Jan-2026,shakshi.dhiman,NA,Amit Bakshi,Pooja Sidhi,MEC Backend,NA,NA,Off Role,shakshi.dhiman@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida
+Sujata Rai,Sujata,Rai,22-Jan-2026,sujata.rai,NA,Sharad Chandra,Ajay Singh,Care Team,NA,NA,Off Role,sujata.rai@highspring.in,Active,NA,GPay,NA,NA,NA,NA,NA,NA,NA,NA,NA,Gurugram
+Asha,Asha,Asha,22-Jan-2026,asha,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,asha@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Mudrika Ruhela,Mudrika,Ruhela,22-Jan-2026,mudrika.ruhela,NA,Vikas Tomer,Vikas Tomer,Seller Program,NA,NA,Off Role,mudrika.ruhela@highspring.in,Active,NA,Seller Program,NA,NA,NA,NA,NA,NA,NA,NA,NA,Meerut
+Pushpit Verma,Pushpit,Verma,22-Jan-2026,pushpit.verma,NA,Amit Bakshi,Pooja Sidhi,MEC Backend,NA,NA,Off Role,pushpit.verma@highspring.in,Active,NA,MEC,NA,NA,NA,NA,NA,NA,NA,NA,NA,Noida

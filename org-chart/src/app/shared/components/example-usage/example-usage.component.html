@@ -1,0 +1,58 @@
+<div class="example-usage-container">
+  <div class="example-header">
+    <h1>Reusable Table Component Demo</h1>
+    <p>This demonstrates the capabilities of the reusable table component with various features.</p>
+  </div>
+
+  <!-- Table Controls -->
+  <div class="example-controls">
+    <button mat-raised-button color="primary" (click)="addEmployee()">
+      <mat-icon>person_add</mat-icon>
+      Add New Employee
+    </button>
+    
+    <button mat-button (click)="refreshData()">
+      <mat-icon>refresh</mat-icon>
+      Refresh Data
+    </button>
+    
+    <button mat-button (click)="resetTable()">
+      <mat-icon>settings_backup_restore</mat-icon>
+      Reset Table
+    </button>
+  </div>
+
+  <!-- Reusable Table -->
+  <app-reusable-table
+    [config]="tableConfig"
+    [data]="employees"
+    (tableEvent)="onTableEvent($event)"
+    class="demo-table">
+  </app-reusable-table>
+
+  <!-- Table Information -->
+  <div class="table-info">
+    <h3>Features Demonstrated:</h3>
+    <ul>
+      <li><strong>Column Management:</strong> Toggle columns, sort by columns, filter by columns</li>
+      <li><strong>Column Resizing:</strong> Drag the edge of column headers to resize columns</li>
+      <li><strong>Horizontal Scrolling:</strong> Scroll horizontally when columns exceed container width</li>
+      <li><strong>Global Search:</strong> Search across all visible columns</li>
+      <li><strong>Row Selection:</strong> Select individual rows or all rows</li>
+      <li><strong>Bulk Actions:</strong> Perform actions on multiple selected rows</li>
+      <li><strong>Row Actions:</strong> Context-specific actions for each row</li>
+      <li><strong>Pagination:</strong> Navigate through large datasets</li>
+      <li><strong>Export:</strong> Export data to CSV format</li>
+      <li><strong>Responsive Design:</strong> Adapts to different screen sizes</li>
+      <li><strong>Custom Formatting:</strong> Format data like dates, currency, and status indicators</li>
+      <li><strong>Row Classes:</strong> Apply CSS classes based on row data</li>
+      <li><strong>Empty State:</strong> Handle cases when no data is available</li>
+    </ul>
+  </div>
+
+  <!-- Implementation Details -->
+  <div class="implementation-details">
+    <h3>Implementation Details:</h3>
+    <p>See the TypeScript file for complete implementation details.</p>
+  </div>
+</div>

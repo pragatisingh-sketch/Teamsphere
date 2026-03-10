@@ -1,0 +1,419 @@
+<div class="requests-dashboard">
+  <app-page-header title="Requests" subtitle="Manage and approve time entry requests across the organization">
+  </app-page-header>
+  <div class="actions">
+    <button mat-raised-button (click)="backToTimeEntries()" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Time Entries
+    </button>
+
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" (click)="approveAllSelected()" [disabled]="!selection.hasValue()">
+        <mat-icon>check_circle</mat-icon>
+        Approve Selected
+      </button>
+      <button mat-raised-button color="warn" (click)="rejectAllSelected()" [disabled]="!selection.hasValue()">
+        <mat-icon>cancel</mat-icon>
+        Reject Selected
+      </button>
+      <button mat-raised-button color="primary" class="action-button download-button" (click)="downloadCSV()">
+        <mat-icon>download</mat-icon> Download CSV
+      </button>
+    </div>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Filter by Status</mat-label>
+      <mat-select (selectionChange)="applyFilter($event, 'status')">
+        <mat-option value="">All</mat-option>
+        <mat-option *ngFor="let status of requestStatuses" [value]="status">{{ status }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="date-range-container">
+      <mat-form-field appearance="outline" class="date-field">
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="startDate">
+        <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="date-field">
+        <mat-label>End Date</mat-label>
+        <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="endDate">
+        <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #endDatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <button mat-raised-button class="apply-button" (click)="applyDateRange()" [disabled]="!startDate || !endDate">
+        <mat-icon>filter_list</mat-icon>
+        Apply
+      </button>
+
+      <mat-slide-toggle class="direct-toggle" [(ngModel)]="showDirectOnly" (change)="toggleDirectOnly()"
+        [matTooltip]="showDirectOnly ? 'Disable to show all team members including indirect reports' : 'Enable to show only direct team members'">
+        Direct Team Only
+      </mat-slide-toggle>
+    </div>
+
+    <!-- Show Column Filters Button -->
+    <button mat-raised-button (click)="toggleColumnFilters()" class="action-button toggle-filter-button">
+      <mat-icon>{{ showColumnFilters ? 'visibility_off' : 'filter_list' }}</mat-icon>
+      {{ showColumnFilters ? 'Hide' : 'Show' }} Column Filters
+    </button>
+
+    <!-- Column Toggle Button -->
+    <button mat-raised-button [matMenuTriggerFor]="columnMenu" class="column-toggle-button">
+      <mat-icon>view_column</mat-icon>
+      Toggle Columns
+    </button>
+
+    <!-- Column Toggle Menu -->
+    <mat-menu #columnMenu="matMenu" class="column-menu">
+      <div class="column-menu-content" (click)="$event.stopPropagation()">
+        <h3 class="column-menu-title">Toggle Columns</h3>
+        <mat-divider></mat-divider>
+
+        <!-- Search input -->
+        <mat-form-field appearance="outline" class="column-search-field">
+          <mat-label>Search columns</mat-label>
+          <input matInput [(ngModel)]="columnSearchText" placeholder="Search columns">
+          <button *ngIf="columnSearchText" matSuffix mat-icon-button aria-label="Clear" (click)="columnSearchText=''">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <!-- Select All checkbox -->
+        <div class="select-all-container">
+          <mat-checkbox [checked]="allColumnsSelected" (change)="toggleAllColumns($event.checked)"
+            class="select-all-checkbox">
+            Select All
+          </mat-checkbox>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Column checkboxes -->
+        <div class="column-menu-items">
+          <mat-checkbox *ngFor="let column of getFilteredColumns()" [checked]="isColumnDisplayed(column)"
+            (change)="toggleColumn(column)" [disabled]="column === 'select' || column === 'actions'"
+            class="column-toggle-checkbox">
+            {{ columnDisplayNames[column] }}
+          </mat-checkbox>
+        </div>
+      </div>
+    </mat-menu>
+
+    <!-- Global Search Field -->
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput (keyup)="applyGlobalFilter($event)" placeholder="Search requests">
+    </mat-form-field>
+
+  </div>
+
+  <div class="table-responsive">
+    <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? toggleAllRows() : null" [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </mat-cell>
+      </ng-container>
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">ID</span>
+            <button mat-icon-button #idTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+              [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('id', idTrigger)"
+              [color]="isFilterActive('id') ? 'accent' : ''" (click)="$event.stopPropagation()">
+              <mat-icon>filter_list</mat-icon>
+            </button>
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let request">{{ request.id }}</mat-cell>
+      </ng-container>
+
+      <!-- User Name Column -->
+      <ng-container matColumnDef="userName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">User</span>
+            <button mat-icon-button #userNameTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+              [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('userName', userNameTrigger)"
+              [color]="isFilterActive('userName') ? 'accent' : ''" (click)="$event.stopPropagation()">
+              <mat-icon>filter_list</mat-icon>
+            </button>
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let request">{{ request.userName || request.username || request.ldap }}</mat-cell>
+      </ng-container>
+
+      <!-- Project Name Column -->
+      <ng-container matColumnDef="projectName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Project</span>
+            <button mat-icon-button #projectNameTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+              [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('projectName', projectNameTrigger)"
+              [color]="isFilterActive('projectName') ? 'accent' : ''" (click)="$event.stopPropagation()">
+              <mat-icon>filter_list</mat-icon>
+            </button>
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let request">{{ request.projectName }}</mat-cell>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="date">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Date</span>
+            <button mat-icon-button #dateTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+              [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('date', dateTrigger)"
+              [color]="isFilterActive('date') ? 'accent' : ''" (click)="$event.stopPropagation()">
+              <mat-icon>filter_list</mat-icon>
+            </button>
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let request">
+          {{ request.date || request.entryDate | date: 'yyyy-MM-dd' }}
+          <button *ngIf="request.isInsufficientDayTime" mat-icon-button class="info-button"
+            [matTooltip]="'Total time for this day is ' + request.dayTotalTimeInMins + ' minutes. Required: 480 minutes (8 hours)'">
+            <mat-icon class="info-icon">info</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Hours Column -->
+      <ng-container matColumnDef="hours">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Minutes</span>
+            <button mat-icon-button #hoursTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+              [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('hours', hoursTrigger)"
+              [color]="isFilterActive('hours') ? 'accent' : ''" (click)="$event.stopPropagation()">
+              <mat-icon>filter_list</mat-icon>
+            </button>
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let request">{{ request.timeInMins || (request.hours * 60) | number:'1.0-0' }}</mat-cell>
+      </ng-container>
+
+      <!-- Description Column -->
+      <ng-container matColumnDef="description">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Description</span>
+            <button mat-icon-button #descriptionTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+              [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('description', descriptionTrigger)"
+              [color]="isFilterActive('description') ? 'accent' : ''" (click)="$event.stopPropagation()">
+              <mat-icon>filter_list</mat-icon>
+            </button>
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let request">{{ request.description || request.activity }}</mat-cell>
+      </ng-container>
+
+      <!-- Process Column (Added) -->
+      <ng-container matColumnDef="process">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Process</span>
+            <button mat-icon-button #processTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+              [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('process', processTrigger)"
+              [color]="isFilterActive('process') ? 'accent' : ''" (click)="$event.stopPropagation()">
+              <mat-icon>filter_list</mat-icon>
+            </button>
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let request">{{ request.process || '-' }}</mat-cell>
+      </ng-container>
+
+      <!-- Shift Column -->
+      <ng-container matColumnDef="shift">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Shift</span>
+            <button mat-icon-button #shiftTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+              [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('shift', shiftTrigger)"
+              [color]="isFilterActive('shift') ? 'accent' : ''" (click)="$event.stopPropagation()">
+              <mat-icon>filter_list</mat-icon>
+            </button>
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let request">{{ request.attendanceType || 'N/A' }}</mat-cell>
+      </ng-container>
+
+      <!-- Overtime Column -->
+      <ng-container matColumnDef="isOvertime">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Overtime</span>
+            <button mat-icon-button #isOvertimeTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+              [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('isOvertime', isOvertimeTrigger)"
+              [color]="isFilterActive('isOvertime') ? 'accent' : ''" (click)="$event.stopPropagation()">
+              <mat-icon>filter_list</mat-icon>
+            </button>
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let request">
+          <mat-icon *ngIf="request.isOvertime" color="accent">check_circle</mat-icon>
+          <mat-icon *ngIf="!request.isOvertime" color="disabled">cancel</mat-icon>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Status</span>
+            <button mat-icon-button #statusTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+              [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('status', statusTrigger)"
+              [color]="isFilterActive('status') ? 'accent' : ''" (click)="$event.stopPropagation()">
+              <mat-icon>filter_list</mat-icon>
+            </button>
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let request">
+          <span [class]="'status-' + request.status?.toLowerCase()">
+            {{ request.status }}
+            <mat-icon *ngIf="request.status === 'APPROVED'" class="verified-icon">verified</mat-icon>
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Comments Column -->
+      <ng-container matColumnDef="comments">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Comments</span>
+            <button mat-icon-button #commentsTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+              [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('comments', commentsTrigger)"
+              [color]="isFilterActive('comments') ? 'accent' : ''" (click)="$event.stopPropagation()">
+              <mat-icon>filter_list</mat-icon>
+            </button>
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let request">{{ request.comment || '-' }}</mat-cell>
+      </ng-container>
+
+      <!-- Created At Column -->
+      <ng-container matColumnDef="createdAt">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Created At</span>
+            <button mat-icon-button #createdAtTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+              [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('createdAt', createdAtTrigger)"
+              [color]="isFilterActive('createdAt') ? 'accent' : ''" (click)="$event.stopPropagation()">
+              <mat-icon>filter_list</mat-icon>
+            </button>
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let request">{{ request.createdAt | date: 'yyyy-MM-dd hh:mm:ss a' }}</mat-cell>
+      </ng-container>
+
+      <!-- Updated At Column -->
+      <ng-container matColumnDef="updatedAt">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <div class="header-container">
+            <span class="header-text">Updated At</span>
+            <button mat-icon-button #updatedAtTrigger="matMenuTrigger" *ngIf="showColumnFilters"
+              [matMenuTriggerFor]="filterMenu" (menuOpened)="openFilterMenu('updatedAt', updatedAtTrigger)"
+              [color]="isFilterActive('updatedAt') ? 'accent' : ''" (click)="$event.stopPropagation()">
+              <mat-icon>filter_list</mat-icon>
+            </button>
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let request">{{ request.updatedAt | date: 'yyyy-MM-dd hh:mm:ss a' }}</mat-cell>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>
+          <div class="header-container">
+            <span class="header-text">Actions</span>
+          </div>
+
+        </mat-header-cell>
+        <mat-cell *matCellDef="let request">
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Actions menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="approveRequest(request)"
+              [disabled]="request.status !== 'PENDING' && request.status !== 'SUBMITTED'">
+              <mat-icon color="primary">check_circle</mat-icon>
+              <span>Approve</span>
+            </button>
+            <button mat-menu-item (click)="rejectRequest(request)"
+              [disabled]="request.status !== 'PENDING' && request.status !== 'SUBMITTED'">
+              <mat-icon color="warn">cancel</mat-icon>
+              <span>Reject</span>
+            </button>
+            <button mat-menu-item (click)="editTimeEntry(request)">
+              <mat-icon color="primary">edit</mat-icon>
+              <span>Edit</span>
+            </button>
+            <button mat-menu-item (click)="deleteTimeEntry(request)">
+              <mat-icon color="warn">delete</mat-icon>
+              <span>Delete</span>
+            </button>
+          </mat-menu>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"
+        [ngClass]="{'insufficient-day-time': row.isInsufficientDayTime}"></mat-row>
+    </mat-table>
+
+    <mat-paginator [length]="dataSource.data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 50]"
+      showFirstLastButtons>
+    </mat-paginator>
+  </div>
+</div>
+
+<!-- Filter Menu Template -->
+<mat-menu #filterMenu="matMenu" class="filter-menu">
+  <div class="filter-menu-content" (click)="$event.stopPropagation()">
+    <ng-container *ngIf="currentFilterMenuState.columnKey">
+      <!-- Search Input -->
+      <mat-form-field appearance="outline" class="filter-search">
+        <mat-label>Search</mat-label>
+        <input matInput [(ngModel)]="currentFilterMenuState.searchText" placeholder="Search options">
+      </mat-form-field>
+
+      <!-- Select All Checkbox -->
+      <mat-checkbox [checked]="isAllTempSelected()" [indeterminate]="isSomeTempSelected()"
+        (change)="toggleSelectAllTemp($event.checked)">
+        Select All ({{ getUniqueColumnValues(currentFilterMenuState.columnKey).length }} items)
+      </mat-checkbox>
+      <hr>
+
+      <!-- Filter Options -->
+      <div style="max-height: 200px; overflow-y: auto;">
+        <mat-checkbox *ngFor="let value of filteredMenuOptions" [checked]="isTempSelected(value)"
+          (change)="toggleTempSelection(value, $event.checked)">
+          {{ value }}
+        </mat-checkbox>
+      </div>
+      <hr>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+        <button mat-button (click)="onFilterApplied()">Apply</button>
+        <button mat-button (click)="clearColumnFilter()">Clear</button>
+      </div>
+    </ng-container>
+  </div>
+</mat-menu>

@@ -1,0 +1,124 @@
+<div class="time-entry-pending-container">
+    <app-page-header *ngIf="dateRange" title="Time-Entry Pending Report"
+        [subtitle]="formatDate(dateRange.start) + ' - ' + formatDate(dateRange.end)" [showBack]="true"
+        (backClick)="goBack()">
+    </app-page-header>
+
+    <!-- Top Section: Cards Grid -->
+    <div class="top-section">
+        <!-- Top 3 Defaulters Card -->
+        <div class="defaulter-card">
+            <div class="card-header time-entry">
+                <i class="material-icons">schedule</i>
+                <span>Top 3 Defaulters</span>
+            </div>
+            <div class="card-body">
+                <div *ngFor="let defaulter of topDefaulters; let i = index" class="top-item">
+                    <span class="rank">{{i + 1}}</span>
+                    <div class="details">
+                        <span class="name">{{defaulter.employeeName}}</span>
+                        <span class="dept">{{defaulter.department}}</span>
+                    </div>
+                    <span class="count">{{defaulter.missingWeeksCount}} Weeks</span>
+                </div>
+                <div *ngIf="topDefaulters.length === 0" class="no-data">No defaulters found</div>
+            </div>
+        </div>
+
+        <!-- Summary & Actions Card -->
+        <div class="defaulter-card">
+            <div class="card-header stats">
+                <i class="material-icons">analytics</i>
+                <span>Actions</span>
+            </div>
+            <div class="card-body">
+                <div class="stats-row">
+                    <span class="stat-label">Total Defaulters</span>
+                    <span class="stat-value">{{filteredDefaulters.length}}</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stat-label">Selected</span>
+                    <span class="stat-value highlight">{{selectedRows.length}}</span>
+                </div>
+                <div class="action-row">
+                    <button mat-raised-button color="primary" [disabled]="selectedRows.length === 0"
+                        (click)="sendBulkReminder()" class="bulk-btn">
+                        <i class="material-icons">send</i>
+                        Send Bulk Reminder ({{selectedRows.length}})
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-section">
+        <app-unified-filter [userRole]="userRole" (filterChange)="handleUnifiedFilterChange($event)">
+        </app-unified-filter>
+    </div>
+
+    <!-- Main Content Area with Table and Side Panel -->
+    <div class="main-content" [class.panel-open]="expandedDefaulter">
+        <!-- Table Section -->
+        <div class="table-section">
+            <div class="table-container">
+                <app-reusable-table [data]="filteredDefaulters" [config]="tableConfig"
+                    tableId="time-entry-pending-table" (tableEvent)="onTableEvent($event)">
+                </app-reusable-table>
+            </div>
+        </div>
+
+        <!-- Side Panel for Week Details -->
+        <div class="side-panel" *ngIf="expandedDefaulter">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <i class="material-icons">person</i>
+                    <span>{{expandedDefaulter.employeeName}}</span>
+                </div>
+                <button class="close-btn" (click)="closePanel()">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+
+            <div class="panel-subtitle">
+                <span>{{expandedDefaulter.missingWeeksCount}} weeks with missing entries</span>
+            </div>
+
+            <div class="panel-content">
+                <div *ngFor="let week of expandedDefaulter.weeklyBreakdowns" class="week-card">
+                    <div class="week-info">
+                        <div class="week-date">
+                            <i class="material-icons">date_range</i>
+                            {{week.weekLabel}}
+                        </div>
+                        <span class="week-status" [class.whole-week]="week.wholeWeekMissing">
+                            {{week.wholeWeekMissing ? 'Whole Week Missing' : (week.missingDays.length || 0) + ' day(s)
+                            missing'}}
+                        </span>
+                    </div>
+                    <!-- Show specific missing dates -->
+                    <div class="missing-days-list"
+                        *ngIf="!week.wholeWeekMissing && week.missingDays && week.missingDays.length > 0">
+                        <div class="missing-days-label">Missing dates:</div>
+                        <div class="missing-days-chips">
+                            <span *ngFor="let day of week.missingDays" class="day-chip">
+                                {{formatMissingDay(day)}}
+                            </span>
+                        </div>
+                    </div>
+                    <button mat-stroked-button color="primary" class="remind-btn"
+                        (click)="sendReminderForWeek(expandedDefaulter, week)">
+                        <i class="material-icons">send</i> Remind
+                    </button>
+                </div>
+            </div>
+
+            <div class="panel-footer">
+                <button mat-raised-button color="primary" (click)="sendIndividualReminder(expandedDefaulter)">
+                    <i class="material-icons">mail</i>
+                    Send Full Reminder
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

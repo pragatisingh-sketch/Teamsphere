@@ -1,0 +1,54 @@
+<div class="maintenance-container">
+  <div class="maintenance-content">
+    <!-- Company Logo -->
+    <div class="logo-container">
+      <img src="assets/highspring-logo.png" alt="Highspring Logo" class="logo">
+    </div>
+
+    <!-- Maintenance Icon -->
+    <div class="maintenance-icon">
+      <mat-icon class="large-icon">build</mat-icon>
+    </div>
+
+    <!-- Main Message -->
+    <h1 class="maintenance-title">Server Under Maintenance</h1>
+    <p class="maintenance-subtitle">We're currently performing scheduled maintenance to improve your experience.</p>
+
+    <!-- Details -->
+    <div class="maintenance-details">
+      <div class="detail-item">
+        <mat-icon>schedule</mat-icon>
+        <span>Estimated completion: A few minutes</span>
+      </div>
+      <div class="detail-item">
+        <mat-icon>info</mat-icon>
+        <span>All services will be restored shortly</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" (click)="refreshPage()" class="action-button">
+        <mat-icon>refresh</mat-icon>
+        Try Again
+      </button>
+      <button mat-stroked-button (click)="goToLogin()" class="action-button secondary">
+        <mat-icon>home</mat-icon>
+        Go to Login
+      </button>
+    </div>
+
+    <!-- Footer Message -->
+    <div class="footer-message">
+      <p>If this issue persists, please contact your system administrator.</p>
+      <p class="contact-info">Thank you for your patience.</p>
+    </div>
+  </div>
+
+  <!-- Background Animation -->
+  <div class="background-animation">
+    <div class="floating-circle circle-1"></div>
+    <div class="floating-circle circle-2"></div>
+    <div class="floating-circle circle-3"></div>
+  </div>
+</div>

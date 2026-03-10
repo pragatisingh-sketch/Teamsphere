@@ -1,0 +1,272 @@
+/* Maintenance Container */
+.maintenance-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f7fa;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.maintenance-content {
+  max-width: 600px;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 2;
+}
+
+/* Logo Styling */
+.logo-container {
+  margin-bottom: 30px;
+}
+
+.logo {
+  width: 250px;
+  height: auto;
+  max-height: 100px;
+  object-fit: contain;
+}
+
+/* Maintenance Icon */
+.maintenance-icon {
+  margin-bottom: 30px;
+}
+
+.large-icon {
+  font-size: 80px;
+  width: 80px;
+  height: 80px;
+  color: #f8b641;
+  animation: rotate 3s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Typography */
+.maintenance-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: #134472;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.5px;
+}
+
+.maintenance-subtitle {
+  font-size: 18px;
+  color: #666;
+  margin: 0 0 40px 0;
+  line-height: 1.5;
+}
+
+/* Details Section */
+.maintenance-details {
+  margin: 40px 0;
+  padding: 20px;
+  background: rgba(19, 68, 114, 0.05);
+  border-radius: 12px;
+  border-left: 4px solid #134472;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 12px 0;
+  font-size: 16px;
+  color: #555;
+}
+
+.detail-item mat-icon {
+  margin-right: 12px;
+  color: #134472;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Action Buttons */
+.action-buttons {
+  margin: 40px 0;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.action-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 8px;
+  min-width: 140px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-button mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.action-button.secondary {
+  color: #134472;
+  border-color: #134472;
+}
+
+.action-button.secondary:hover {
+  background-color: rgba(19, 68, 114, 0.05);
+}
+
+/* Footer Message */
+.footer-message {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.footer-message p {
+  margin: 8px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.contact-info {
+  font-weight: 500;
+  color: #134472;
+}
+
+/* Background Animation */
+.background-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.floating-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(45deg, rgba(248, 182, 65, 0.1), rgba(244, 123, 52, 0.1));
+  animation: float 6s ease-in-out infinite;
+}
+
+.circle-1 {
+  width: 100px;
+  height: 100px;
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.circle-2 {
+  width: 150px;
+  height: 150px;
+  top: 60%;
+  right: 10%;
+  animation-delay: 2s;
+}
+
+.circle-3 {
+  width: 80px;
+  height: 80px;
+  bottom: 20%;
+  left: 20%;
+  animation-delay: 4s;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+    opacity: 0.8;
+  }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .maintenance-content {
+    padding: 30px 20px;
+    margin: 10px;
+  }
+
+  .logo {
+    width: 220px;
+  }
+
+  .maintenance-title {
+    font-size: 28px;
+  }
+
+  .maintenance-subtitle {
+    font-size: 16px;
+  }
+
+  .large-icon {
+    font-size: 60px;
+    width: 60px;
+    height: 60px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .action-button {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .detail-item {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .maintenance-content {
+    padding: 20px 15px;
+  }
+
+  .logo {
+    width: 180px;
+  }
+
+  .maintenance-title {
+    font-size: 24px;
+  }
+
+  .maintenance-subtitle {
+    font-size: 14px;
+  }
+
+  .large-icon {
+    font-size: 50px;
+    width: 50px;
+    height: 50px;
+  }
+}

@@ -1,0 +1,136 @@
+<div class="release-details-container">
+    <app-page-header [title]="release?.title || 'Release Details'" [subtitle]="'Version ' + (release?.version || '')">
+    </app-page-header>
+
+    <!-- Back Button -->
+    <div class="back-button-container">
+        <button mat-stroked-button (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            Back to Releases
+        </button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-spinner">
+        <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <!-- Release Content -->
+    <div *ngIf="!isLoading && release" class="release-content">
+        <!-- Release Header Card -->
+        <div class="release-header-card">
+            <div class="version-badge">v{{ release.version }}</div>
+            <div class="release-meta">
+                <span class="release-date">
+                    <mat-icon>calendar_today</mat-icon>
+                    Released on {{ formatDate(release.releaseDate) }}
+                </span>
+                <span class="created-by">
+                    <mat-icon>person</mat-icon>
+                    Created by {{ release.createdBy }}
+                </span>
+                <span class="notification-status" [class.sent]="release.notificationSent">
+                    <mat-icon>{{ release.notificationSent ? 'check_circle' : 'schedule' }}</mat-icon>
+                    {{ release.notificationSent ? 'Notification Sent' : 'Not Notified' }}
+                </span>
+            </div>
+        </div>
+
+        <!-- Bug Fixes Section -->
+        <div *ngIf="bugFixes.length > 0" class="section bug-fixes">
+            <div class="section-header">
+                <span class="section-icon">🐛</span>
+                <h2>Bug Fixes</h2>
+                <span class="count-badge">{{ bugFixes.length }}</span>
+            </div>
+            <div class="items-list">
+                <div *ngFor="let item of bugFixes" class="release-item">
+                    <div class="item-header">
+                        <h3>{{ item.title }}</h3>
+                    </div>
+                    <p *ngIf="item.description" class="item-description">{{ item.description }}</p>
+
+                    <!-- Steps -->
+                    <div *ngIf="item.steps?.length > 0" class="steps-container">
+                        <h4>Steps to Reproduce / Demo:</h4>
+                        <ol class="steps-list">
+                            <li *ngFor="let step of item.steps" class="step-item">
+                                <span class="step-explanation">{{ step.explanation }}</span>
+                                <a *ngIf="step.screenshotUrl" [href]="step.screenshotUrl" target="_blank"
+                                    class="step-link">
+                                    <mat-icon>link</mat-icon> View Screenshot
+                                </a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhancements Section -->
+        <div *ngIf="enhancements.length > 0" class="section enhancements">
+            <div class="section-header">
+                <span class="section-icon">✨</span>
+                <h2>Enhancements</h2>
+                <span class="count-badge">{{ enhancements.length }}</span>
+            </div>
+            <div class="items-list">
+                <div *ngFor="let item of enhancements" class="release-item">
+                    <div class="item-header">
+                        <h3>{{ item.title }}</h3>
+                    </div>
+                    <p *ngIf="item.description" class="item-description">{{ item.description }}</p>
+
+                    <div *ngIf="item.steps?.length > 0" class="steps-container">
+                        <h4>How to Use:</h4>
+                        <ol class="steps-list">
+                            <li *ngFor="let step of item.steps" class="step-item">
+                                <span class="step-explanation">{{ step.explanation }}</span>
+                                <a *ngIf="step.screenshotUrl" [href]="step.screenshotUrl" target="_blank"
+                                    class="step-link">
+                                    <mat-icon>link</mat-icon> View Screenshot
+                                </a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div *ngIf="features.length > 0" class="section features">
+            <div class="section-header">
+                <span class="section-icon">🚀</span>
+                <h2>New Features</h2>
+                <span class="count-badge">{{ features.length }}</span>
+            </div>
+            <div class="items-list">
+                <div *ngFor="let item of features" class="release-item">
+                    <div class="item-header">
+                        <h3>{{ item.title }}</h3>
+                    </div>
+                    <p *ngIf="item.description" class="item-description">{{ item.description }}</p>
+
+                    <div *ngIf="item.steps?.length > 0" class="steps-container">
+                        <h4>How to Use:</h4>
+                        <ol class="steps-list">
+                            <li *ngFor="let step of item.steps" class="step-item">
+                                <span class="step-explanation">{{ step.explanation }}</span>
+                                <a *ngIf="step.screenshotUrl" [href]="step.screenshotUrl" target="_blank"
+                                    class="step-link">
+                                    <mat-icon>link</mat-icon> View Screenshot
+                                </a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="bugFixes.length === 0 && enhancements.length === 0 && features.length === 0" class="empty-state">
+            <mat-icon>info</mat-icon>
+            <p>No release items found for this version.</p>
+        </div>
+    </div>
+</div>

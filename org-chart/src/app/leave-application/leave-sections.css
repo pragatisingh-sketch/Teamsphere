@@ -1,0 +1,922 @@
+/* Page Header */
+.page-header-new {
+    margin-bottom: 24px;
+}
+
+.page-title-new {
+    font-size: 28px;
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 8px 0;
+}
+
+.page-subtitle-new {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
+/* Form Card Base Styles */
+.form-card-new {
+    margin-bottom: 24px;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+    border: 1px solid #e0e0e0 !important;
+}
+
+.card-header-new {
+    display: flex;
+    align-items: center;
+    padding: 20px 24px !important;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.section-icon-new {
+    color: #667eea;
+    margin-right: 12px;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+.card-title-new {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #333 !important;
+    margin: 0 !important;
+}
+
+/* 4-Column Grid */
+.grid-4-col-new {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+/* Total Days Row */
+.total-days-row-new {
+    margin-bottom: 20px;
+}
+
+.total-days-field-new {
+    max-width: 300px;
+}
+
+.total-days-field-new input {
+    color: #667eea !important;
+    font-weight: 500;
+}
+
+/* Check Icon */
+.check-icon-new {
+    color: #4caf50 !important;
+}
+
+/* Balance Chips Section */
+.balance-chips-section-new {
+    padding-top: 20px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.balance-label-new {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.balance-chips-new {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.balance-chip-new {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 400;
+    transition: all 0.2s ease;
+}
+
+.balance-chip-new strong {
+    font-weight: 700;
+    margin: 0 4px;
+    font-size: 14px;
+}
+
+/* Sick Leave Chip - Orange */
+.balance-chip-new.sick-new {
+    background-color: #fff3e0;
+    border: 1px solid #ffb74d;
+    color: #e65100;
+}
+
+.balance-chip-new.sick-new.low-new {
+    background-color: #ffebee;
+    border-color: #ef5350;
+    color: #c62828;
+}
+
+/* Casual Leave Chip - Orange */
+.balance-chip-new.casual-new {
+    background-color: #fff3e0;
+    border: 1px solid #ffb74d;
+    color: #e65100;
+}
+
+.balance-chip-new.casual-new.low-new {
+    background-color: #ffebee;
+    border-color: #ef5350;
+    color: #c62828;
+}
+
+/* Earned Leave Chip - Green */
+.balance-chip-new.earned-new {
+    background-color: #e8f5e9;
+    border: 1px solid #81c784;
+    color: #1b5e20;
+}
+
+.balance-chip-new.earned-new.low-new {
+    background-color: #ffebee;
+    border-color: #ef5350;
+    color: #c62828;
+}
+
+/* WFH Chip - Green */
+.balance-chip-new.wfh-new {
+    background-color: #e8f5e9;
+    border: 1px solid #81c784;
+    color: #1b5e20;
+}
+
+.balance-chip-new.wfh-new.low-new {
+    background-color: #ffebee;
+    border-color: #ef5350;
+    color: #c62828;
+}
+
+.balance-chip-new:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .grid-4-col-new {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .grid-4-col-new {
+        grid-template-columns: 1fr;
+    }
+
+    .balance-chips-new {
+        flex-direction: column;
+    }
+
+    .balance-chip-new {
+        justify-content: space-between;
+    }
+}
+
+/* ===== SECTION 2: DATE RANGE AND INFO BANNER STYLES ===== */
+
+/* 2-Column Grid */
+.grid-2-col-new {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 12px;
+    /* Reduced from 20px */
+}
+
+/* Card Header Content with View Toggle */
+.card-header-content-new {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+/* Compact Working Days Info Banner */
+.info-banner-compact-new {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border-left: 4px solid #2196f3;
+    border-radius: 8px;
+    margin-top: 8px;
+    /* Reduced from 16px for more compact spacing */
+}
+
+.info-icon-compact-new {
+    color: #1976d2;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.info-text-compact-new {
+    font-size: 14px;
+    color: #0d47a1;
+    line-height: 1.4;
+}
+
+.info-text-compact-new strong {
+    font-weight: 600;
+    color: #1565c0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .grid-2-col-new {
+        grid-template-columns: 1fr;
+    }
+
+    .info-banner-compact-new {
+        flex-direction: row;
+        padding: 12px;
+    }
+
+    .info-text-compact-new {
+        font-size: 13px;
+    }
+}
+
+/* ===== SECTION 3: DAY-BY-DAY CONFIGURATION STYLES ===== */
+
+/* Table Wrapper */
+.day-config-table-wrapper-new {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+/* Table Styles */
+.day-config-table-new {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+.day-config-table-new thead {
+    background: #f8f9fa;
+}
+
+.day-config-table-new th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.day-config-table-new td {
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.day-config-table-new tr:hover {
+    background: #f8f9fa;
+}
+
+/* Purple Date Badge */
+.date-badge-new {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #667eea;
+    border-radius: 20px;
+    color: white;
+}
+
+.date-number-new {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.date-weekday-new {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* Holiday Badge */
+.holiday-badge-new {
+    margin-top: 6px;
+    padding: 4px 8px;
+    background: #fff3e0;
+    border: 1px solid #ffb74d;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #e65100;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+
+/* Leave Type Select with Count Badge */
+.leave-type-select-new {
+    min-width: 200px;
+    font-size: 14px;
+}
+
+.option-with-badge-new {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.count-badge-new {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 20px;
+    padding: 0 6px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #666;
+}
+
+/* Duration Selector */
+.duration-selector-new {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fraction-indicator-new {
+    font-size: 12px;
+    color: #999;
+    font-weight: 500;
+}
+
+.duration-select-new {
+    min-width: 120px;
+    font-size: 14px;
+}
+
+/* Balance Pill */
+.balance-pill-new {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.balance-pill-new.negative-new {
+    background: #ffebee;
+    color: #c62828;
+}
+
+/* Total Requested Summary */
+.total-requested-summary-new {
+    margin-top: 20px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+
+.summary-label-new {
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+}
+
+.summary-chip-new {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.summary-chip-new.sick-summary {
+    background: #fff3e0;
+    border: 1px solid #ffb74d;
+    color: #e65100;
+}
+
+.summary-chip-new.casual-summary {
+    background: #fff3e0;
+    border: 1px solid #ffb74d;
+    color: #e65100;
+}
+
+.summary-chip-new.earned-summary {
+    background: #e8f5e9;
+    border: 1px solid #81c784;
+    color: #1b5e20;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .day-config-table-new {
+        font-size: 12px;
+    }
+
+    .date-number-new {
+        font-size: 16px;
+    }
+
+    .leave-type-select-new,
+    .duration-select-new {
+        min-width: 100px;
+    }
+}
+
+/* ===== SECTION 5: TIME ENTRY PREVIEW SLEEK STYLES ===== */
+
+/* Card Styling */
+.time-entry-card-sleek {
+    margin-bottom: 20px;
+}
+
+/* Subheading with Badge */
+.time-entry-subheading-sleek {
+    margin-bottom: 16px;
+}
+
+.subheading-with-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.subheading-icon {
+    color: #667eea;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.subheading-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+.preview-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #fff3e0;
+    color: #f57c00;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.time-entry-description-sleek {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Time Entry Table - Sleek Design */
+.time-entry-table-wrapper-sleek {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    background: #fafafa;
+}
+
+.time-entry-table-sleek {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.time-entry-table-sleek thead {
+    background: #f5f5f5;
+}
+
+.time-entry-table-sleek th {
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    text-transform: capitalize;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.time-entry-table-sleek td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #333;
+    font-size: 13px;
+}
+
+.time-entry-table-sleek tbody tr {
+    background: white;
+    transition: background 0.2s;
+}
+
+.time-entry-table-sleek tbody tr:hover {
+    background: #f9f9f9;
+}
+
+/* Date Cell with Lock Icon */
+.date-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.lock-icon-small {
+    color: #9e9e9e;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+/* Activity Cell */
+.activity-cell {
+    font-weight: 600;
+    color: #667eea;
+}
+
+/* Time Cell with Icon */
+.time-cell {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.time-icon {
+    color: #757575;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+/* Attendance Badge */
+.attendance-cell {
+    font-weight: 500;
+}
+
+.attendance-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #e8eaf6;
+    color: #5c6bc0;
+}
+
+/* Comment Cell */
+.comment-cell {
+    color: #757575;
+    font-size: 12px;
+}
+
+/* Status Badge - Sleek */
+.status-badge-pending-sleek {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    background: #fff3e0;
+    color: #f57c00;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* Lock Info Notice - Sleek */
+.lock-info-notice-sleek {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #f5f5f5;
+    border-radius: 6px;
+}
+
+.lock-icon-notice {
+    color: #757575;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.lock-info-notice-sleek span {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .time-entry-table-sleek {
+        font-size: 11px;
+    }
+
+    .time-entry-table-sleek th,
+    .time-entry-table-sleek td {
+        padding: 8px 10px;
+    }
+
+    .subheading-with-badge {
+        flex-wrap: wrap;
+    }
+}
+
+/* Balance Validation Styles */
+
+/* Warning Badge */
+.balance-warning-badge-new {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    margin-left: 8px;
+    background: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #FCA5A5;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Error Message Section */
+.balance-error-section-new {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: #FEE2E2;
+    border-left: 4px solid #EF4444;
+    border-radius: 4px;
+}
+
+.balance-error-header-new {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.error-icon-new {
+    color: #DC2626;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.error-title-new {
+    color: #991B1B;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.error-list-new {
+    margin: 0;
+    padding-left: 20px;
+    list-style: none;
+}
+
+.error-item-new {
+    color: #7F1D1D;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 4px 0;
+}
+
+/* Submit Buttons */
+.form-actions-new {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding: 0px 0 24px;
+}
+
+.cancel-button-new {
+    background-color: white !important;
+    color: #EF4444 !important;
+    border: 1px solid #EF4444 !important;
+    padding: 10px 24px !important;
+    font-weight: 500 !important;
+    border-radius: 6px !important;
+    text-transform: none !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.2s ease !important;
+}
+
+.cancel-button-new:hover:not([disabled]) {
+    background-color: #FEF2F2 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    transform: translateY(-1px);
+}
+
+.cancel-button-new mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+    color: #EF4444;
+}
+
+.submit-button-new {
+    background-color: #8B5CF6 !important;
+    color: white !important;
+    padding: 10px 28px !important;
+    font-weight: 600 !important;
+    border-radius: 6px !important;
+    text-transform: none !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.2s ease !important;
+}
+
+.submit-button-new:hover:not([disabled]) {
+    background-color: #7C3AED !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15) !important;
+    transform: translateY(-1px);
+}
+
+.submit-button-new:disabled {
+    background-color: #D1D5DB !important;
+    color: #9CA3AF !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+}
+
+.submit-button-new mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+}
+
+/* Disabled Leave Type Option Styling - Improved Visibility */
+.disabled-option {
+    opacity: 0.65;
+    color: #6B7280 !important;
+    text-decoration: line-through;
+    font-style: italic;
+}
+
+/* Material option disabled state */
+.mat-option[disabled] {
+    opacity: 0.75;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: #F9FAFB;
+}
+
+/* Hover effect for non-disabled options */
+.mat-option:not([disabled]):hover {
+    background-color: #F3F4F6;
+}
+
+/* ===== BULK VIEW STYLES ===== */
+
+.bulk-view-new {
+    padding: 20px 0;
+}
+
+/* Leave Type for All Days */
+.bulk-leave-type-row-new {
+    margin-bottom: 24px;
+}
+
+.bulk-label-new {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.bulk-select-wrapper-new {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.bulk-leave-select-new {
+    flex: 1;
+    max-width: 300px;
+}
+
+.total-days-badge-new {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 16px;
+    background: #e8f5e9;
+    border: 1px solid #81c784;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1b5e20;
+}
+
+/* Half Day Checkboxes */
+.half-day-checkboxes-new {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.half-day-checkbox-new {
+    font-size: 14px;
+}
+
+.checkbox-date-new {
+    color: #999;
+    font-size: 13px;
+    margin-left: 4px;
+}
+
+/* Applying Dates Display */
+.applying-dates-new {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.applying-label-new {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.applying-label-new strong {
+    color: #333;
+    font-weight: 600;
+}
+
+.date-pills-new {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.date-pill-new {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    background: #e3f2fd;
+    border: 1px solid #90caf9;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #1976d2;
+}
+
+.total-badge-new {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 16px;
+    background: #fff3e0;
+    border: 1px solid #ffb74d;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #e65100;
+}

@@ -1,0 +1,112 @@
+<div class="faq-dialog">
+    <div class="dialog-header">
+        <div class="header-content">
+            <mat-icon class="header-icon">help_center</mat-icon>
+            <div>
+                <h2>Help & FAQ</h2>
+                <p>Frequently asked questions and troubleshooting tips</p>
+            </div>
+        </div>
+        <button mat-icon-button (click)="close()" class="close-btn">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <mat-dialog-content>
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="loading-spinner">
+            <mat-spinner diameter="40"></mat-spinner>
+        </div>
+
+        <!-- Edit/Create Form -->
+        <div *ngIf="isEditing && editingFaq" class="edit-form">
+            <h3>{{ editingFaq.id ? 'Edit FAQ' : 'Create New FAQ' }}</h3>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Question</mat-label>
+                <input matInput [(ngModel)]="editingFaq.question" placeholder="Enter the question">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Answer</mat-label>
+                <textarea matInput [(ngModel)]="editingFaq.answer" rows="4" placeholder="Enter the answer"></textarea>
+            </mat-form-field>
+
+            <div class="form-row">
+                <mat-form-field appearance="outline" class="field-category">
+                    <mat-label>Category</mat-label>
+                    <mat-select [(ngModel)]="editingFaq.category">
+                        <mat-option *ngFor="let cat of categories" [value]="cat">{{ cat }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="field-order">
+                    <mat-label>Display Order</mat-label>
+                    <input matInput type="number" [(ngModel)]="editingFaq.displayOrder">
+                </mat-form-field>
+            </div>
+
+            <div class="form-actions">
+                <button mat-stroked-button (click)="cancelEdit()">Cancel</button>
+                <button mat-raised-button color="primary" (click)="saveFaq()">
+                    <mat-icon>save</mat-icon>
+                    Save
+                </button>
+            </div>
+        </div>
+
+        <!-- FAQ List -->
+        <div *ngIf="!isLoading && !isEditing" class="faq-content">
+            <!-- Admin Actions -->
+            <div *ngIf="canManage" class="admin-actions">
+                <button mat-stroked-button color="primary" (click)="startCreate()">
+                    <mat-icon>add</mat-icon>
+                    Add FAQ
+                </button>
+                <button mat-stroked-button (click)="initializeDefaults()" *ngIf="faqs.length === 0">
+                    <mat-icon>auto_fix_high</mat-icon>
+                    Load Default FAQs
+                </button>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="faqs.length === 0" class="empty-state">
+                <mat-icon>help_outline</mat-icon>
+                <p>No FAQs available yet.</p>
+            </div>
+
+            <!-- FAQ Accordion -->
+            <mat-accordion *ngIf="faqs.length > 0" class="faq-accordion">
+                <ng-container *ngFor="let category of ['Troubleshooting', 'General', 'Support']">
+                    <div *ngIf="(getGroupedFAQs()[category] || []).length > 0" class="category-section">
+                        <h3 class="category-title">
+                            <mat-icon>{{ getCategoryIcon(category) }}</mat-icon>
+                            {{ category }}
+                        </h3>
+
+                        <mat-expansion-panel *ngFor="let faq of getGroupedFAQs()[category]" class="faq-panel">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    {{ faq.question }}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <div class="faq-answer">
+                                <p>{{ faq.answer }}</p>
+
+                                <div *ngIf="canManage" class="faq-actions">
+                                    <button mat-icon-button color="primary" (click)="startEdit(faq)" matTooltip="Edit">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button color="warn" (click)="deleteFaq(faq)" matTooltip="Delete">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                    </div>
+                </ng-container>
+            </mat-accordion>
+        </div>
+    </mat-dialog-content>
+</div>

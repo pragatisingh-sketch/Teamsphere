@@ -1,0 +1,627 @@
+.reusable-table-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Table Header Styles */
+.table-header {
+  margin-bottom: 16px;
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
+
+.table-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.table-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 500;
+  color: #333;
+}
+
+.table-subtitle {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Table Controls */
+.table-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.left-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.right-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.bulk-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.selection-info {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1976d2;
+}
+
+.bulk-action-button {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.search-field {
+  min-width: 250px;
+}
+
+.toggle-filter-button,
+.column-toggle-button,
+.export-button {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Table Responsive Container */
+.table-responsive {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  scrollbar-width: thin;
+  scrollbar-color: #1976d2 #f1f1f1;
+}
+
+.table-responsive.scrollable {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-responsive::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background-color: #1976d2;
+  border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background-color: #1565c0;
+}
+
+/* Enhanced table styles for better horizontal scrolling */
+.reusable-table {
+  width: 100%;
+  min-width: 800px;
+  /* Minimum width to ensure scrollability when needed */
+  border-collapse: collapse;
+  table-layout: fixed;
+  /* Ensures columns maintain their resized widths */
+}
+
+.reusable-table th,
+.reusable-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Table Styles */
+.reusable-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.reusable-table th,
+.reusable-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.reusable-table th {
+  background-color: #f8f9fa;
+  font-weight: 500;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  position: relative;
+}
+
+/* Column resizing styles */
+.reusable-table th.resizable {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  /* Prevent text selection during resize */
+}
+
+.reusable-table th.resizable:hover {
+  background-color: #f5f5f5;
+}
+
+.reusable-table th.resizable:hover .resize-handle {
+  opacity: 1;
+  background-color: #1976d2;
+}
+
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 8px;
+  background-color: transparent;
+  cursor: col-resize !important;
+  /* Force col-resize cursor */
+  opacity: 0;
+  transition: all 0.2s ease;
+  z-index: 20;
+  border-right: 2px solid transparent;
+}
+
+.resize-handle:hover,
+.resize-handle.active {
+  background-color: #1976d2;
+  opacity: 1;
+  border-right: 2px solid #1565c0;
+}
+
+.resize-handle:active {
+  background-color: #1565c0;
+  opacity: 1;
+}
+
+.reusable-table th.resizing {
+  user-select: none;
+  cursor: col-resize !important;
+  background-color: #e3f2fd;
+}
+
+.reusable-table th.resizing * {
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Make resize handle more visible on smaller screens */
+@media (max-width: 768px) {
+  .resize-handle {
+    width: 12px;
+  }
+}
+
+/* Row hover and click styles */
+.reusable-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Only show pointer cursor on rows if rowClick is configured */
+.reusable-table tr.clickable-row {
+  cursor: pointer;
+}
+
+.reusable-table tr.selected {
+  background-color: #e3f2fd;
+}
+
+/* Clickable cell link styles */
+.clickable-cell-link {
+  color: #1976d2;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.clickable-cell-link:hover {
+  color: #1565c0;
+  border-bottom: 1px solid #1565c0;
+  text-decoration: none;
+}
+
+.clickable-cell-link:active {
+  color: #0d47a1;
+}
+
+/* Ensure proper cell width constraints */
+.reusable-table mat-cell,
+.reusable-table mat-header-cell {
+  box-sizing: border-box;
+  flex: none !important;
+  /* Prevent flex from overriding width */
+}
+
+/* Select column fixed width */
+.reusable-table .select-column {
+  width: 60px !important;
+  min-width: 60px !important;
+  max-width: 60px !important;
+  flex: 0 0 60px !important;
+  padding: 0 8px !important;
+  justify-content: center;
+}
+
+/* Actions column fixed width */
+.reusable-table .actions-column {
+  width: 150px !important;
+  min-width: 150px !important;
+  max-width: 150px !important;
+  flex: 0 0 150px !important;
+  padding: 0 8px !important;
+}
+
+/* Header Container */
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.header-text {
+  flex: 1;
+  font-weight: 500;
+}
+
+.has-filter .header-container {
+  justify-content: flex-start;
+}
+
+/* Selection Column */
+.mat-checkbox {
+  margin: 0;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.action-buttons button {
+  min-width: auto;
+  padding: 4px;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background-color: #fafafa;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+}
+
+.empty-content {
+  text-align: center;
+  color: #666;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  color: #ccc;
+}
+
+.empty-message {
+  font-size: 16px;
+  margin: 0 0 16px 0;
+}
+
+.empty-action {
+  font-weight: 500;
+}
+
+/* Column Menu */
+.column-menu {
+  min-width: 300px;
+}
+
+.column-menu-content {
+  padding: 16px;
+}
+
+.column-menu-title {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.column-search-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.select-all-container {
+  margin: 16px 0;
+}
+
+.column-menu-items {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.column-toggle-checkbox {
+  display: block;
+  margin: 4px 0;
+}
+
+/* Filter Menu */
+.filter-menu {
+  min-width: 250px;
+}
+
+.filter-menu-content {
+  padding: 16px;
+  min-height: 200px;
+}
+
+.filter-search {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .table-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .right-controls {
+    justify-content: center;
+  }
+
+  .search-field {
+    min-width: 100%;
+  }
+
+  .reusable-table th,
+  .reusable-table td {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .action-buttons {
+    flex-wrap: wrap;
+  }
+}
+
+/* Row Classes */
+.insufficient-day-time {
+  background-color: #fff3e0 !important;
+}
+
+.approved {
+  background-color: #e8f5e8;
+}
+
+.pending {
+  background-color: #fff8e1;
+}
+
+.rejected {
+  background-color: #ffebee;
+}
+
+/* Status Indicators */
+.status-approved {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.status-pending {
+  color: #ff9800;
+  font-weight: 500;
+}
+
+.status-rejected {
+  color: #f44336;
+  font-weight: 500;
+}
+
+.verified-icon {
+  margin-left: 4px;
+}
+
+/* Info Button */
+.info-button {
+  margin-left: 8px;
+  opacity: 0.7;
+}
+
+.info-icon {
+  font-size: 16px;
+}
+
+/* Context Menu */
+.context-menu {
+  min-width: 200px;
+}
+
+.context-menu button {
+  width: 100%;
+  justify-content: flex-start;
+  font-size: 14px;
+}
+
+/* Loading State */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+/* Custom Table Classes */
+.reusable-table.full-width {
+  width: 100%;
+}
+
+.reusable-table.dense {
+  font-size: 12px;
+}
+
+.reusable-table.bordered {
+  border: 1px solid #e0e0e0;
+}
+
+.reusable-table.striped tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Pagination */
+mat-paginator {
+  margin-top: 16px;
+  padding: 16px 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Tooltip Styles */
+.mat-tooltip {
+  max-width: 300px;
+  font-size: 14px;
+}
+
+/* Print Styles */
+@media print {
+
+  .table-controls,
+  .column-menu,
+  .filter-menu,
+  mat-paginator {
+    display: none;
+  }
+
+  .reusable-table {
+    border: 1px solid #000;
+  }
+
+  .reusable-table th,
+  .reusable-table td {
+    border: 1px solid #ddd;
+    padding: 4px 8px;
+  }
+}
+
+/* Badge Styles */
+.badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+  text-transform: capitalize;
+  background-color: #e0e0e0;
+  /* Default gray */
+  color: #333;
+}
+
+/* Status variants */
+.badge.active,
+.badge.open,
+.badge.new {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.badge.resolved,
+.badge.closed,
+.badge.completed,
+.badge.approved {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+.badge.pending,
+.badge.hold,
+.badge.in-progress {
+  background-color: #fff8e1;
+  color: #f57c00;
+}
+
+.badge.rejected,
+.badge.cancelled {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+/* Priority variants */
+.badge.high,
+.badge.critical,
+.badge.urgent {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.badge.medium {
+  background-color: #fff3e0;
+  color: #ef6c00;
+}
+
+.badge.low {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+/* Type variants */
+.badge.bug {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.badge.feature,
+.badge.enhancement {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.badge.task {
+  background-color: #f5f5f5;
+  color: #616161;
+}

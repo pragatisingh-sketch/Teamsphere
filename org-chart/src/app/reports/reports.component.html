@@ -1,0 +1,119 @@
+<div class="reports-container" style="margin-top: 20px;">
+  <app-page-header title="Insights Reports" [subtitle]="formatDate(startDate) + ' - ' + formatDate(endDate)">
+  </app-page-header>
+  <div class="header-with-filters">
+    <div class="header-actions">
+      <button *ngIf="(permissionService.hasAnyRole(['MANAGER', 'ADMIN_OPS_MANAGER']) | async)" mat-raised-button
+        color="primary" (click)="downloadAttendanceTracker()" class="export-btn"
+        matTooltip="Download Attendance Tracker Excel">
+        <mat-icon>download</mat-icon> Export Attendance Tracker
+      </button>
+      <button mat-icon-button (click)="toggleFilterPanel()" class="filter-toggle-btn" matTooltip="Toggle Filters">
+        <mat-icon>filter_list</mat-icon>
+      </button>
+    </div>
+  </div>
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Loading State with Skeleton -->
+    <div *ngIf="loading" class="insights-container">
+      <div *ngFor="let skeleton of [1, 2, 3, 4, 5, 6]" class="insight-card-wrapper skeleton-card">
+        <div class="skeleton-insight-card">
+          <div class="skeleton-header">
+            <div class="skeleton-icon"></div>
+            <div class="skeleton-title-section">
+              <div class="skeleton-title"></div>
+              <div class="skeleton-subtitle"></div>
+            </div>
+          </div>
+          <div class="skeleton-value-section">
+            <div class="skeleton-value"></div>
+            <div class="skeleton-trend"></div>
+          </div>
+          <div class="skeleton-secondary-value">
+            <div class="skeleton-secondary-label"></div>
+            <div class="skeleton-secondary-text"></div>
+          </div>
+          <div class="skeleton-progress-section">
+            <div class="skeleton-progress-bar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insight Cards Grid -->
+    <div *ngIf="!loading" class="insights-container">
+      <div *ngFor="let card of insightCards" class="insight-card-wrapper" (click)="onCardClick(card)">
+
+        <app-insight-card [data]="card" [layout]="'default'" [showProgress]="true"
+          [showSecondary]="card.secondaryValue ? true : false" [clickable]="true" [loading]="loading">
+        </app-insight-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay Background -->
+  <div *ngIf="filterPanelOpen" class="filter-overlay active" (click)="closeFilterPanel()"></div>
+
+  <!-- Floating Filter Panel -->
+  <div *ngIf="filterPanelOpen" class="filter-panel-overlay active">
+    <div class="filter-panel-content">
+      <div class="filter-header">
+        <h3>Global Filters</h3>
+        <button mat-icon-button (click)="closeFilterPanel()" class="close-btn">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="filter-body">
+        <div class="filter-section">
+          <h4>Date Range</h4>
+          <div class="preset-date-ranges">
+            <button mat-button class="preset-btn" [class.active]="selectedPreset === 'lastWeek'"
+              (click)="selectDatePreset('lastWeek')">
+              Last Week
+            </button>
+            <button mat-button class="preset-btn" [class.active]="selectedPreset === 'lastMonth'"
+              (click)="selectDatePreset('lastMonth')">
+              Last Month
+            </button>
+            <button mat-button class="preset-btn" [class.active]="selectedPreset === 'lastQuarter'"
+              (click)="selectDatePreset('lastQuarter')">
+              Last Quarter
+            </button>
+            <button mat-button class="preset-btn" [class.active]="selectedPreset === 'last7Days'"
+              (click)="selectDatePreset('last7Days')">
+              Last 7 Days
+            </button>
+          </div>
+          <div class="date-range">
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Start Date</mat-label>
+              <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="startDate" (dateChange)="onDateChange()">
+              <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+              <mat-datepicker #startDatePicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>End Date</mat-label>
+              <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="endDate" (dateChange)="onDateChange()">
+              <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+              <mat-datepicker #endDatePicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+
+
+
+        <div class="filter-actions">
+          <button mat-button (click)="clearFilters()" class="clear-btn">
+            Clear Filters
+          </button>
+          <button mat-raised-button color="primary" (click)="applyFilters()" class="apply-btn">
+            Apply Filters
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

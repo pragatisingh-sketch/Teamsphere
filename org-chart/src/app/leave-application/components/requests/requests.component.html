@@ -1,0 +1,388 @@
+<!-- Common Action Toolbar -->
+<div class="actions-toolbar">
+  <!-- Download CSV -->
+  <div class="action-group">
+    <button mat-raised-button color="primary" [matMenuTriggerFor]="downloadMenu">
+      <mat-icon>download</mat-icon> Download CSV
+    </button>
+    <mat-menu #downloadMenu="matMenu">
+      <button mat-menu-item (click)="downloadCSV('processed')">
+        <mat-icon>description</mat-icon> Processed Requests
+      </button>
+      <button mat-menu-item (click)="downloadCSV('pending')">
+        <mat-icon>hourglass_empty</mat-icon> Pending Requests
+      </button>
+    </mat-menu>
+  </div>
+
+  <!-- Toggle Columns -->
+  <div class="action-group">
+    <button mat-raised-button color="primary" (click)="showColumnToggle = !showColumnToggle"
+      matTooltip="Toggle columns">
+      <mat-icon>view_column</mat-icon> Toggle Columns
+    </button>
+  </div>
+
+  <!-- Show Filters -->
+  <div class="action-group">
+    <button mat-raised-button color="primary" class="action-button columns-button"
+      (click)="showColumnFilters = !showColumnFilters" [attr.aria-pressed]="showColumnFilters"
+      matTooltip="Show/hide column filters">
+      <mat-icon>filter_alt</mat-icon>Columns
+    </button>
+  </div>
+
+  <app-shared-toggle *ngIf="isLeadOrManager()" [checked]="true" [label]="'Direct Members'"
+    (toggled)="toggleOnBehalfMode($event)">
+  </app-shared-toggle>
+
+  <!-- Date Range -->
+  <div class="action-group date-range-group">
+    <mat-form-field appearance="outline" class="date-range-field">
+      <mat-label>Date Range</mat-label>
+      <mat-date-range-input [formGroup]="dateRange" [rangePicker]="picker">
+        <input matStartDate formControlName="start" placeholder="Start date">
+        <input matEndDate formControlName="end" placeholder="End date">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="applyDateFilter()" class="apply-filter-btn">
+      <mat-icon>filter_list</mat-icon> Apply
+    </button>
+  </div>
+</div>
+
+<!-- Column Toggle Overlay -->
+<div *ngIf="showColumnToggle" class="column-toggle-overlay" (click)="showColumnToggle = false"></div>
+
+<!-- Column Toggle Dialog -->
+<div *ngIf="showColumnToggle" class="column-toggle-dialog">
+  <div class="column-toggle-header">
+    <h3>Toggle Columns</h3>
+    <mat-form-field appearance="outline" class="column-search">
+      <mat-label>Search columns</mat-label>
+      <input matInput [(ngModel)]="columnSearchText" placeholder="Search columns...">
+    </mat-form-field>
+  </div>
+
+  <div class="column-toggle-content">
+    <mat-checkbox [checked]="allColumnsSelected" (change)="toggleAllColumns($event.checked)">
+      Select All ({{ getFilteredColumns().length }} columns)
+    </mat-checkbox>
+
+    <div class="column-list">
+      <mat-checkbox *ngFor="let column of getFilteredColumns()" [checked]="isColumnDisplayed(column)"
+        (change)="toggleColumn(column)">
+        {{ columnDisplayNames[column] }}
+      </mat-checkbox>
+    </div>
+  </div>
+
+  <div class="column-toggle-footer">
+    <button mat-button (click)="showColumnToggle = false">Close</button>
+  </div>
+</div>
+
+<mat-tab-group [selectedIndex]="selectedTabIndex">
+  <mat-tab label="Processed Requests">
+    <div class="processed-requests-container">
+
+      <mat-button-toggle-group class="toggle-group" [value]="selectedStatus" appearance="legacy" exclusive
+        (change)="onStatusChange($event)">
+        <mat-button-toggle *ngFor="let status of processedStatuses" [value]="status">
+          {{ status }}
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <div class="table-wrapper">
+
+        <mat-table [dataSource]="getProcessedDataSource()" matSort #processedSort="matSort" class="mat-elevation-z8">
+
+          <!-- <ng-container matColumnDef="select">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="masterToggle(getVisibleProcessedRows())"
+                [checked]="selection.hasValue() && isAllSelected(getVisibleProcessedRows())"
+                [indeterminate]="selection.hasValue() && !isAllSelected(getVisibleProcessedRows())">
+              </mat-checkbox>
+
+            </mat-header-cell>
+
+            <mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="selection.toggle(row)"
+                [checked]="selection.isSelected(row)">
+              </mat-checkbox>
+            </mat-cell>
+          </ng-container> -->
+
+          <!-- Loop through existing columns -->
+          <ng-container *ngFor="let col of displayedColumns" [matColumnDef]="col">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>
+              <div class="header-container">
+                <span>{{ columnDisplayNames[col] }}</span>
+                <button mat-icon-button *ngIf="showColumnFilters" [matMenuTriggerFor]="filterMenu"
+                  (menuOpened)="openFilterMenu(col, $event)" [color]="isFilterActive(col) ? 'accent' : ''"
+                  (click)="$event.stopPropagation()">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+            </mat-header-cell>
+
+            <mat-cell *matCellDef="let row">
+              <ng-container [ngSwitch]="col">
+
+                <span *ngSwitchCase="'timestamp'">{{ row.timestamp | date:'yyyy-MM-dd HH:mm' }}</span>
+                <span *ngSwitchCase="'ldap'">{{ row.ldap }}</span>
+                <span *ngSwitchCase="'name'">{{ row.requestorName }}</span>
+                <span *ngSwitchCase="'requestType'">{{ row.applicationType }}</span>
+                <span *ngSwitchCase="'leaveType'">{{ row.leaveType }}</span>
+                <span *ngSwitchCase="'leaveDetails'">{{ row.leaveDetails }}</span>
+                <span *ngSwitchCase="'startDate'">{{ row.startDate | date:'MMM d, y' }}</span>
+                <span *ngSwitchCase="'endDate'">{{ row.endDate | date:'MMM d, y' }}</span>
+                <span *ngSwitchCase="'duration'">{{ row.lvWfhDuration }}</span>
+                <span *ngSwitchCase="'reason'"
+                  [class.empty-cell]="!row.reason || row.reason === 'NA' || row.reason === 'N/A'">{{ row.reason || 'NA'
+                  }}</span>
+                <span *ngSwitchCase="'status'" [ngClass]="{
+                  'status-pending': row.status === 'PENDING',
+                  'status-approved': row.status === 'APPROVED',
+                  'status-rejected': row.status === 'REJECTED' || row.status === 'DELETED',
+                  'status-revoked': row.status === 'REVOKED'
+                }">
+                  {{ row.status }}
+                </span>
+                <span *ngSwitchCase="'document'">
+                  <button *ngIf="row.documentPath && row.documentPath !== 'NA'" mat-icon-button
+                    (click)="openPreviewDialog(row)">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <span *ngIf="!row.documentPath || row.documentPath === 'NA'">N/A</span>
+                </span>
+
+                <span *ngSwitchCase="'approvingLead'">{{ row.approvingLead || 'NA' }}</span>
+                <span *ngSwitchCase="'backupInfo'"
+                  [class.empty-cell]="!row.backupInfo || row.backupInfo === 'NA' || row.backupInfo === 'N/A'">{{
+                  row.backupInfo || 'NA' }}</span>
+                <span *ngSwitchCase="'changedBy'">{{ row.changedBy || 'NA' }}</span>
+                <span *ngSwitchCase="'leaveCategory'" [ngClass]="{
+                  'status-approved': row.leaveCategory === 'PLANNED',
+                  'status-rejected': row.leaveCategory === 'UNPLANNED'
+                }">{{ row.leaveCategory || 'NA' }}</span>
+
+              </ng-container>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+
+            <mat-cell *matCellDef="let row" class="actions-cell">
+              <!-- View History Icon (outside menu) -->
+              <button mat-icon-button (click)="viewAuditHistory(row)" matTooltip="View History" color="primary">
+                <mat-icon>visibility</mat-icon>
+              </button>
+
+              <!-- Three-dot menu -->
+              <mat-icon class="menu-icon" [matMenuTriggerFor]="processedMenu">
+                more_vert
+              </mat-icon>
+
+              <mat-menu #processedMenu="matMenu">
+
+                <!-- REVOKE (only when APPROVED) -->
+                <button mat-menu-item (click)="revokeRequest(row)" [disabled]="row.status !== 'APPROVED'">
+                  <mat-icon color="warn">undo</mat-icon>
+                  <span>Revoke</span>
+                </button>
+
+                <!-- CATEGORY UPDATE -->
+                <button mat-menu-item (click)="openCategoryUpdateDialog(row)">
+                  <mat-icon>category</mat-icon>
+                  <span>Update Category</span>
+                </button>
+
+              </mat-menu>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns.concat(['actions'])"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns.concat(['actions']);"
+            [ngClass]="{'modified-record': hasAuditHistory(row)}"></mat-row>
+
+        </mat-table>
+
+      </div>
+
+      <!-- PAGINATORS -->
+      <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 15,20]" *ngIf="selectedStatus === 'APPROVED'"
+        #approvedPaginator></mat-paginator>
+
+      <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 15,20]" *ngIf="selectedStatus === 'REJECTED'"
+        #rejectedPaginator></mat-paginator>
+
+      <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 15,20]" *ngIf="selectedStatus === 'REVOKED'"
+        #revokedPaginator></mat-paginator>
+
+    </div>
+  </mat-tab>
+
+  <mat-tab label="Pending Requests">
+    <div class="new-requests-table table-wrapper">
+      <mat-table [dataSource]="pendingDataSource" matSort #pendingSort="matSort" class="mat-elevation-z8">
+        <!-- SELECT CHECKBOX COLUMN -->
+        <!-- <ng-container matColumnDef="select">
+          <mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="masterToggle(getVisiblePendingRows())"
+              [checked]="selection.hasValue() && isAllSelected(getVisiblePendingRows())"
+              [indeterminate]="selection.hasValue() && !isAllSelected(getVisiblePendingRows())">
+            </mat-checkbox>
+          </mat-header-cell>
+
+          <mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="selection.toggle(row)"
+              [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </mat-cell>
+        </ng-container> -->
+
+        <!-- Loop existing columns -->
+        <ng-container *ngFor="let col of displayedColumns" [matColumnDef]="col">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            <div class="header-container">
+              <span>{{ columnDisplayNames[col] }}</span>
+
+              <button mat-icon-button *ngIf="showColumnFilters" [matMenuTriggerFor]="filterMenu"
+                (menuOpened)="openFilterMenu(col, $event)" [color]="isFilterActive(col) ? 'accent' : ''"
+                (click)="$event.stopPropagation()">
+                <mat-icon>filter_list</mat-icon>
+              </button>
+            </div>
+          </mat-header-cell>
+
+          <mat-cell *matCellDef="let row">
+            <ng-container [ngSwitch]="col">
+
+              <span *ngSwitchCase="'timestamp'">{{ row.timestamp | date:'yyyy-MM-dd HH:mm' }}</span>
+              <span *ngSwitchCase="'ldap'">{{ row.ldap }}</span>
+              <span *ngSwitchCase="'name'">{{ row.requestorName }}</span>
+              <span *ngSwitchCase="'requestType'">{{ row.applicationType }}</span>
+              <span *ngSwitchCase="'leaveType'">{{ row.leaveType }}</span>
+              <span *ngSwitchCase="'leaveDetails'">{{ row.leaveDetails }}</span>
+              <span *ngSwitchCase="'startDate'">{{ row.startDate | date:'MMM d, y' }}</span>
+              <span *ngSwitchCase="'endDate'">{{ row.endDate | date:'MMM d, y' }}</span>
+              <span *ngSwitchCase="'duration'">{{ row.lvWfhDuration }}</span>
+              <span *ngSwitchCase="'reason'"
+                [class.empty-cell]="!row.reason || row.reason === 'NA' || row.reason === 'N/A'">{{ row.reason || 'NA'
+                }}</span>
+
+              <span *ngSwitchCase="'status'" [ngClass]="{
+                  'status-pending': row.status === 'PENDING',
+                  'status-approved': row.status === 'APPROVED',
+                  'status-rejected': row.status === 'REJECTED'
+                }">
+                {{ row.status }}
+              </span>
+
+              <span *ngSwitchCase="'document'">
+                <button *ngIf="row.document && row.document !== 'NA'" mat-icon-button (click)="openPreviewDialog(row)">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <span *ngIf="!row.document || row.document === 'NA'">N/A</span>
+              </span>
+
+              <span *ngSwitchCase="'approvingLead'">{{ row.approvingLead || 'NA' }}</span>
+              <span *ngSwitchCase="'backupInfo'"
+                [class.empty-cell]="!row.backupInfo || row.backupInfo === 'NA' || row.backupInfo === 'N/A'">{{
+                row.backupInfo || 'NA' }}</span>
+              <span *ngSwitchCase="'leaveCategory'" [ngClass]="{
+                  'status-approved': row.leaveCategory === 'PLANNED',
+                  'status-rejected': row.leaveCategory === 'UNPLANNED'
+                }">{{ row.leaveCategory || 'NA' }}</span>
+
+            </ng-container>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+
+          <mat-cell *matCellDef="let row">
+            <!-- View History Icon (outside menu) -->
+            <button mat-icon-button (click)="viewAuditHistory(row)" matTooltip="View History" color="primary">
+              <mat-icon>visibility</mat-icon>
+            </button>
+
+            <!-- Three-dot menu -->
+            <mat-icon class="menu-icon" [matMenuTriggerFor]="pendingMenu">
+              more_vert
+            </mat-icon>
+
+            <mat-menu #pendingMenu="matMenu">
+
+              <!-- APPROVE (with canApprove enforcement) -->
+              <button mat-menu-item (click)="approveRequest(row)"
+                [disabled]="row.status !== 'PENDING' || !canApprove(row)">
+                <mat-icon color="primary">check_circle</mat-icon>
+                <span>Approve</span>
+              </button>
+
+              <!-- REJECT -->
+              <button mat-menu-item (click)="rejectRequest(row)"
+                [disabled]="row.status !== 'PENDING' || !canApprove(row)">
+                <mat-icon color="warn">cancel</mat-icon>
+                <span>Reject</span>
+              </button>
+
+              <!-- CATEGORY UPDATE -->
+              <button mat-menu-item (click)="openCategoryUpdateDialog(row)">
+                <mat-icon>category</mat-icon>
+                <span>Update Category</span>
+              </button>
+
+            </mat-menu>
+
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns.concat(['actions'])"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns.concat(['actions']);"
+          [ngClass]="{'modified-record': hasAuditHistory(row)}"></mat-row>
+
+      </mat-table>
+    </div>
+
+    <mat-paginator #pendingPaginator [pageSizeOptions]="[5,10,20,50]" showFirstLastButtons></mat-paginator>
+
+  </mat-tab>
+</mat-tab-group>
+
+<!-- Shared Filter Menu -->
+<mat-menu #filterMenu="matMenu" class="filter-menu">
+  <div class="filter-menu-content" (click)="$event.stopPropagation()">
+    <ng-container *ngIf="currentFilterMenuState.columnKey">
+      <mat-form-field appearance="outline" class="filter-search">
+        <mat-label>Search</mat-label>
+        <input matInput [(ngModel)]="currentFilterMenuState.searchText" placeholder="Search options">
+      </mat-form-field>
+
+      <mat-checkbox [checked]="isAllTempSelected()" [indeterminate]="isSomeTempSelected()"
+        (change)="toggleSelectAllTemp($event.checked)">
+        Select All ({{ getUniqueColumnValues(currentFilterMenuState.columnKey).length }} items)
+      </mat-checkbox>
+      <hr>
+
+      <div style="max-height: 200px; overflow-y: auto;">
+        <mat-checkbox *ngFor="let value of filteredMenuOptions" [checked]="isTempSelected(value)"
+          (change)="toggleTempSelection(value, $event.checked)">
+          {{ value }}
+        </mat-checkbox>
+      </div>
+      <hr>
+
+      <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+        <button mat-button (click)="onFilterApplied()">Apply</button>
+        <button mat-button (click)="clearColumnFilter()">Clear</button>
+      </div>
+    </ng-container>
+  </div>
+</mat-menu>
