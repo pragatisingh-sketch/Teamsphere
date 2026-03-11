@@ -65,6 +65,7 @@ public class SecurityConfig {
                                 "/auth/verify-otp",
                                 "/auth/reset-password-with-otp",
                                 "/admin/reset-password-postman",
+                                "/admin/register",
                                 "/api/time-entries/**",
                                 "/api/timesheets/**",
                                 "/api/projects/**",
