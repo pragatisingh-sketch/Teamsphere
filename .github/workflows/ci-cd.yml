@@ -290,7 +290,7 @@ jobs:
 
             # Remove old certbot Nginx configurations to ensure the new routing rules are applied
             sudo rm -f /etc/nginx/sites-available/teamsphere-le-ssl.conf
-            sudo rm -f /etc/nginx/sites-enabled/teamsp  here-le-ssl.conf
+            sudo rm -f /etc/nginx/sites-enabled/teamsphere-le-ssl.conf
 
             if [ "$CERT_EXISTS" -eq "0" ]; then
               echo "No certificate found — requesting new one for $APP_DOMAIN"

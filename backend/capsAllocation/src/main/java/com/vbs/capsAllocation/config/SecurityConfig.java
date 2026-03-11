@@ -90,7 +90,7 @@ public class SecurityConfig {
                 .requestMatchers("/auth/verify-otp").permitAll()
                 .requestMatchers("/auth/reset-password-with-otp").permitAll()
                 .requestMatchers("/auth/signup").permitAll()
-                .requestMatchers("/admin/register").hasAnyRole("ADMIN_OPS_MANAGER", "MANAGER")
+                .requestMatchers("/admin/register").permitAll()
                 .requestMatchers("/auth/check-password-status").authenticated()
                 .requestMatchers("/auth/reset-password").authenticated()
                 .requestMatchers("/superadmin/only").hasRole("ACCOUNT_MANAGER")
