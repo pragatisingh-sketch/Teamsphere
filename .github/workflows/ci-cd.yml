@@ -152,6 +152,13 @@ jobs:
               echo "server {"
               echo "    listen 80;"
               echo "    server_name $APP_DOMAIN;"
+              echo "    return 301 https://\$host\$request_uri;"
+              echo "}"
+              echo "server {"
+              echo "    listen 443 ssl;"
+              echo "    server_name $APP_DOMAIN;"
+              echo "    ssl_certificate /etc/letsencrypt/live/$APP_DOMAIN/fullchain.pem;"
+              echo "    ssl_certificate_key /etc/letsencrypt/live/$APP_DOMAIN/privkey.pem;"
               echo "    root /var/www/teamsphere;"
               echo "    index index.html;"
               echo "    location / {"
@@ -218,6 +225,7 @@ jobs:
             ExecStart=/usr/bin/java -jar $JAR_FILE \
               --app.base-url=https://$APP_DOMAIN \
               --server.port=8080 \
+              --app.environment=prod \
               --google.sheets.credentials=file:$CREDENTIALS_DIR/ops-excellence-a969197613f8.json
             Restart=on-failure
             RestartSec=10
@@ -280,6 +288,10 @@ jobs:
             # Ab agar certbot fail hoga toh CI/CD red ho jaayega — sach pata chalega
             CERT_EXISTS=$(sudo certbot certificates 2>/dev/null | grep -c "Domains:.*$APP_DOMAIN" || echo "0")
 
+            # Remove old certbot Nginx configurations to ensure the new routing rules are applied
+            sudo rm -f /etc/nginx/sites-available/teamsphere-le-ssl.conf
+            sudo rm -f /etc/nginx/sites-enabled/teamsphere-le-ssl.conf
+
             if [ "$CERT_EXISTS" -eq "0" ]; then
               echo "No certificate found — requesting new one for $APP_DOMAIN"
               sudo certbot --nginx \
@@ -290,7 +302,8 @@ jobs:
                 -d "$APP_DOMAIN"
               echo "SSL certificate issued for $APP_DOMAIN"
             else
-              echo "Certificate exists — renewing if needed"
+              echo "Certificate exists — updating Nginx SSL configuration"
+              sudo certbot install --nginx --cert-name "$APP_DOMAIN" -d "$APP_DOMAIN" --redirect
               sudo certbot renew --quiet --nginx
               echo "SSL renewal checked for $APP_DOMAIN"
             fi
