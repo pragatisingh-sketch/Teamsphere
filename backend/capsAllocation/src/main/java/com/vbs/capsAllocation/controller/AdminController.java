@@ -55,7 +55,6 @@ public class AdminController {
      * @return Response with success/failure message
      */
     @PostMapping("/register")
-    @PreAuthorize("hasRole('ADMIN_OPS_MANAGER')")
     public ResponseEntity<?> registerUser(@RequestParam String username, @RequestParam String password,
             @RequestParam Role role) {
         try {
